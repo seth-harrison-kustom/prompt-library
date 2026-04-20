@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kustom GM Prompt Library</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f7; color: #1a1a1a; padding: 2rem 1rem; }
+.container { max-width: 960px; margin: 0 auto; }
+.header { padding-bottom: 1.25rem; border-bottom: 1px solid #e5e5e0; margin-bottom: 1.5rem; }
+.header-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+.header h1 { font-size: 22px; font-weight: 600; }
+.badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; background: #f0f0ec; color: #666; border: 1px solid #e0e0da; }
+.header p { font-size: 13px; color: #666; line-height: 1.5; }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.filter-btn { font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px; border: 1px solid #ddd; background: transparent; color: #555; cursor: pointer; transition: all 0.12s; }
+.filter-btn:hover { background: #f0f0ec; }
+.filter-btn.active { background: #1a1a1a; color: #fff; border-color: transparent; }
+.search-wrap { margin-bottom: 1.25rem; }
+.search-wrap input { width: 100%; font-size: 13px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #1a1a1a; }
+.search-wrap input:focus { outline: none; border-color: #aaa; }
+.section { margin-bottom: 1.5rem; }
+.section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #999; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #e5e5e0; }
+.prompt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; }
+.prompt-card { border: 1px solid #e5e5e0; border-radius: 12px; padding: 14px 16px; background: #fff; cursor: pointer; transition: border-color 0.12s, background 0.12s; }
+.prompt-card:hover { border-color: #ccc; background: #fafaf8; }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.card-title { font-size: 13px; font-weight: 600; color: #1a1a1a; line-height: 1.4; }
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; flex-shrink: 0; }
+.tag { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
+.tag-cowork { background: #E6F1FB; color: #0C447C; }
+.tag-m365 { background: #EAF3DE; color: #3B6D11; }
+.tag-claude { background: #EEEDFE; color: #3C3489; }
+.tag-field { background: #FAEEDA; color: #854F0B; }
+.tag-office { background: #FAECE7; color: #993C1D; }
+.card-prompt { font-size: 12px; color: #555; line-height: 1.55; font-style: italic; border-left: 2px solid #e0e0da; padding-left: 10px; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-prompt.expanded { -webkit-line-clamp: unset; }
+.card-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.card-tool { font-size: 11px; color: #999; }
+.btn-group { display: flex; gap: 6px; align-items: center; }
+.copy-btn { font-size: 11px; font-weight: 500; padding: 4px 10px; border: 1px solid #ddd; border-radius: 6px; background: transparent; color: #555; cursor: pointer; transition: all 0.12s; white-space: nowrap; }
+.copy-btn:hover { background: #f0f0ec; }
+.copy-btn.copied { color: #3B6D11; border-color: #3B6D11; background: #EAF3DE; }
+.expand-btn { font-size: 11px; color: #999; background: none; border: none; cursor: pointer; padding: 0; }
+.expand-btn:hover { color: #555; }
+.empty { text-align: center; padding: 2rem; color: #999; font-size: 13px; }
+.count-label { font-size: 12px; color: #999; margin-bottom: 0.75rem; }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <div class="header-top"><h1>GM Prompt Library</h1><span class="badge">Kustom US</span></div>
+  <p>Example prompts for Claude Enterprise + Cowork. Click any card to expand the full prompt. Copy it, paste it, adapt it to your jobs.</p>
+</div>
+<div class="search-wrap"><input type="text" id="search" placeholder="Search prompts — e.g. collections, one-on-one, pipeline..." /></div>
+<div class="filters" id="filters"></div>
+<div id="count" class="count-label"></div>
+<div id="library"></div>
+</div>
+<script>
+const prompts = [
+  { section: "Financial & Collections", title: "Collections status across all open jobs", tool: "Cowork + DASH", tags: ["cowork"], prompt: `Go to DASH and pull all open jobs where the invoice date is more than 30 days ago and payment has not been received. List them with job number, job name, invoice date, invoice amount, and last AR note. Sort by oldest first.` },
+  { section: "Financial & Collections", title: "AR aging summary — flag 60+ day accounts", tool: "Cowork + KIDD", tags: ["cowork"], prompt: `Open the A/R Aging Report in KIDD. List every invoice that is 60 days or older. For each one show the job name, PC assigned, dollar amount, and the most recent DASH note that starts with "AR$:". I want to know who's holding the money and what the last action was.` },
+  { section: "Financial & Collections", title: "Prep my weekly A/R collections meeting", tool: "Cowork + DASH", tags: ["cowork"], prompt: `I have my weekly A/R Collections Meeting today. Go into DASH and pull all open invoices by coordinator. For each PC, show me: total outstanding, number of invoices past 30 days, past 60 days, and any jobs flagged in a note as needing escalation. Organize it by PC so I can run through it coordinator by coordinator.` },
+  { section: "Financial & Collections", title: "Find jobs with no cash movement this month", tool: "Cowork + DASH", tags: ["cowork"], prompt: `In DASH, find all active jobs that have had no payment received in the last 30 days. Show me job name, PC, current balance owed, and the last AR note logged. I want to know which jobs are completely stalled on collections.` },
+  { section: "Financial & Collections", title: "Underbilling report — jobs not yet invoiced", tool: "Cowork + DASH", tags: ["cowork"], prompt: `Pull a list of all jobs in DASH where work has been completed or is substantially complete, but no invoice has been sent yet. Show the job name, date of majority completion (if entered), PC assigned, and contract value. Flag any that have been sitting unbilled for more than 2 weeks.` },
+  { section: "Financial & Collections", title: "Draft a collections follow-up email", tool: "Claude", tags: ["claude"], prompt: `Write a professional but firm collections follow-up email to a homeowner/adjuster. The invoice for [job name] was sent on [date] for $[amount] and we have not received payment. We have called twice and left voicemails. Keep it firm, professional, and focused on getting a response and a payment timeline. Don't be aggressive.` },
+  { section: "Job Pipeline & Production", title: "Full job pipeline — all active jobs", tool: "Cowork + DASH", tags: ["cowork"], prompt: `Go to DASH and pull all currently active jobs. For each job show: job number, job name, type (MIT or RECON), PD assigned, target completion date, current status, and last note date. Sort by target completion date ascending so I can see what's coming due first.` },
+  { section: "Job Pipeline & Production", title: "Jobs at risk of missing target completion", tool: "Cowork + DASH", tags: ["cowork"], prompt: `In DASH, find all active RECON jobs where the target completion date is within the next 14 days. For each, show me the job name, PD, target date, and the last progress note. Flag any where the last note is more than 5 days old — those are the ones I'm most worried about.` },
+  { section: "Job Pipeline & Production", title: "Prep my GM/PD one-on-one", tool: "Cowork + DASH", tags: ["cowork"], prompt: `I have my weekly one-on-one with [PD Name] in 30 minutes. Pull all jobs currently assigned to them from DASH. For each job show: job name, target completion date, current cash standing, any open invoices, and the most recent job note. Flag anything that looks like it needs my attention — overdue dates, stalled collections, or no recent notes.` },
+  { section: "Job Pipeline & Production", title: "Summarize one-on-one and generate follow-up email", tool: "Claude + M365", tags: ["claude", "m365"], prompt: `Here are my notes from my PD one-on-one with [PD Name] today: [paste notes or describe discussion]. Summarize the key decisions made and draft a brief follow-up email to [PD Name] that lists all action items, who owns each one, and the deadline. Keep it tight — this is an executive-level summary, not a recap of everything we talked about.` },
+  { section: "Job Pipeline & Production", title: "MIT jobs still open past 30 days", tool: "Cowork + DASH", tags: ["cowork"], prompt: `Pull all mitigation jobs in DASH that are still listed as active and were opened more than 30 days ago. Show me job name, open date, current status, PD/tech assigned, and last note. Any MIT job this old needs to either be closed or I need to understand why it's still open.` },
+  { section: "Job Pipeline & Production", title: "Missing or overdue DASH documentation", tool: "Cowork + DASH", tags: ["cowork"], prompt: `In DASH, find all active jobs that are missing any of the following: (1) a note in the last 7 days, (2) an uploaded Work Authorization, (3) a target completion date. List them by job and show what's missing. I want to close these documentation gaps before they become problems.` },
+  { section: "Pending Sales & Business Development", title: "Full pending sales report", tool: "Cowork + DASH", tags: ["cowork"], prompt: `Pull the Pending Sales report from DASH. Show all leads and pending jobs that don't yet have a signed Work Authorization or Construction Agreement. For each one show: job name, lead date, RSS assigned, last "SALES UPDATE:" note, and current status. Sort by lead date oldest first.` },
+  { section: "Pending Sales & Business Development", title: "Pending jobs with no update in 4+ days", tool: "Cowork + DASH", tags: ["cowork"], prompt: `In DASH, find all pending jobs where the last note with header "SALES UPDATE:" is more than 4 days old. The RSS is supposed to be updating customers twice a week. Show me which jobs are falling behind on follow-up and who the RSS is on each one.` },
+  { section: "Pending Sales & Business Development", title: "Jobs lost this month — reason summary", tool: "Cowork + DASH", tags: ["cowork"], prompt: `Pull all jobs from DASH this month that have a note starting with "JOB LOST:" and are marked as closed/lost. List the job name, date lost, RSS, and the reason documented in the note. I want to see if there's a pattern in why we're losing work.` },
+  { section: "Pending Sales & Business Development", title: "Draft a customer follow-up for a stalled job", tool: "Claude", tags: ["claude"], prompt: `Write a customer follow-up message for a RECON job that has been pending for [X] days. The estimate has been submitted to the insurance adjuster and we're waiting on approval. The customer is [describe their concern or mood if known]. The tone should be professional, reassuring, and keep momentum going without being pushy. End with a clear next step.` },
+  { section: "Pending Sales & Business Development", title: "Log a sales update note in DASH", tool: "Cowork + DASH", tags: ["cowork"], prompt: `Go to DASH, find job [job name or number], and add a new note with the header "SALES UPDATE:" followed by this update: [describe what happened — call attempt, objection raised, next step agreed on, etc.]. Make sure it's logged under my name today.` },
+  { section: "Team Management & Communications", title: "Send my one-on-one follow-up email", tool: "M365 + Claude", tags: ["m365", "claude"], prompt: `Using Outlook, draft and send a follow-up email to [PD/PC name] after our one-on-one today. Subject: "One-on-One Follow-Up — [Date]". Body: list the action items we discussed, who owns each one, and the deadline. Keep it short. CC me.` },
+  { section: "Team Management & Communications", title: "Review my team's calendar for this week", tool: "M365", tags: ["m365"], prompt: `Open my Outlook calendar and show me all team meetings scheduled for this week. List each meeting with title, date/time, attendees, and whether there's an agenda attached. Flag any standing meetings that are missing attendees or have no notes/agenda.` },
+  { section: "Team Management & Communications", title: "Check if all required meetings are on the books", tool: "M365", tags: ["m365"], prompt: `Look at my Outlook calendar for the next two weeks. Confirm that I have all of the following scheduled: (1) weekly one-on-one with each PD, (2) A/R collections meeting, (3) any required leadership/corporate calls. List what's there and flag what's missing.` },
+  { section: "Team Management & Communications", title: "Draft a performance coaching note", tool: "Claude", tags: ["claude"], prompt: `Help me write a documented coaching note for [team member role]. The issue is [describe the performance gap — e.g. DASH notes not being updated, missed customer follow-ups, late to meetings]. I need to document this privately in a way that's clear, fair, and factual. It should reference the expectation, describe what's been observed, and state what needs to change.` },
+  { section: "Team Management & Communications", title: "Draft a team-wide office update", tool: "Claude", tags: ["claude"], prompt: `Write a brief all-office update for my team covering: (1) any process or SOP reminders they need to hear this week, (2) a performance callout or win worth recognizing, (3) one focus area I want everyone prioritizing. Keep it direct, energizing, and under 200 words. Don't make it feel like a corporate memo.` },
+  { section: "Reporting & Insights", title: "Weekly office performance snapshot", tool: "Cowork + DASH", tags: ["cowork"], prompt: `Build me a weekly snapshot for my office. I need: (1) total active jobs broken down by MIT vs RECON, (2) jobs opened this week vs jobs closed, (3) total outstanding A/R, (4) any jobs missing DASH notes in the last 7 days, (5) pending sales count. Pull what you can from DASH.` },
+  { section: "Reporting & Insights", title: "Month-to-date revenue and margin summary", tool: "Cowork + DASH / PowerBI", tags: ["cowork"], prompt: `Pull month-to-date financials for my office. I want to see total revenue billed, total cash collected, gross margin if available, and a breakdown by job type (MIT vs RECON). Use DASH or PowerBI — whichever has the most current data.` },
+  { section: "Reporting & Insights", title: "Identify my highest-margin open jobs", tool: "Cowork + DASH", tags: ["cowork"], prompt: `In DASH, look at all active jobs with a contract value over $[threshold]. Show me job name, contract value, estimated margin or cost-to-complete if available, and current status. I want to make sure my highest-value jobs are getting the attention they need.` },
+  { section: "Reporting & Insights", title: "Deductibles not yet collected", tool: "Cowork + DASH", tags: ["cowork"], prompt: `Find all active RECON jobs in DASH where the deductible has not been collected and invoiced. Show job name, PD, contract value, and estimated deductible amount if noted. These are dollars we should already have in hand.` },
+  { section: "Reporting & Insights", title: "Supplements and change orders pending approval", tool: "Cowork + DASH", tags: ["cowork"], prompt: `Pull all active jobs in DASH that have a supplement or change order currently submitted but not yet approved. Show job name, supplement amount if noted, date submitted, and last follow-up note. I want to track what's outstanding and make sure we're following up.` },
+  { section: "Field GM Add-On", title: "Plan my job site visits for the week", tool: "Claude + Cowork", tags: ["cowork", "field"], prompt: `Based on my active job list in DASH, help me prioritize which job sites I should visit this week. I have roughly [X] hours available for site visits. Flag jobs that: (1) haven't had a GM or PD visit recently, (2) are near a milestone like demo or COC, (3) have a customer satisfaction concern noted. List them ranked by priority.` },
+  { section: "Field GM Add-On", title: "Referral source outreach tracker", tool: "Cowork + DASH", tags: ["cowork", "field"], prompt: `In DASH, pull all leads received in the last 90 days and group them by referral source. Show me which sources sent the most leads, which ones we converted, and which ones we lost. I want to know who my best referral relationships are and which ones I need to invest more time in.` },
+  { section: "Field GM Add-On", title: "Google review status for recently closed jobs", tool: "Cowork + DASH", tags: ["cowork", "field"], prompt: `Find all jobs closed in the last 60 days in DASH. For each one, check whether a Google review was solicited — look for any note referencing a review request. List the ones where no review was solicited so I can follow up with those customers.` },
+  { section: "Field GM Add-On", title: "Build my BD outreach list for the week", tool: "Claude", tags: ["claude", "field"], prompt: `Help me build a BD outreach plan for this week. My goals are to strengthen relationships with existing referral sources and identify 2-3 new contacts to reach. I have about [X] hours for outreach. Suggest a structure for the week — who to call, who to visit in person, and what to say to re-engage someone I haven't talked to in a while.` },
+  { section: "Office GM Add-On", title: "Financial planning: weekly budget review", tool: "Claude + Cowork", tags: ["cowork", "office"], prompt: `I want to do a weekly budget review. Pull all active jobs from DASH where cost-to-complete has been logged. For each, compare current costs against the contract value and flag any jobs where margin looks tight (under [X]%) or where we're trending over budget. Prioritize the ones that need immediate attention.` },
+  { section: "Office GM Add-On", title: "PD workload distribution check", tool: "Cowork + DASH", tags: ["cowork", "office"], prompt: `In DASH, show me all active jobs grouped by PD. For each PD, give me a count of jobs, total contract value, and any jobs past their target completion date. I want to see if workload is distributed evenly or if anyone is overloaded.` },
+  { section: "Office GM Add-On", title: "Leadership prep: summarize office metrics for an exec call", tool: "Claude + Cowork", tags: ["claude", "cowork", "office"], prompt: `I have a leadership call in [X hours]. Pull my office's key metrics from DASH: jobs open, jobs closed this month, total A/R outstanding, pending sales pipeline value, and any escalated items. Then help me summarize it into a tight 3-minute verbal update I can deliver on the call — lead with the wins, flag the risks, state what I'm doing about each one.` },
+  { section: "Office GM Add-On", title: "Staff development: identify training gaps", tool: "Claude", tags: ["claude", "office"], prompt: `Based on what I've observed, I want to think through development gaps on my team. Here's what I'm seeing: [describe 2-3 patterns you've noticed — e.g. DASH notes are inconsistent, PD is struggling with collections conversations, new PC is slow on invoicing]. Help me identify the root cause for each and suggest a concrete coaching or development approach.` }
+];
+
+const sections = [...new Set(prompts.map(p => p.section))];
+const allTags = ["cowork","m365","claude","field","office"];
+const tagLabels = { cowork:"Cowork/DASH", m365:"M365/Outlook", claude:"Claude only", field:"Field GM", office:"Office GM" };
+let activeFilter = "all", searchVal = "";
+const expandedCards = new Set();
+
+function renderFilters() {
+  const f = document.getElementById("filters");
+  f.innerHTML = "";
+  const allBtn = document.createElement("button");
+  allBtn.className = "filter-btn" + (activeFilter === "all" ? " active" : "");
+  allBtn.textContent = "All prompts";
+  allBtn.onclick = () => { activeFilter = "all"; render(); };
+  f.appendChild(allBtn);
+  allTags.forEach(tag => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn" + (activeFilter === tag ? " active" : "");
+    btn.textContent = tagLabels[tag];
+    btn.onclick = () => { activeFilter = tag; render(); };
+    f.appendChild(btn);
+  });
+}
+
+function render() {
+  renderFilters();
+  const lib = document.getElementById("library");
+  lib.innerHTML = "";
+  let total = 0;
+  sections.forEach(sec => {
+    const matching = prompts.filter(p => p.section === sec && (activeFilter === "all" || p.tags.includes(activeFilter)) && (!searchVal || p.title.toLowerCase().includes(searchVal) || p.prompt.toLowerCase().includes(searchVal) || p.section.toLowerCase().includes(searchVal)));
+    if (!matching.length) return;
+    total += matching.length;
+    const secEl = document.createElement("div");
+    secEl.className = "section";
+    const label = document.createElement("div");
+    label.className = "section-label";
+    label.textContent = sec;
+    secEl.appendChild(label);
+    const grid = document.createElement("div");
+    grid.className = "prompt-grid";
+    matching.forEach((p, idx) => {
+      const id = sec + idx;
+      const card = document.createElement("div");
+      card.className = "prompt-card";
+      const top = document.createElement("div");
+      top.className = "card-top";
+      const titleEl = document.createElement("div");
+      titleEl.className = "card-title";
+      titleEl.textContent = p.title;
+      const tagsEl = document.createElement("div");
+      tagsEl.className = "card-tags";
+      p.tags.forEach(t => { const span = document.createElement("span"); span.className = "tag tag-" + t; span.textContent = tagLabels[t]; tagsEl.appendChild(span); });
+      top.appendChild(titleEl); top.appendChild(tagsEl);
+      const promptEl = document.createElement("div");
+      promptEl.className = "card-prompt" + (expandedCards.has(id) ? " expanded" : "");
+      promptEl.textContent = '"' + p.prompt + '"';
+      const bottom = document.createElement("div");
+      bottom.className = "card-bottom";
+      const toolEl = document.createElement("div");
+      toolEl.className = "card-tool";
+      toolEl.textContent = p.tool;
+      const btnGroup = document.createElement("div");
+      btnGroup.className = "btn-group";
+      const expandBtn = document.createElement("button");
+      expandBtn.className = "expand-btn";
+      expandBtn.textContent = expandedCards.has(id) ? "collapse" : "expand";
+      expandBtn.onclick = e => { e.stopPropagation(); if (expandedCards.has(id)) expandedCards.delete(id); else expandedCards.add(id); render(); };
+      const copyBtn = document.createElement("button");
+      copyBtn.className = "copy-btn";
+      copyBtn.textContent = "copy";
+      copyBtn.onclick = e => { e.stopPropagation(); navigator.clipboard.writeText(p.prompt).then(() => { copyBtn.textContent = "copied!"; copyBtn.classList.add("copied"); setTimeout(() => { copyBtn.textContent = "copy"; copyBtn.classList.remove("copied"); }, 1800); }); };
+      btnGroup.appendChild(expandBtn); btnGroup.appendChild(copyBtn);
+      bottom.appendChild(toolEl); bottom.appendChild(btnGroup);
+      card.appendChild(top); card.appendChild(promptEl); card.appendChild(bottom);
+      grid.appendChild(card);
+    });
+    secEl.appendChild(grid);
+    lib.appendChild(secEl);
+  });
+  document.getElementById("count").textContent = total + " prompt" + (total !== 1 ? "s" : "");
+  if (total === 0) lib.innerHTML = '<div class="empty">No prompts match your search.</div>';
+}
+
+render();
+document.getElementById("search").addEventListener("input", e => { searchVal = e.target.value.toLowerCase(); render(); });
+</script>
+</body>
+</html>
