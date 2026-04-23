@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GP$ — Stack Rankings vs Projections Q1 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Space Grotesk', sans-serif; background: #090b10; color: #d4d8e8; padding: 28px 32px; font-size: 13px; line-height: 1.5; }
+  h1 { font-family: 'Space Mono', monospace; font-size: 20px; color: #fff; }
+  .subtitle { color: #555; font-size: 12px; margin-top: 4px; margin-bottom: 14px; font-family: 'Space Mono', monospace; }
+  .correction-note { font-family: 'Space Mono', monospace; font-size: 10px; color: #444; background: #0a0c12; border: 1px solid #1e2233; border-radius: 4px; padding: 4px 8px; margin-bottom: 22px; }
+  .section { margin-bottom: 24px; }
+  .section-label { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #ff5f5f; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: #1e2233; }
+  .grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+  .card { background: #0e1118; border: 1px solid #1e2233; border-radius: 6px; padding: 14px 16px; }
+  .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #444; margin-bottom: 8px; font-family: 'Space Mono', monospace; }
+  .stat-big { font-size: 26px; font-weight: 700; line-height: 1; } .stat-sub { font-size: 11px; color: #555; margin-top: 4px; }
+  .green { color: #48c774; } .red { color: #ff5f5f; } .blue { color: #5b9ef5; } .yellow { color: #ffdd57; } .gray { color: #888; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead tr { border-bottom: 1px solid #1e2233; }
+  th { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: #444; padding: 6px 10px; text-align: left; white-space: nowrap; }
+  th.right { text-align: right; }
+  td { padding: 6px 10px; border-bottom: 1px solid #13161f; }
+  td.right { text-align: right; font-family: 'Space Mono', monospace; font-size: 11px; }
+  tr:hover td { background: #0f121c; } tr:last-child td { border-bottom: none; }
+  .name-col { color: #fff; font-weight: 500; }
+  .re-tag { display: inline-block; font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700; background: rgba(255,95,95,0.12); color: #ff5f5f; border-radius: 3px; padding: 1px 5px; margin-left: 6px; vertical-align: middle; }
+  .diff-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .diff-bar-track { width: 80px; height: 6px; background: #161924; border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+  .diff-bar-fill { height: 100%; border-radius: 2px; }
+  .insight { background: #0e1118; border: 1px solid #1e2233; border-left: 3px solid #ff5f5f; border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 12px; line-height: 1.6; margin-bottom: 8px; }
+  .insight.green { border-left-color: #48c774; } .insight.yellow { border-left-color: #ffdd57; } .insight.blue { border-left-color: #5b9ef5; } .insight strong { color: #fff; }
+  .pill { display: inline-block; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; border-radius: 3px; padding: 1px 6px; margin-right: 6px; }
+  .pill-green { background: rgba(72,199,116,0.15); color: #48c774; } .pill-yellow { background: rgba(255,221,87,0.12); color: #ffdd57; }
+  .pill-red { background: rgba(255,95,95,0.15); color: #ff5f5f; } .pill-blue { background: rgba(91,158,245,0.15); color: #5b9ef5; }
+  .pill-gray { background: rgba(255,255,255,0.06); color: #888; }
+  .legend { display: flex; gap: 16px; font-size: 11px; color: #555; margin-bottom: 10px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+</style>
+</head>
+<body>
+<h1>GP$ &mdash; STACK RANKINGS vs. PROJECTIONS</h1>
+<p class="subtitle">// Q1 2026 &nbsp;|&nbsp; PRODUCED (STACK) vs. PROJECTED (YOUR REPORT) &nbsp;|&nbsp; 99-RE TEAM</p>
+<p class="correction-note">CORRECTIONS: Dean, Michael = 99-RE Recon Estimator. Pember, Amanda = legal name; proj workbook lists as Mandy Yater (preferred) &mdash; now matched.</p>
+<div class="section">
+  <div class="section-label">Aggregate</div>
+  <div class="grid4">
+    <div class="card"><div class="card-label">Total Stack GP$ Produced</div><div class="stat-big green">$5,912,595</div><div class="stat-sub">17 estimators w/ proj data</div></div>
+    <div class="card"><div class="card-label">Total Projected GP$</div><div class="stat-big blue">$4,867,151</div><div class="stat-sub">same 17 estimators</div></div>
+    <div class="card"><div class="card-label">Total Overage vs Projection</div><div class="stat-big green">+$1,045,444</div><div class="stat-sub green">+21.5% above projected</div></div>
+    <div class="card"><div class="card-label">Beat Projection</div><div style="display:flex;gap:16px;"><div><div class="stat-big green">15</div><div class="stat-sub green">above proj</div></div><div><div class="stat-big red">2</div><div class="stat-sub red">below proj</div></div></div></div>
+  </div>
+</div>
+<div class="section">
+  <div class="section-label">Individual Breakdown &mdash; Sorted by Variance ($)</div>
+  <div class="card" style="padding: 12px 0;">
+    <div class="legend" style="padding: 0 10px 8px;">
+      <span><span class="legend-dot" style="background:#48c774;"></span>Stack &gt; Proj (outperformed)</span>
+      <span><span class="legend-dot" style="background:#ff5f5f;"></span>Stack &lt; Proj (underperformed)</span>
+    </div>
+    <table>
+      <thead><tr><th>Name</th><th class="right">Stack GP$ (Q1)</th><th class="right">Proj GP$</th><th class="right">Diff ($)</th><th class="right">Diff (%)</th><th>Visual</th></tr></thead>
+      <tbody>
+        <tr><td class="name-col">Caldwell, Arcadia <span class="re-tag">RE</span></td><td class="right green">$1,061,460</td><td class="right gray">$717,712</td><td class="right green">+$343,748</td><td class="right green">+47.9%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:100%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+48%</span></div></td></tr>
+        <tr><td class="name-col">Dean, Michael <span class="re-tag">RE</span></td><td class="right green">$1,072,073</td><td class="right gray">$731,217</td><td class="right green">+$340,856</td><td class="right green">+46.6%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:99%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+47%</span></div></td></tr>
+        <tr><td class="name-col">Werling, Bryan <span class="re-tag">RE</span></td><td class="right green">$247,421</td><td class="right gray">$101,789</td><td class="right green">+$145,632</td><td class="right yellow">+143.1%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:100%;background:#ffdd57;"></div></div><span class="yellow" style="font-size:11px;">+143%</span></div></td></tr>
+        <tr><td class="name-col">Llamas, David <span class="re-tag">RE</span></td><td class="right green">$371,828</td><td class="right gray">$327,501</td><td class="right green">+$44,327</td><td class="right green">+13.5%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:9%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+14%</span></div></td></tr>
+        <tr><td class="name-col">Denham, Richard <span class="re-tag">RE</span></td><td class="right green">$477,091</td><td class="right gray">$447,184</td><td class="right green">+$29,907</td><td class="right green">+6.7%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:5%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+7%</span></div></td></tr>
+        <tr><td class="name-col">Taber, Haleigh <span class="re-tag">RE</span></td><td class="right green">$193,446</td><td class="right gray">$167,998</td><td class="right green">+$25,448</td><td class="right green">+15.1%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:10%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+15%</span></div></td></tr>
+        <tr><td class="name-col">Lawrie, Scott <span class="re-tag">RE</span></td><td class="right green">$428,157</td><td class="right gray">$403,553</td><td class="right green">+$24,604</td><td class="right green">+6.1%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:4%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+6%</span></div></td></tr>
+        <tr><td class="name-col">Whitney, Sean <span class="re-tag">RE</span></td><td class="right green">$226,808</td><td class="right gray">$202,937</td><td class="right green">+$23,871</td><td class="right green">+11.8%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:8%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+12%</span></div></td></tr>
+        <tr><td class="name-col">Ramirez, Tyler <span class="re-tag">RE</span></td><td class="right green">$162,167</td><td class="right gray">$143,725</td><td class="right green">+$18,442</td><td class="right green">+12.8%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:9%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+13%</span></div></td></tr>
+        <tr><td class="name-col">Pember, Amanda <span class="re-tag">RE</span></td><td class="right green">$31,816</td><td class="right gray">$14,102</td><td class="right green">+$17,714</td><td class="right yellow">+125.6%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:90%;background:#ffdd57;"></div></div><span class="yellow" style="font-size:11px;">+126%</span></div></td></tr>
+        <tr><td class="name-col">Hantz, Archie <span class="re-tag">RE</span></td><td class="right green">$297,053</td><td class="right gray">$283,333</td><td class="right green">+$13,720</td><td class="right green">+4.8%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:3%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+5%</span></div></td></tr>
+        <tr><td class="name-col">Castrogiovanni, Michael <span class="re-tag">RE</span></td><td class="right green">$445,520</td><td class="right gray">$432,603</td><td class="right green">+$12,917</td><td class="right green">+3.0%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:2%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+3%</span></div></td></tr>
+        <tr><td class="name-col">Trevino, Richard <span class="re-tag">RE</span></td><td class="right green">$303,189</td><td class="right gray">$296,061</td><td class="right green">+$7,128</td><td class="right green">+2.4%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:2%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+2%</span></div></td></tr>
+        <tr><td class="name-col">Elghossein, Soleiman <span class="re-tag">RE</span></td><td class="right green">$64,987</td><td class="right gray">$63,251</td><td class="right green">+$1,736</td><td class="right green">+2.7%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:2%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+3%</span></div></td></tr>
+        <tr><td class="name-col">James, Alexandra <span class="re-tag">RE</span></td><td class="right green">$63,671</td><td class="right gray">$62,949</td><td class="right green">+$722</td><td class="right green">+1.1%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:1%;background:#48c774;"></div></div><span class="green" style="font-size:11px;">+1%</span></div></td></tr>
+        <tr><td class="name-col">Johnson, Michael <span class="re-tag">RE</span></td><td class="right gray">$80,582</td><td class="right gray">$80,582</td><td class="right gray">-$0</td><td class="right gray">0.0%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:1%;background:#555;"></div></div><span class="gray" style="font-size:11px;">flat</span></div></td></tr>
+        <tr><td class="name-col">Cargile, Jeremy <span class="re-tag">RE</span></td><td class="right red">$385,326</td><td class="right gray">$390,654</td><td class="right red">-$5,328</td><td class="right red">-1.4%</td><td><div class="diff-bar-wrap"><div class="diff-bar-track"><div class="diff-bar-fill" style="width:4%;background:#ff5f5f;"></div></div><span class="red" style="font-size:11px;">-1%</span></div></td></tr>
+        <tr style="border-top:2px solid #2a2d3a;">
+          <td style="color:#fff;font-weight:700;padding-top:10px;">TOTAL (17 estimators)</td>
+          <td class="right" style="color:#fff;font-weight:700;padding-top:10px;">$5,912,595</td>
+          <td class="right" style="color:#fff;font-weight:700;padding-top:10px;">$4,867,151</td>
+          <td class="right green" style="font-weight:700;padding-top:10px;">+$1,045,444</td>
+          <td class="right green" style="font-weight:700;padding-top:10px;">+21.5%</td>
+          <td style="padding-top:10px;"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="section">
+  <div class="section-label">Estimators Not in Both Datasets</div>
+  <div class="card" style="padding:12px 0;">
+    <table>
+      <thead><tr><th style="padding-left:16px;">Name</th><th>Status</th><th class="right">Stack GP$</th><th class="right">Proj GP$</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td style="padding-left:16px;" class="name-col">Morales, Adrian <span class="re-tag">RE</span></td><td style="color:#888;">Stack only</td><td class="right gray">$0</td><td class="right gray">&mdash;</td><td style="color:#555;">New hire Mar 2026 &mdash; no proj sheet</td></tr>
+        <tr><td style="padding-left:16px;" class="name-col">Graham, Jessica <span class="re-tag">RE</span></td><td style="color:#888;">Stack only</td><td class="right gray">$0</td><td class="right gray">&mdash;</td><td style="color:#555;">New hire Mar 2026 &mdash; no proj sheet</td></tr>
+        <tr><td style="padding-left:16px;" class="name-col">Baska, Joy</td><td style="color:#888;">Proj only</td><td class="right gray">&mdash;</td><td class="right blue">$1,390,786</td><td style="color:#555;">In workbook but not on Estimators tab of stack rankings</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="section">
+  <div class="section-label">Key Observations</div>
+  <div class="insight green"><span class="pill pill-green">OVERALL</span><strong>The team produced $1.05M more than projections &mdash; 21.5% above plan.</strong> 15 of 17 estimators beat their projected GP$. With all corrections applied, every estimator in this comparison is 99-RE.</div>
+  <div class="insight yellow"><span class="pill pill-yellow">BIGGEST VARIANCE</span><strong>Werling is the most dramatic % outperformer at +143% ($145K over).</strong> Pember second at +126% ($17.7K over). Both projections were likely set conservatively given ramp status.</div>
+  <div class="insight green"><span class="pill pill-green">TOP DOLLAR OVERS</span><strong>Caldwell (+$344K) and Dean (+$341K) account for 66% of the total $1.05M overage.</strong> Both are high-volume, large-portfolio estimators where GP recognition timing likely drives the spread.</div>
+  <div class="insight" style="border-left-color:#ff5f5f;"><span class="pill pill-red">MISSES</span><strong>Only Cargile missed projection at -$5,328 (-1.4%).</strong> Johnson was flat to the dollar. A 1-of-17 miss rate is exceptional. Cargile's miss is rounding noise.</div>
+  <div class="insight blue"><span class="pill pill-blue">TIGHT MODELS</span><strong>James (+1.1%), Elghossein (+2.7%), Trevino (+2.4%), Castrogiovanni (+3.0%) all came in nearly on the number.</strong> Your projections for these estimators are reliably calibrated.</div>
+</div>
+<div style="margin-top:20px;border-top:1px solid #1a1d28;padding-top:12px;font-family:'Space Mono',monospace;font-size:10px;color:#333;">
+  KUSTOM US &mdash; CENTRALIZED ESTIMATING &mdash; GP$ STACK vs PROJ Q1 2026 &nbsp;|&nbsp; GENERATED FOR INTERNAL USE
+</div>
+</body>
+</html>
