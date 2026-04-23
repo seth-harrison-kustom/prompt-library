@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stack Rankings Q1 2026 - RE vs Non-RE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Space Grotesk', sans-serif; background: #090b10; color: #d4d8e8; padding: 28px 32px; font-size: 13px; line-height: 1.5; min-width: 900px; }
+  h1 { font-family: 'Space Mono', monospace; font-size: 20px; color: #fff; letter-spacing: -0.5px; }
+  .subtitle { color: #555; font-size: 12px; margin-top: 4px; margin-bottom: 26px; font-family: 'Space Mono', monospace; }
+  .re-color { color: #ff5f5f; }
+  .nonre-color { color: #5b9ef5; }
+  .good { color: #48c774; }
+  .bad { color: #ff5f5f; }
+  .neutral { color: #888; }
+  .section { margin-bottom: 26px; }
+  .section-label { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #ff5f5f; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: #1e2233; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+  .card { background: #0e1118; border: 1px solid #1e2233; border-radius: 6px; padding: 14px 16px; }
+  .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #444; margin-bottom: 8px; font-family: 'Space Mono', monospace; }
+  .stat-big { font-size: 28px; font-weight: 700; line-height: 1; }
+  .stat-sub { font-size: 11px; color: #555; margin-top: 4px; }
+  .compare-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+  .compare-label { font-size: 10px; font-family: 'Space Mono', monospace; width: 52px; color: #666; }
+  .compare-val { font-size: 16px; font-weight: 700; }
+  .compare-median { font-size: 12px; color: #555; }
+  .compare-note { font-size: 11px; color: #555; margin-top: 6px; border-top: 1px solid #1a1d28; padding-top: 6px; }
+  .bar-container { margin-top: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+  .bar-label { width: 52px; font-size: 10px; font-family: 'Space Mono', monospace; color: #666; }
+  .bar-track { flex: 1; height: 8px; background: #161924; border-radius: 2px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 2px; }
+  .bar-val { width: 60px; font-size: 11px; font-weight: 600; text-align: right; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead tr { border-bottom: 1px solid #1e2233; }
+  th { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: #444; padding: 5px 8px; text-align: left; white-space: nowrap; }
+  td { padding: 5px 8px; border-bottom: 1px solid #13161f; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #0f121c; }
+  .rank-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; min-width: 24px; text-align: center; padding: 1px 4px; border-radius: 3px; background: #1a1d28; color: #aaa; }
+  .rank-top { background: rgba(255,95,95,0.15); color: #ff5f5f; }
+  .delta { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; }
+  .delta-up { color: #48c774; }
+  .delta-dn { color: #ff5f5f; }
+  .delta-flat { color: #555; }
+  .trajectory { font-size: 11px; }
+  .insight-list { display: flex; flex-direction: column; gap: 8px; }
+  .insight { background: #0e1118; border: 1px solid #1e2233; border-left: 3px solid #ff5f5f; border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 12px; line-height: 1.6; }
+  .insight.blue { border-left-color: #5b9ef5; }
+  .insight.green { border-left-color: #48c774; }
+  .insight strong { color: #fff; }
+  .pill { display: inline-block; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; border-radius: 3px; padding: 1px 6px; margin-right: 6px; }
+  .pill-re { background: rgba(255,95,95,0.15); color: #ff5f5f; }
+  .pill-nonre { background: rgba(91,158,245,0.15); color: #5b9ef5; }
+  .pill-green { background: rgba(72,199,116,0.15); color: #48c774; }
+  .pill-yellow { background: rgba(255,221,87,0.12); color: #ffdd57; }
+  .pill-gray { background: rgba(255,255,255,0.06); color: #888; }
+  .nr { color: #333; font-family: 'Space Mono', monospace; font-size: 10px; }
+</style>
+</head>
+<body>
+
+<h1>STACK RANKINGS — Q1 2026</h1>
+<p class="subtitle">// 99-RE REMOTE ESTIMATING vs. NON-RE &nbsp;|&nbsp; ESTIMATORS TAB &nbsp;|&nbsp; ANALYSIS</p>
+
+<div class="section">
+  <div class="section-label">Headline Snapshot</div>
+  <div class="grid4">
+    <div class="card">
+      <div class="card-label">Team Size</div>
+      <div style="display:flex;align-items:baseline;gap:12px;">
+        <div><span class="stat-big re-color">18</span><div class="stat-sub">99-RE</div></div>
+        <div style="color:#333;font-size:20px;">vs</div>
+        <div><span class="stat-big nonre-color">12</span><div class="stat-sub">Non-RE</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Q4&rarr;Q1 Avg Rank Change (+ = up)</div>
+      <div style="display:flex;align-items:baseline;gap:12px;">
+        <div><span class="stat-big good">+2.69</span><div class="stat-sub">99-RE</div></div>
+        <div style="color:#333;font-size:20px;">vs</div>
+        <div><span class="stat-big bad">-1.38</span><div class="stat-sub">Non-RE</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">RE in Top 10 &mdash; Q1 2026</div>
+      <div class="stat-big re-color" style="margin-bottom:4px;">5 of 10</div>
+      <div style="display:flex;gap:12px;font-size:11px;color:#555;"><span>Q4: 4</span><span>Q3: 4</span><span>Q2: 3</span></div>
+      <div class="stat-sub" style="margin-top:4px;">&#8593; Growing every quarter</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Q4&rarr;Q1 Improvers</div>
+      <div style="display:flex;gap:16px;">
+        <div><div class="stat-big good">9</div><div class="stat-sub re-color">RE improved</div></div>
+        <div><div class="stat-big" style="color:#888;">6</div><div class="stat-sub" style="color:#888;">RE declined</div></div>
+      </div>
+      <div class="stat-sub" style="margin-top:4px;">Non-RE: 3 up, 4 down</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">KPI Comparison &mdash; Active Estimators Only</div>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-label">GP $</div>
+      <div class="compare-row"><span class="compare-label re-color">RE</span><span class="compare-val re-color">$302,533</span><span class="compare-median">avg</span><span class="compare-median" style="margin-left:6px;">$272,237 med</span></div>
+      <div class="compare-row"><span class="compare-label nonre-color">Non-RE</span><span class="compare-val nonre-color">$317,164</span><span class="compare-median">avg</span><span class="compare-median" style="margin-left:6px;">$282,363 med</span></div>
+      <div class="bar-container">
+        <div class="bar-row"><span class="bar-label re-color">RE</span><div class="bar-track"><div class="bar-fill" style="width:95%;background:#ff5f5f;"></div></div><span class="bar-val re-color">$302K</span></div>
+        <div class="bar-row"><span class="bar-label nonre-color">Non-RE</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#5b9ef5;"></div></div><span class="bar-val nonre-color">$317K</span></div>
+      </div>
+      <div class="compare-note">Non-RE leads by ~5% avg. Median gap is even smaller &mdash; nearly identical.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">PEI &mdash; Profitability Efficiency Index</div>
+      <div class="compare-row"><span class="compare-label re-color">RE</span><span class="compare-val re-color">1.005</span><span class="compare-median">avg</span><span class="compare-median" style="margin-left:6px;">0.958 med</span></div>
+      <div class="compare-row"><span class="compare-label nonre-color">Non-RE</span><span class="compare-val nonre-color">1.031</span><span class="compare-median">avg</span><span class="compare-median" style="margin-left:6px;">1.089 med</span></div>
+      <div class="bar-container">
+        <div class="bar-row"><span class="bar-label re-color">RE</span><div class="bar-track"><div class="bar-fill" style="width:84%;background:#ff5f5f;"></div></div><span class="bar-val re-color">0.958</span></div>
+        <div class="bar-row"><span class="bar-label nonre-color">Non-RE</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#5b9ef5;"></div></div><span class="bar-val nonre-color">1.089</span></div>
+      </div>
+      <div class="compare-note">RE median PEI sub-1.0 is the key weakness. Several estimators in the 0.72-0.86 range dragging this metric.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Volume vs Size Tradeoff</div>
+      <div style="margin-bottom:10px;">
+        <div class="compare-row"><span class="compare-label re-color">RE</span><span class="compare-val re-color">68.9</span><span class="compare-median">avg # estimates</span></div>
+        <div class="compare-row"><span class="compare-label nonre-color">Non-RE</span><span class="compare-val nonre-color">55.1</span><span class="compare-median">avg # estimates</span></div>
+      </div>
+      <div style="border-top:1px solid #1e2233;padding-top:8px;margin-top:2px;">
+        <div class="compare-row"><span class="compare-label re-color">RE</span><span class="compare-val" style="color:#aaa;">$14,811</span><span class="compare-median">avg est size</span></div>
+        <div class="compare-row"><span class="compare-label nonre-color">Non-RE</span><span class="compare-val nonre-color">$46,873</span><span class="compare-median">avg est size</span></div>
+      </div>
+      <div class="compare-note">RE writes 25% more estimates. Non-RE writes 3x larger estimates. Structural difference - volume vs. complexity.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">RE Individual Rank Movement &mdash; All Quarters</div>
+  <div class="card" style="padding:12px 0;">
+    <table>
+      <thead><tr><th style="padding-left:16px;">Name</th><th>Title</th><th>Q2 '25</th><th>Q3 '25</th><th>Q4 '25</th><th>Q1 '26</th><th>Q4&rarr;Q1 &Delta;</th><th>Overall</th></tr></thead>
+      <tbody>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Caldwell, Arcadia</td><td style="color:#555;">Estimator</td><td><span class="rank-badge rank-top">4</span></td><td><span class="rank-badge rank-top">4</span></td><td><span class="rank-badge rank-top">2</span></td><td><span class="rank-badge rank-top">3</span></td><td><span class="delta delta-flat">&plusmn;0</span></td><td class="trajectory good">Consistent top 5 anchor</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Lawrie, Scott</td><td style="color:#555;">Estimator</td><td><span class="rank-badge">8</span></td><td><span class="rank-badge">14</span></td><td><span class="rank-badge">18</span></td><td><span class="rank-badge rank-top">6</span></td><td><span class="delta delta-up">+12</span></td><td class="trajectory good">Big bounce-back this Q</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Werling, Bryan</td><td style="color:#555;">Estimator</td><td><span class="nr">NR</span></td><td><span class="rank-badge">22</span></td><td><span class="rank-badge">19</span></td><td><span class="rank-badge rank-top">7</span></td><td><span class="delta delta-up">+12</span></td><td class="trajectory good">Rapid ascent since entry</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Castrogiovanni, M.</td><td style="color:#555;">Mit Estimator</td><td><span class="rank-badge">14</span></td><td><span class="rank-badge rank-top">7</span></td><td><span class="rank-badge">12</span></td><td><span class="rank-badge rank-top">9</span></td><td><span class="delta delta-up">+3</span></td><td class="trajectory neutral">Volatile but top-15 range</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Denham, Richard</td><td style="color:#555;">Sr. Estimator</td><td><span class="rank-badge">10</span></td><td><span class="rank-badge">15</span></td><td><span class="rank-badge">25</span></td><td><span class="rank-badge rank-top">10</span></td><td><span class="delta delta-up">+15</span></td><td class="trajectory good">Biggest Q4&rarr;Q1 jump on board</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Cargile, Jeremy</td><td style="color:#555;">Recon Estimator</td><td><span class="rank-badge">15</span></td><td><span class="rank-badge">26</span></td><td><span class="rank-badge">22</span></td><td><span class="rank-badge">11</span></td><td><span class="delta delta-up">+11</span></td><td class="trajectory good">Strong recovery after Q3 dip</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Llamas, David</td><td style="color:#555;">Mit Estimator</td><td><span class="rank-badge">12</span></td><td><span class="rank-badge">13</span></td><td><span class="rank-badge rank-top">4</span></td><td><span class="rank-badge">12</span></td><td><span class="delta delta-dn">-8</span></td><td class="trajectory neutral">Spike in Q4, gave it back</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Whitney, Sean</td><td style="color:#555;">Recon Estimator</td><td><span class="rank-badge">19</span></td><td><span class="rank-badge rank-top">8</span></td><td><span class="rank-badge rank-top">9</span></td><td><span class="rank-badge">13</span></td><td><span class="delta delta-dn">-4</span></td><td class="trajectory neutral">Climbed, now stalling slightly</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Taber, Haleigh</td><td style="color:#555;">Recon Estimator</td><td><span class="rank-badge">22</span></td><td><span class="rank-badge">19</span></td><td><span class="rank-badge">15</span></td><td><span class="rank-badge">14</span></td><td><span class="delta delta-up">+1</span></td><td class="trajectory good">Slow, steady improvement all year</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Ramirez, Tyler</td><td style="color:#555;">Sr. Estimator</td><td><span class="rank-badge">32</span></td><td><span class="rank-badge">31</span></td><td><span class="rank-badge">14</span></td><td><span class="rank-badge">15</span></td><td><span class="delta delta-flat">-1</span></td><td class="trajectory good">Massive improvement Q2&rarr;Q1 (+17)</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Johnson, Michael</td><td style="color:#555;">Recon Estimator</td><td><span class="rank-badge">25</span></td><td><span class="rank-badge">18</span></td><td><span class="rank-badge">17</span></td><td><span class="rank-badge">17</span></td><td><span class="delta delta-flat">0</span></td><td class="trajectory good">Consistent upward year trend</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Trevino, Richard</td><td style="color:#555;">Recon Estimator</td><td><span class="rank-badge">23</span></td><td><span class="rank-badge">32</span></td><td><span class="rank-badge">24</span></td><td><span class="rank-badge">18</span></td><td><span class="delta delta-up">+6</span></td><td class="trajectory neutral">Volatile - net flat over year</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Hantz, Archie</td><td style="color:#555;">Estimator</td><td><span class="nr">NR</span></td><td><span class="rank-badge rank-top">9</span></td><td><span class="rank-badge rank-top">10</span></td><td><span class="rank-badge">19</span></td><td><span class="delta delta-dn">-9</span></td><td class="trajectory bad">Held top-10 two straight Q's, dropped hard</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Non-RE &mdash; Individual Rank Movement</div>
+  <div class="card" style="padding:12px 0;">
+    <table>
+      <thead><tr><th style="padding-left:16px;">Name</th><th>Division</th><th>Q2 '25</th><th>Q3 '25</th><th>Q4 '25</th><th>Q1 '26</th><th>Q4&rarr;Q1 &Delta;</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Dean, Michael</td><td style="color:#555;">S. Seattle</td><td><span class="rank-badge rank-top">5</span></td><td><span class="rank-badge rank-top">6</span></td><td><span class="rank-badge rank-top">6</span></td><td><span class="rank-badge rank-top">1</span></td><td><span class="delta delta-up">+5</span></td><td class="good">Broke through to #1 overall</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Hilbert, Jason</td><td style="color:#555;">Pasco</td><td><span class="rank-badge rank-top">6</span></td><td><span class="rank-badge rank-top">2</span></td><td><span class="rank-badge rank-top">5</span></td><td><span class="rank-badge rank-top">2</span></td><td><span class="delta delta-up">+3</span></td><td class="good">Consistent top performer</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Mendoza Flores, M.</td><td style="color:#555;">Pasco</td><td><span class="rank-badge rank-top">1</span></td><td><span class="rank-badge rank-top">1</span></td><td><span class="rank-badge rank-top">1</span></td><td><span class="rank-badge rank-top">4</span></td><td><span class="delta delta-dn">-3</span></td><td class="bad">Slipping from dominant #1 position</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Bergquist, Blake</td><td style="color:#555;">Pasco</td><td><span class="rank-badge rank-top">2</span></td><td><span class="rank-badge rank-top">3</span></td><td><span class="rank-badge rank-top">7</span></td><td><span class="rank-badge rank-top">5</span></td><td><span class="delta delta-up">+2</span></td><td class="neutral">Down from Q2 peak, stabilizing</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Baker, Keith</td><td style="color:#555;">Pasco</td><td><span class="rank-badge rank-top">7</span></td><td><span class="rank-badge">21</span></td><td><span class="rank-badge rank-top">8</span></td><td><span class="rank-badge rank-top">8</span></td><td><span class="delta delta-flat">0</span></td><td class="neutral">Very volatile, net flat</td></tr>
+        <tr><td style="padding-left:16px;color:#fff;font-weight:500;">Borrelli, Chris</td><td style="color:#555;">Gold River</td><td><span class="rank-badge rank-top">3</span></td><td><span class="rank-badge rank-top">10</span></td><td><span class="rank-badge">11</span></td><td><span class="rank-badge">20</span></td><td><span class="delta delta-dn">-9</span></td><td class="bad">Biggest faller on entire board</td></tr>
+      </tbody>
+    </table>
+    <div style="padding:8px 16px;font-size:11px;color:#444;border-top:1px solid #1e2233;margin-top:4px;">Norris, Brown, Rodriguez, Petreski (San Diego) + Little (S. Seattle) are new &mdash; no prior quarter history available.</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Key Observations &amp; Patterns</div>
+  <div class="insight-list">
+    <div class="insight green"><span class="pill pill-green">MOMENTUM</span><strong>RE collectively improved this quarter - Non-RE did not.</strong> 9 of 16 RE estimators with Q4 data improved rank Q4&rarr;Q1. Only 3 of 8 Non-RE with history improved. The team's avg rank change was +2.69 while Non-RE averaged -1.38. RE had the stronger quarter.</div>
+    <div class="insight green"><span class="pill pill-green">TOP 10</span><strong>RE top-10 representation has grown every single quarter</strong> &mdash; 3 &rarr; 4 &rarr; 4 &rarr; 5. Now at parity with Non-RE (5 each) despite RE being 50% larger. The team is punching at weight and trending toward majority top-10 share.</div>
+    <div class="insight green"><span class="pill pill-green">VOLUME</span><strong>RE dominates on throughput.</strong> RE averages 68.9 approved estimates vs. 55.1 for Non-RE &mdash; 25% more avg, 30% more at median. RE is the engine that runs the estimate pipeline.</div>
+    <div class="insight blue"><span class="pill pill-nonre">DEAL SIZE</span><strong>Non-RE writes 3x larger estimates on average.</strong> $46,873 vs. $14,811 per estimate. This is structural &mdash; non-RE handles complex recon jobs, RE handles programmatic/mitigation volume. Worth questioning whether ranking KPIs adequately control for this split.</div>
+    <div class="insight" style="border-left-color:#ffdd57;"><span class="pill pill-yellow">PEI GAP</span><strong>RE's PEI median (0.958) is the primary weakness.</strong> Avg is barely at 1.005 but median below 1.0 means more than half the team is there. Non-RE median is 1.089. Specific drag: Trevino (0.803), Hantz (0.803), Elghossein (0.723).</div>
+    <div class="insight"><span class="pill pill-re">PASCO EFFECT</span><strong>Non-RE is heavily dominated by a single office.</strong> 4 of the 6 Non-RE estimators with full history are Pasco (99-11). "Non-RE" as a benchmark is partially just "Pasco vs. the world."</div>
+    <div class="insight"><span class="pill pill-re">WATCH LIST</span><strong>Two RE estimators who held top-10 positions in Q4 fell hard in Q1:</strong> Hantz (10&rarr;19, -9) and Llamas (4&rarr;12, -8). Both earned top-10 and gave it back in one quarter.</div>
+    <div class="insight"><span class="pill pill-gray">NEW HIRES</span><strong>6 estimators across both groups have zero GP $ and are very new.</strong> RE side: Morales and Graham (both hired Mar 2026, under 6 weeks in). Their composite scores will shift significantly as GP ramps.</div>
+  </div>
+</div>
+
+<div style="margin-top:20px;border-top:1px solid #1a1d28;padding-top:12px;font-family:'Space Mono',monospace;font-size:10px;color:#333;">
+  KUSTOM US - CENTRALIZED ESTIMATING - STACK RANKINGS Q1 2026 ANALYSIS &nbsp;|&nbsp; SOURCE: ESTIMATORS TAB &nbsp;|&nbsp; GENERATED FOR INTERNAL USE
+</div>
+
+</body>
+</html>
