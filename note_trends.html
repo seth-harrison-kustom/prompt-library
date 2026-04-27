@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kustom US — Note Activity Trends</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --accent: #4f8ef7;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --purple: #a78bfa;
+    --teal: #2dd4bf;
+    --orange: '#fb923c';
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.5; }
+  header { padding: 24px 32px 16px; border-bottom: 1px solid var(--border); }
+  header h1 { font-size: 22px; font-weight: 700; }
+  header p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px 32px; }
+  .grid.single { grid-template-columns: 1fr; }
+  .grid.thirds { grid-template-columns: 1fr 1fr 1fr; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; }
+  .card h2 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 2px; }
+  .card .subtitle { font-size: 12px; color: #4a5060; margin-bottom: 14px; }
+  .chart-wrap { position: relative; }
+  .kpi-row { display: flex; gap: 16px; padding: 16px 32px 0; }
+  .kpi { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; }
+  .kpi .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .kpi .value { font-size: 26px; font-weight: 700; margin-top: 2px; }
+  .kpi .change { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .section-label { padding: 8px 32px 0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #3d4251; }
+  .insight { background: #1e2130; border-left: 3px solid var(--amber); border-radius: 0 6px 6px 0; padding: 10px 14px; margin-top: 12px; font-size: 12px; color: #b0b8cc; line-height: 1.6; }
+  .insight strong { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Kustom US — Note Activity Trends</h1>
+  <p>1,739,194 notes · Jan 2023 – Apr 2026 · all divisions &nbsp;·&nbsp; Generated 2026-04-27</p>
+</header>
+
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="label">Total Notes</div>
+    <div class="value" style="color:#4f8ef7">1.74M</div>
+    <div class="change">Jan 2023 – Apr 2026</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Monthly Run Rate (2026)</div>
+    <div class="value" style="color:#34d399">~60K</div>
+    <div class="change">4× the 2023 baseline of ~15K/mo</div>
+  </div>
+  <div class="kpi">
+    <div class="label">AR$ Notes (all time)</div>
+    <div class="value" style="color:#fbbf24">90,048</div>
+    <div class="change">AR$ tagging started Jun 2024 — zero before</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Tagged Rate (Apr 2026)</div>
+    <div class="value" style="color:#a78bfa">15.4%</div>
+    <div class="change">Up from ~0% pre-mid-2024</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Avg Notes/Job</div>
+    <div class="value" style="color:#2dd4bf">28–40</div>
+    <div class="change">Repair 39.8 · MIT 27.8 · varies by office</div>
+  </div>
+</div>
+
+<div class="section-label" style="margin-top:20px">Volume Over Time</div>
+
+<div class="grid single">
+  <div class="card">
+    <h2>Monthly Note Volume</h2>
+    <div class="subtitle">Total notes written per month by event_date — Seth joined Jul 14 2025</div>
+    <div class="chart-wrap" style="height:280px"><canvas id="totalNotesChart"></canvas></div>
+    <div class="insight"><strong>What happened Jun 2024:</strong> AR$ tagging went live. Note count jumped immediately — the tag created a forcing function for coordinators to log collection status on every overdue job. That single workflow change added ~4,000 structured notes per month.</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>MIT vs Repair Notes / Month</h2>
+    <div class="subtitle">Repair consistently outpaces MIT — more touches per job on longer lifecycle</div>
+    <div class="chart-wrap" style="height:260px"><canvas id="mitRepairChart"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h2>Structured Tag Velocity</h2>
+    <div class="subtitle">How many structured (non-freeform) notes written per month — new tags appearing over time</div>
+    <div class="chart-wrap" style="height:260px"><canvas id="tagVelocityChart"></canvas></div>
+    <div class="insight"><strong>Sep 2025 step-change:</strong> EST APPROVED, EST IP, SUP UPLOADED, SUP APPROVED, SUP IP all activated simultaneously — structured estimate/supplement workflow rollout.</div>
+  </div>
+</div>
+
+<div class="section-label">Tag Breakdown by Month</div>
+
+<div class="grid single">
+  <div class="card">
+    <h2>Tagged Notes by Category — Monthly (2024–2026)</h2>
+    <div class="subtitle">Stacked bars show which workflows are generating structured notes · FREEFORM excluded</div>
+    <div class="chart-wrap" style="height:300px"><canvas id="tagStackChart"></canvas></div>
+  </div>
+</div>
+
+<div class="section-label">Office-Level Note Behavior</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Notes per Job by Office — 2025</h2>
+    <div class="subtitle">Documentation intensity · higher = more active file management</div>
+    <div class="chart-wrap" style="height:360px"><canvas id="notesPerJobChart"></canvas></div>
+    <div class="insight"><strong>Dallas and San Diego outliers:</strong> Dallas 8.5 notes/job (new office, lean workflow). San Diego 5.7 (non-program heavy, minimal DASH notes — different operating model).</div>
+  </div>
+
+  <div class="card">
+    <h2>AR$ Notes per Job by Office — 2026 YTD</h2>
+    <div class="subtitle">Collection friction signal · how many AR$ notes generated per unique job</div>
+    <div class="chart-wrap" style="height:360px"><canvas id="arPerJobChart"></canvas></div>
+    <div class="insight"><strong>Dallas flag:</strong> 35% of all Dallas notes are AR$ — highest in the portfolio. New office building receivables fast. Sacramento (both) and Raleigh also elevated vs the rest.</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>% Structured (Tagged) Notes by Office — 2026 YTD</h2>
+    <div class="subtitle">Workflow discipline signal · higher % = staff using structured tags more consistently</div>
+    <div class="chart-wrap" style="height:320px"><canvas id="pctTaggedChart"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h2>Notes per Job by Job Type</h2>
+    <div class="subtitle">Type 04 (Repair) most heavily documented — longer job lifecycle generates more touches</div>
+    <div class="chart-wrap" style="height:320px"><canvas id="jobTypeDepthChart"></canvas></div>
+    <div class="insight"><strong>Type codes:</strong> 01=Fire, 02=Water/MIT, 03=Mold/MIT, 04=Repair, 05=Emergency Resp, 07=Board-Up/Repair, 08=Cleaning, 09=CAT, 10=Contract Work, 12/13=Commercial</div>
+  </div>
+</div>
+
+<div class="section-label">Activity Patterns</div>
+
+<div class="grid thirds">
+  <div class="card">
+    <h2>Notes by Day of Week — 2025+</h2>
+    <div class="subtitle">Total notes + AR$ notes by weekday</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="dowChart"></canvas></div>
+    <div class="insight"><strong>Tuesday peak:</strong> Most active note day. Friday drops notably. Weekend is near-zero — field staff not in DASH.</div>
+  </div>
+
+  <div class="card">
+    <h2>Notes by Hour of Day — 2025+</h2>
+    <div class="subtitle">All timezones combined — peak band is 11am–3pm</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="hodChart"></canvas></div>
+    <div class="insight"><strong>12pm–1pm peak</strong> suggests coordinators catch up during and after lunch. Notes after 6pm are cross-timezone (West Coast offices still active at 9pm ET).</div>
+  </div>
+
+  <div class="card">
+    <h2>Top Note Writers — 2025+</h2>
+    <div class="subtitle">By note volume; AR$ count shows collection-focused coordinators</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="writersChart"></canvas></div>
+  </div>
+</div>
+
+<div style="padding: 12px 32px 32px; color: #3d4251; font-size: 11px; margin-top:8px">
+  Note: event_date used throughout (when note was entered, not when it was pulled). "Tagged" = any tag other than FREEFORM. 2026 partial = Jan–Apr 26.
+</div>
+
+<script>
+Chart.defaults.color = '#8892a4';
+Chart.defaults.borderColor = '#2a2d3a';
+Chart.defaults.font.size = 11;
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+
+const C = {
+  blue:   '#4f8ef7',
+  green:  '#34d399',
+  amber:  '#fbbf24',
+  red:    '#f87171',
+  purple: '#a78bfa',
+  teal:   '#2dd4bf',
+  orange: '#fb923c',
+  pink:   '#f472b6',
+  gray:   '#6b7280',
+};
+
+const sethIdx = 30;
+
+function sethPlugin(idx) {
+  return {
+    id: 'seth',
+    afterDraw(chart) {
+      const x = chart.scales.x.getPixelForTick(idx);
+      if (!x) return;
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.beginPath();
+      ctx.setLineDash([5,4]);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 1.5;
+      ctx.moveTo(x, chart.chartArea.top);
+      ctx.lineTo(x, chart.chartArea.bottom);
+      ctx.stroke();
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText('Seth', x + 4, chart.chartArea.top + 12);
+      ctx.restore();
+    }
+  };
+}
+
+const monthly = [
+  ['2023-01', 16278,  7853,  8409,    0,   1,  13,   0,  0,  0,   14],
+  ['2023-02', 15157,  6139,  8971,    0,   0,   1,   0,  0,  0,    1],
+  ['2023-03', 20203,  8232, 11930,    0,   0,   1,   0,  0,  0,    1],
+  ['2023-04', 15470,  6657,  8760,    0,   0,   0,   0,  0,  0,    0],
+  ['2023-05', 16628,  6445, 10148,    0,   0,   6,   0,  0,  0,    6],
+  ['2023-06', 15349,  6246,  9063,    0,   0,   0,   0,  0,  0,    0],
+  ['2023-07', 33916, 14332, 19523,    0,  83, 307,  15,  0,  0,  406],
+  ['2023-08', 42345, 17004, 25279,    0,  89, 337,  14,  0,  0,  440],
+  ['2023-09', 35912, 14269, 21601,    0,  83, 202,  19,  0,  0,  304],
+  ['2023-10', 35320, 14244, 20927,    0,  68, 236,  41,  0,  0,  350],
+  ['2023-11', 31055, 12050, 18859,    0,  66, 179,  58,  0,  0,  306],
+  ['2023-12', 30213, 12678, 17363,    0,  54, 111,  97,  0,  0,  265],
+  ['2024-01', 40942, 19375, 21300,    0, 157, 119,  97,  0,  0,  376],
+  ['2024-02', 43620, 19898, 23451,    0, 176,  79,  51,  0,  0,  310],
+  ['2024-03', 43764, 19132, 24322,    0, 136,  60,  65,  0,  0,  263],
+  ['2024-04', 42932, 17933, 24695,    0, 158,  79,  29,  0,  0,  272],
+  ['2024-05', 41056, 17663, 23202,    0, 127,  68,  31,  0,  0,  232],
+  ['2024-06', 39610, 16696, 22656, 1262, 155,  58,  34,  0,  0, 1515],
+  ['2024-07', 51594, 22648, 28744, 2446, 225, 140,  52,  0,  0, 2865],
+  ['2024-08', 56658, 23854, 32658, 3990, 277, 221,  51,  0,  0, 4545],
+  ['2024-09', 56467, 23317, 32976, 4611, 333, 359,  49,  0,  0, 5356],
+  ['2024-10', 58602, 23172, 35245, 4722, 365, 165,  46,  0,  0, 5301],
+  ['2024-11', 48432, 19429, 28843, 4045, 226, 111,  28,  1,  0, 4413],
+  ['2024-12', 49534, 18974, 30357, 3964, 259, 129,  34,  0,  0, 4386],
+  ['2025-01', 54887, 21721, 32989, 4707, 230,  94,  35,  0,  0, 5066],
+  ['2025-02', 49513, 19737, 29638, 4235, 221,  97,  25,  0,  0, 4578],
+  ['2025-03', 53740, 20709, 32918, 4625, 246,  97,  27,  0,  0, 4997],
+  ['2025-04', 53594, 20221, 33271, 3888, 164, 158,  14,  0,  0, 4226],
+  ['2025-05', 48219, 18708, 29421, 2947, 172, 143,  13,  0,  0, 3279],
+  ['2025-06', 46357, 18250, 28011, 3973, 180, 119,  23,  0,  0, 4302],
+  ['2025-07', 56157, 22804, 33235, 5044, 213, 144,  24,  0,  0, 5427],
+  ['2025-08', 56412, 23833, 32490, 3823, 357, 299,  55,  0,  0, 4540],
+  ['2025-09', 56833, 23143, 33494, 3857, 630, 617, 318,202, 45, 5867],
+  ['2025-10', 56071, 23279, 32654, 4124, 663, 880, 398,225, 79, 6692],
+  ['2025-11', 44481, 19353, 24965, 3778, 526, 625, 341,172, 77, 5778],
+  ['2025-12', 52566, 22222, 30145, 3493, 830, 655, 496,275,160, 6203],
+  ['2026-01', 62438, 28276, 33934, 3773,1110, 788, 630,360,222, 7279],
+  ['2026-02', 57859, 25600, 32123, 4424,1151, 681, 640,336,226, 7860],
+  ['2026-03', 60940, 24701, 36112, 4724,1301, 806, 834,428,383, 9311],
+  ['2026-04', 48070, 18278, 29673, 3593,1108, 655, 666,378,325, 7407],
+];
+
+const mlabels = monthly.map(d => d[0]);
+
+new Chart(document.getElementById('totalNotesChart'), {
+  type: 'line',
+  plugins: [sethPlugin(sethIdx)],
+  data: {
+    labels: mlabels,
+    datasets: [{
+      label: 'Total notes',
+      data: monthly.map(d => d[1]),
+      borderColor: C.blue,
+      backgroundColor: C.blue + '22',
+      fill: true,
+      tension: 0.35,
+      pointRadius: 2,
+    }, {
+      label: 'AR$ notes',
+      data: monthly.map(d => d[4]),
+      borderColor: C.amber,
+      backgroundColor: 'transparent',
+      tension: 0.35,
+      pointRadius: 2,
+      borderWidth: 1.5,
+    }, {
+      label: 'Tagged (non-freeform)',
+      data: monthly.map(d => d[10]),
+      borderColor: C.purple,
+      backgroundColor: 'transparent',
+      tension: 0.35,
+      pointRadius: 2,
+      borderWidth: 1.5,
+      borderDash: [4,3],
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
+    scales: {
+      x: { ticks: { maxRotation: 45, font: { size: 10 } } },
+      y: { title: { display: true, text: 'Notes' }, ticks: { callback: v => (v/1000).toFixed(0)+'K' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('mitRepairChart'), {
+  type: 'bar',
+  plugins: [sethPlugin(sethIdx)],
+  data: {
+    labels: mlabels,
+    datasets: [{
+      label: 'MIT',
+      data: monthly.map(d => d[2]),
+      backgroundColor: C.teal + 'aa',
+      stack: 's'
+    },{
+      label: 'Repair',
+      data: monthly.map(d => d[3]),
+      backgroundColor: C.orange + 'aa',
+      stack: 's'
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
+    scales: {
+      x: { ticks: { maxRotation: 45, font: { size: 9 } } },
+      y: { ticks: { callback: v => (v/1000).toFixed(0)+'K' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('tagVelocityChart'), {
+  type: 'line',
+  plugins: [sethPlugin(sethIdx)],
+  data: {
+    labels: mlabels,
+    datasets: [
+      { label: 'AR$', data: monthly.map(d=>d[4]), borderColor: C.amber, backgroundColor:'transparent', tension:0.3, pointRadius:2, borderWidth:2 },
+      { label: 'Customer Contact', data: monthly.map(d=>d[5]), borderColor: C.green, backgroundColor:'transparent', tension:0.3, pointRadius:2, borderWidth:1.5 },
+      { label: 'Job Update', data: monthly.map(d=>d[6]), borderColor: C.blue, backgroundColor:'transparent', tension:0.3, pointRadius:2, borderWidth:1.5 },
+      { label: 'Adjuster Contact', data: monthly.map(d=>d[7]), borderColor: C.purple, backgroundColor:'transparent', tension:0.3, pointRadius:2, borderWidth:1.5 },
+      { label: 'Est Approved', data: monthly.map(d=>d[8]), borderColor: C.teal, backgroundColor:'transparent', tension:0.3, pointRadius:2, borderWidth:1.5 },
+      { label: 'Est IP', data: monthly.map(d=>d[9]), borderColor: C.red, backgroundColor:'transparent', tension:0.3, pointRadius:2, borderWidth:1.5 },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } } },
+    scales: {
+      x: { ticks: { maxRotation: 45, font: { size: 9 } } },
+      y: { title: { display: true, text: 'Notes' } }
+    }
+  }
+});
+
+const tagStart = 12;
+const tagLabels = mlabels.slice(tagStart);
+new Chart(document.getElementById('tagStackChart'), {
+  type: 'bar',
+  plugins: [sethPlugin(sethIdx - tagStart)],
+  data: {
+    labels: tagLabels,
+    datasets: [
+      { label: 'AR$', data: monthly.slice(tagStart).map(d=>d[4]), backgroundColor: C.amber+'cc', stack:'s' },
+      { label: 'Customer Contact', data: monthly.slice(tagStart).map(d=>d[5]), backgroundColor: C.green+'cc', stack:'s' },
+      { label: 'Job Update', data: monthly.slice(tagStart).map(d=>d[6]), backgroundColor: C.blue+'cc', stack:'s' },
+      { label: 'Adjuster Contact', data: monthly.slice(tagStart).map(d=>d[7]), backgroundColor: C.purple+'cc', stack:'s' },
+      { label: 'Est Approved', data: monthly.slice(tagStart).map(d=>d[8]), backgroundColor: C.teal+'cc', stack:'s' },
+      { label: 'Est IP', data: monthly.slice(tagStart).map(d=>d[9]), backgroundColor: C.red+'cc', stack:'s' },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
+    scales: {
+      x: { ticks: { maxRotation: 45, font: { size: 10 } } },
+      y: { title: { display: true, text: 'Structured notes' } }
+    }
+  }
+});
+
+const officeDepth2025 = [
+  ['Seattle, WA',               48.8, 1110,  5.7,  3.9],
+  ['Jacksonville, FL',          46.4,  606, 13.1, 11.9],
+  ['Sacramento (Fairfield)',     41.8,  606, 22.5, 21.9],
+  ['Charlotte, NC',             39.9, 1170,  6.4,  2.6],
+  ['Tucson, AZ',                39.2, 1096,  5.8,  5.6],
+  ['Kalamazoo, MI',             35.2,  987, 12.8,  7.3],
+  ['Michigan Center, MI',       35.0,  688, 10.2,  6.1],
+  ['Pompano Beach, FL',         34.9,  442,  8.7,  5.1],
+  ['Raleigh/Durham, NC',        34.7,  761, 18.4, 13.2],
+  ['Spokane, WA',               34.7,  792,  4.8,  3.4],
+  ['Atlanta, GA',               33.5,  525, 13.5,  4.1],
+  ['Orlando, FL',               33.2,  860,  5.3,  5.0],
+  ['Sacramento (Gold River)',   33.1, 1642, 19.5, 18.7],
+  ['Tacoma, WA',                30.2, 1438, 10.3,  8.6],
+  ['Indianapolis, IN',          29.1, 1235, 10.0,  8.7],
+  ['Phoenix, AZ',               25.8,  875,  9.3,  9.2],
+  ['Yakima, WA',                23.3,  395,  2.1,  2.1],
+  ['Ventura, CA',               23.0,  399,  7.9,  2.2],
+  ['Pasco, WA',                 21.0, 1748,  2.8,  2.7],
+  ['Santa Barbara, CA',         19.4, 1162,  1.4,  1.3],
+  ['Santa Maria, CA',           17.4,  240,  3.2,  2.3],
+  ['Dallas, TX',                 8.5,  656, 16.4, 16.4],
+  ['San Diego, CA',              5.7,  675,  0.0,  0.0],
+  ['National',                   4.9,  575,  3.0,  2.9],
+].sort((a,b) => a[1]-b[1]);
+
+const offLabels = officeDepth2025.map(d=>d[0]);
+
+new Chart(document.getElementById('notesPerJobChart'), {
+  type: 'bar',
+  data: {
+    labels: offLabels,
+    datasets: [{
+      label: 'Notes per job',
+      data: officeDepth2025.map(d=>d[1]),
+      backgroundColor: officeDepth2025.map(d =>
+        d[1] < 10 ? C.red+'aa' : d[1] < 20 ? C.amber+'aa' : C.blue+'aa'
+      ),
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { title: { display: true, text: 'Avg notes per job (2025)' } },
+      y: { ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+const arOffices = [
+  ['Sacramento (Gold River)',   3.00, 12.5],
+  ['Sacramento (Fairfield)',    2.66, 12.6],
+  ['Raleigh/Durham, NC',        2.40, 14.2],
+  ['Santa Maria, CA',           2.28, 15.1],
+  ['Dallas, TX',                2.00, 34.9],
+  ['Seattle, WA',               1.84,  5.2],
+  ['Spokane, WA',               1.64,  7.6],
+  ['Phoenix, AZ',               1.55, 12.6],
+  ['Kalamazoo, MI',             1.29,  6.3],
+  ['Atlanta, GA',               1.13,  5.9],
+  ['Orlando, FL',               1.12,  6.4],
+  ['Michigan Center, MI',       1.02,  5.3],
+  ['Ventura, CA',               0.91,  5.4],
+  ['Jacksonville, FL',          0.84,  4.2],
+  ['Charlotte, NC',             0.80,  2.9],
+  ['Tucson, AZ',                0.73,  3.6],
+  ['Indianapolis, IN',          0.65,  3.4],
+  ['Pompano Beach, FL',         0.61,  2.8],
+  ['Pasco, WA',                 0.57,  4.9],
+  ['Yakima, WA',                0.56,  4.8],
+  ['Tacoma, WA',                0.51,  3.7],
+  ['Louisville, KY',            0.43,  3.0],
+  ['Santa Barbara, CA',         0.30,  2.3],
+  ['National',                  0.29,  6.9],
+  ['San Diego, CA',             0.00,  0.1],
+].sort((a,b) => a[1]-b[1]);
+
+new Chart(document.getElementById('arPerJobChart'), {
+  type: 'bar',
+  data: {
+    labels: arOffices.map(d=>d[0]),
+    datasets: [{
+      label: 'AR$ notes per job',
+      data: arOffices.map(d=>d[1]),
+      backgroundColor: arOffices.map(d =>
+        d[1] >= 2.0 ? C.red+'cc' : d[1] >= 1.0 ? C.amber+'cc' : C.green+'88'
+      ),
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { title: { display: true, text: 'AR$ notes / unique job (2026 YTD)' } },
+      y: { ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+const pctTagged2026 = [
+  ['Dallas, TX',               35.1],
+  ['Ventura, CA',              28.7],
+  ['Atlanta, GA',              26.0],
+  ['Raleigh/Durham, NC',       26.4],
+  ['Sacramento (Fairfield)',   18.6],
+  ['Santa Maria, CA',          18.9],
+  ['Kalamazoo, MI',            20.1],
+  ['Sacramento (Gold River)',  17.1],
+  ['Michigan Center, MI',      16.7],
+  ['Orlando, FL',               9.8],
+  ['Pompano Beach, FL',         9.7],
+  ['Jacksonville, FL',          9.7],
+  ['Indianapolis, IN',          9.6],
+  ['Tucson, AZ',                8.6],
+  ['Phoenix, AZ',              15.1],
+  ['Spokane, WA',              13.6],
+  ['Charlotte, NC',            12.7],
+  ['Seattle, WA',              10.9],
+  ['Tacoma, WA',               10.1],
+  ['Yakima, WA',                5.3],
+  ['Pasco, WA',                 5.1],
+  ['Louisville, KY',            3.5],
+  ['Santa Barbara, CA',         2.4],
+  ['National',                  7.1],
+  ['San Diego, CA',             0.1],
+].sort((a,b) => a[1]-b[1]);
+
+new Chart(document.getElementById('pctTaggedChart'), {
+  type: 'bar',
+  data: {
+    labels: pctTagged2026.map(d=>d[0]),
+    datasets: [{
+      label: '% structured notes',
+      data: pctTagged2026.map(d=>d[1]),
+      backgroundColor: pctTagged2026.map(d =>
+        d[1] >= 25 ? C.purple+'cc' : d[1] >= 15 ? C.blue+'cc' : C.gray+'88'
+      ),
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { title: { display: true, text: '% of notes with structured tag (2026 YTD)' }, ticks: { callback: v => v+'%' } },
+      y: { ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+const jtData = [
+  { type: '04 — Repair',          npj: 39.8, jobs: 12099 },
+  { type: '02 — Water/MIT',       npj: 27.8, jobs:  9057 },
+  { type: '03 — Mold/MIT',        npj: 25.9, jobs:  1057 },
+  { type: '10 — Contract Work',   npj: 22.2, jobs:  1194 },
+  { type: '06 — Sewage',          npj: 18.4, jobs:   127 },
+  { type: '01 — Fire',            npj: 20.1, jobs:  1043 },
+  { type: '07 — Board-Up/Repair', npj: 20.7, jobs:  1005 },
+  { type: '08 — Cleaning',        npj: 16.0, jobs:   704 },
+  { type: '05 — Emergency Resp',  npj: 14.8, jobs:   736 },
+  { type: '13 — Commercial',      npj: 15.9, jobs:    85 },
+  { type: '09 — CAT',             npj: 13.1, jobs:   252 },
+  { type: '12 — Other',           npj:  5.6, jobs:   108 },
+].sort((a,b) => a.npj - b.npj);
+
+new Chart(document.getElementById('jobTypeDepthChart'), {
+  type: 'bar',
+  data: {
+    labels: jtData.map(d=>d.type),
+    datasets: [{
+      label: 'Notes per job',
+      data: jtData.map(d=>d.npj),
+      backgroundColor: jtData.map(d =>
+        d.npj >= 30 ? C.orange+'cc' : d.npj >= 20 ? C.amber+'88' : C.gray+'88'
+      ),
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { title: { display: true, text: 'Avg notes per job (2025+)' } },
+      y: { ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('dowChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    datasets: [
+      { label: 'All notes', data: [8679,165673,187390,172001,167235,147040,10119], backgroundColor: C.blue+'bb', borderRadius: 3 },
+      { label: 'AR$ notes', data: [238,12513,14744,13370,13003,10879,261], backgroundColor: C.amber+'99', borderRadius: 3 },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
+    scales: { y: { ticks: { callback: v => (v/1000).toFixed(0)+'K' } } }
+  }
+});
+
+new Chart(document.getElementById('hodChart'), {
+  type: 'bar',
+  data: {
+    labels: Array.from({length:24},(_,i)=>(i===0?'12am':i<12?i+'am':i===12?'12pm':(i-12)+'pm')),
+    datasets: [{
+      label: 'Notes',
+      data: [3927,2581,1478,647,413,673,2131,9199,31311,44529,61333,83543,88845,89036,87597,81503,78876,66399,54384,33579,14275,10323,6313,5242],
+      backgroundColor: Array.from({length:24},(_,i) =>
+        (i>=11&&i<=16) ? C.green+'cc' : (i>=8&&i<=18) ? C.blue+'88' : C.gray+'55'
+      ),
+      borderRadius: 2,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { font: { size: 9 } } },
+      y: { ticks: { callback: v => (v/1000).toFixed(0)+'K' } }
+    }
+  }
+});
+
+const writers = [
+  ['XactNet System', 'Atlanta', 51156, 0],
+  ['Case, Vicki', 'Pasco', 15047, 2266],
+  ['Keziah, Cathy', 'Charlotte', 11450, 1],
+  ['Hsu, Austin', 'Sac Gold River', 9815, 1107],
+  ['Krepel, Colleen', 'Indianapolis', 9151, 459],
+  ['Dean, Mike', 'Atlanta', 9074, 0],
+  ['Davala, Angela', 'Kalamazoo', 9063, 1520],
+  ['Tramel, Ruby', 'Sac Gold River', 9043, 5307],
+  ['Arenas, Jackeline', 'Tucson', 9040, 553],
+  ['Layng, Amber', 'Sac Gold River', 9004, 419],
+  ['Holmes, Rachel', 'Atlanta', 8982, 2069],
+  ['Saunders, Courtney', 'Sac Fairfield', 8908, 3777],
+].sort((a,b) => a[2]-b[2]);
+
+new Chart(document.getElementById('writersChart'), {
+  type: 'bar',
+  data: {
+    labels: writers.map(d=>d[0].split(',')[0]),
+    datasets: [
+      { label: 'Total notes', data: writers.map(d=>d[2]), backgroundColor: C.blue+'88', borderRadius: 2 },
+      { label: 'AR$ notes', data: writers.map(d=>d[3]), backgroundColor: C.amber+'cc', borderRadius: 2 },
+    ]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12, font:{ size:10} } } },
+    scales: {
+      x: { ticks: { callback: v => (v/1000).toFixed(0)+'K' } },
+      y: { ticks: { font: { size: 10 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>
