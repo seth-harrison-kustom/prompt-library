@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kustom US — Job Trends Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --accent: #4f8ef7;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --purple: #a78bfa;
+    --teal: #2dd4bf;
+    --orange: '#fb923c';
+    --seth-line: #f59e0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  header {
+    padding: 24px 32px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { font-size: 22px; font-weight: 700; color: var(--text); }
+  header p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 24px 32px;
+  }
+  .grid.single { grid-template-columns: 1fr; }
+  .grid.thirds { grid-template-columns: 1fr 1fr 1fr; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+  }
+  .card h2 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .card .subtitle {
+    font-size: 12px;
+    color: #5a6070;
+    margin-bottom: 16px;
+  }
+  .chart-wrap {
+    position: relative;
+  }
+  .chart-wrap.tall { height: 320px; }
+  .chart-wrap.medium { height: 260px; }
+  .chart-wrap.short { height: 200px; }
+  .kpi-row {
+    display: flex;
+    gap: 16px;
+    padding: 0 32px 0;
+  }
+  .kpi {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .kpi .value { font-size: 28px; font-weight: 700; margin-top: 4px; }
+  .kpi .change { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .kpi .value.accent { color: var(--accent); }
+  .kpi .value.green { color: var(--green); }
+  .kpi .value.amber { color: var(--amber); }
+  .kpi .value.purple { color: var(--purple); }
+  .legend-note {
+    font-size: 11px;
+    color: #5a6070;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-note .dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+  }
+  .section-label {
+    padding: 8px 32px 0;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #3d4251;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Kustom US — Job Portfolio Trends</h1>
+  <p>Source: notes.db — 45,386 jobs, all divisions, 2022–2026 Q2 partial &nbsp;·&nbsp; Generated 2026-04-27</p>
+</header>
+
+<div style="padding: 20px 32px 4px">
+  <div class="kpi-row" style="padding:0; gap:16px; display:flex">
+    <div class="kpi">
+      <div class="label">Total Jobs (DB)</div>
+      <div class="value accent">45,386</div>
+      <div class="change">All divisions, all time</div>
+    </div>
+    <div class="kpi">
+      <div class="label">2026 Q1 Volume</div>
+      <div class="value green">$53.5M</div>
+      <div class="change">4,050 jobs · highest quarter on record</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Program Mix — 2026 Q1</div>
+      <div class="value amber">50.5%</div>
+      <div class="change">Up from ~29% in 2022</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Active Offices</div>
+      <div class="value purple">14+</div>
+      <div class="change">Dallas & Louisville added 2024–2025</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label" style="margin-top:20px">Portfolio Overview — Quarterly</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Job Volume by Quarter</h2>
+    <div class="subtitle">Program vs Non-Program count — Seth started Q3 2025</div>
+    <div class="chart-wrap tall"><canvas id="volumeChart"></canvas></div>
+    <div class="legend-note">
+      <span class="dot" style="background:#4f8ef7"></span> Non-Program &nbsp;
+      <span class="dot" style="background:#34d399"></span> Program &nbsp;
+      <span class="dot" style="background:#f59e0b; width:2px; height:16px; border-radius:1px"></span> Seth joined Jul 2025
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Total Estimate Volume ($M) by Quarter</h2>
+    <div class="subtitle">Sum of total_estimates for jobs with non-zero estimates</div>
+    <div class="chart-wrap tall"><canvas id="dollarChart"></canvas></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Average Estimate by Quarter</h2>
+    <div class="subtitle">Program vs Non-Program — lower avg reflects more program/residential claims in mix</div>
+    <div class="chart-wrap tall"><canvas id="avgEstChart"></canvas></div>
+    <div class="legend-note">
+      <span class="dot" style="background:#4f8ef7"></span> All Jobs &nbsp;
+      <span class="dot" style="background:#34d399"></span> Program &nbsp;
+      <span class="dot" style="background:#f87171"></span> Non-Program
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Program Mix % by Quarter</h2>
+    <div class="subtitle">% of jobs associated with a TPA/insurance program account</div>
+    <div class="chart-wrap tall"><canvas id="programMixChart"></canvas></div>
+  </div>
+</div>
+
+<div class="section-label" style="margin-top:4px">Office Performance — Annual</div>
+
+<div class="grid single" style="padding-bottom:0">
+  <div class="card">
+    <h2>Top Offices — Annual Job Volume</h2>
+    <div class="subtitle">Normalized office names · excludes small/misc entries · 2022–2026 partial</div>
+    <div class="chart-wrap" style="height:420px"><canvas id="officeChart"></canvas></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Top Offices — Annual $ Volume ($M)</h2>
+    <div class="subtitle">2025 full year vs 2026 partial (Q1 + partial Q2)</div>
+    <div class="chart-wrap tall"><canvas id="officeDollarChart"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h2>New / High-Growth Markets</h2>
+    <div class="subtitle">Offices that ramped up significantly since 2023</div>
+    <div class="chart-wrap tall"><canvas id="growthChart"></canvas></div>
+  </div>
+</div>
+
+<div class="section-label" style="margin-top:4px">Loss Type Analysis</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Job Count by Loss Type</h2>
+    <div class="subtitle">All years · top 12 types</div>
+    <div class="chart-wrap tall"><canvas id="lossTypeCountChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h2>Average Estimate by Loss Type</h2>
+    <div class="subtitle">Fire and complex losses carry significantly higher estimates</div>
+    <div class="chart-wrap tall"><canvas id="lossTypeAvgChart"></canvas></div>
+  </div>
+</div>
+
+<div style="padding: 12px 32px 32px; color: #3d4251; font-size: 11px;">
+  Notes: 2026 Q2 is partial (data through ~Apr 2026). "Unknown" loss type = no loss_type field populated. Program = tpa_company IS NOT NULL. Average estimates exclude $0 values (uninvoiced/TBD).
+</div>
+
+<script>
+Chart.defaults.color = '#8892a4';
+Chart.defaults.borderColor = '#2a2d3a';
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 12;
+
+const quarterly = [
+  { q:'2022 Q1', jobs:346,  prog:163,  avg:52414,  avgP:32293,  avgNP:72404, vol:15.99 },
+  { q:'2022 Q2', jobs:446,  prog:275,  avg:43783,  avgP:28696,  avgNP:68287, vol:18.04 },
+  { q:'2022 Q3', jobs:839,  prog:457,  avg:30647,  avgP:20123,  avgNP:43347, vol:24.21 },
+  { q:'2022 Q4', jobs:1150, prog:618,  avg:27648,  avgP:13899,  avgNP:43653, vol:30.27 },
+  { q:'2023 Q1', jobs:1635, prog:968,  avg:23772,  avgP:17476,  avgNP:33256, vol:36.58 },
+  { q:'2023 Q2', jobs:1561, prog:684,  avg:16908,  avgP:15823,  avgNP:17755, vol:24.92 },
+  { q:'2023 Q3', jobs:2278, prog:990,  avg:20595,  avgP:21944,  avgNP:19554, vol:43.56 },
+  { q:'2023 Q4', jobs:1847, prog:790,  avg:18458,  avgP:15259,  avgNP:20973, vol:30.86 },
+  { q:'2024 Q1', jobs:2765, prog:1010, avg:18211,  avgP:17703,  avgNP:18517, vol:44.80 },
+  { q:'2024 Q2', jobs:2257, prog:923,  avg:20918,  avgP:19965,  avgNP:21614, vol:41.33 },
+  { q:'2024 Q3', jobs:3404, prog:1309, avg:17622,  avgP:16408,  avgNP:18416, vol:52.60 },
+  { q:'2024 Q4', jobs:2752, prog:1068, avg:22910,  avgP:17540,  avgNP:26403, vol:55.28 },
+  { q:'2025 Q1', jobs:2812, prog:1080, avg:19445,  avgP:16213,  avgNP:21472, vol:47.43 },
+  { q:'2025 Q2', jobs:2691, prog:1123, avg:24363,  avgP:29846,  avgNP:20406, vol:58.06 },
+  { q:'2025 Q3', jobs:3155, prog:1246, avg:14089,  avgP:15308,  avgNP:13278, vol:39.17 },
+  { q:'2025 Q4', jobs:3647, prog:1873, avg:12811,  avgP:12955,  avgNP:12658, vol:37.87 },
+  { q:'2026 Q1', jobs:4050, prog:2044, avg:17142,  avgP:17716,  avgNP:16567, vol:53.45 },
+  { q:'2026 Q2*',jobs:842,  prog:400,  avg:15596,  avgP:10071,  avgNP:20234, vol:9.29  },
+];
+
+const labels = quarterly.map(d => d.q);
+const sethIndex = 14;
+
+const C = {
+  blue:   '#4f8ef7',
+  green:  '#34d399',
+  amber:  '#fbbf24',
+  red:    '#f87171',
+  purple: '#a78bfa',
+  teal:   '#2dd4bf',
+  orange: '#fb923c',
+  pink:   '#f472b6',
+};
+
+function sethAnnotationPlugin(index) {
+  return {
+    id: 'sethLine',
+    afterDraw(chart) {
+      if (!chart.data.labels) return;
+      const x = chart.scales.x.getPixelForTick(index);
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.beginPath();
+      ctx.setLineDash([5, 4]);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 1.5;
+      ctx.moveTo(x, chart.chartArea.top);
+      ctx.lineTo(x, chart.chartArea.bottom);
+      ctx.stroke();
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = '10px sans-serif';
+      ctx.fillText('Seth joined', x + 4, chart.chartArea.top + 14);
+      ctx.restore();
+    }
+  };
+}
+
+new Chart(document.getElementById('volumeChart'), {
+  type: 'bar',
+  plugins: [sethAnnotationPlugin(sethIndex)],
+  data: {
+    labels,
+    datasets: [
+      { label: 'Non-Program', data: quarterly.map(d => d.jobs - d.prog), backgroundColor: C.blue + 'cc', stack: 'stack' },
+      { label: 'Program', data: quarterly.map(d => d.prog), backgroundColor: C.green + 'cc', stack: 'stack' }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { footer: (items) => { const total = items.reduce((s, i) => s + i.raw, 0); return `Total: ${total.toLocaleString()}`; } } } },
+    scales: { x: { ticks: { maxRotation: 45, font: { size: 10 } } }, y: { title: { display: true, text: 'Jobs' } } }
+  }
+});
+
+new Chart(document.getElementById('dollarChart'), {
+  type: 'line',
+  plugins: [sethAnnotationPlugin(sethIndex)],
+  data: {
+    labels,
+    datasets: [{ label: 'Total $M', data: quarterly.map(d => d.vol), borderColor: C.teal, backgroundColor: C.teal + '22', fill: true, tension: 0.3, pointRadius: 3, pointBackgroundColor: C.teal }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { ticks: { maxRotation: 45, font: { size: 10 } } }, y: { title: { display: true, text: '$M' }, ticks: { callback: v => '$' + v + 'M' } } }
+  }
+});
+
+new Chart(document.getElementById('avgEstChart'), {
+  type: 'line',
+  plugins: [sethAnnotationPlugin(sethIndex)],
+  data: {
+    labels,
+    datasets: [
+      { label: 'All Jobs', data: quarterly.map(d => d.avg), borderColor: C.blue, backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+      { label: 'Program', data: quarterly.map(d => d.avgP), borderColor: C.green, backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderDash: [4, 3], borderWidth: 1.5 },
+      { label: 'Non-Program', data: quarterly.map(d => d.avgNP), borderColor: C.red, backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderDash: [4, 3], borderWidth: 1.5 }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { ticks: { maxRotation: 45, font: { size: 10 } } }, y: { title: { display: true, text: 'Avg Estimate ($)' }, ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'K' } } }
+  }
+});
+
+new Chart(document.getElementById('programMixChart'), {
+  type: 'line',
+  plugins: [sethAnnotationPlugin(sethIndex)],
+  data: {
+    labels,
+    datasets: [{ label: 'Program %', data: quarterly.map(d => Math.round(d.prog / d.jobs * 100)), borderColor: C.amber, backgroundColor: C.amber + '22', fill: true, tension: 0.3, pointRadius: 3, pointBackgroundColor: C.amber }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { ticks: { maxRotation: 45, font: { size: 10 } } }, y: { min: 0, max: 70, title: { display: true, text: '% Program' }, ticks: { callback: v => v + '%' } } }
+  }
+});
+
+const rawOffice = [
+  ['Atlanta, GA',2022,140,3.21],['Atlanta, GA',2023,240,2.80],['Atlanta, GA',2024,300,3.22],['Atlanta, GA',2025,324,3.34],['Atlanta, GA',2026,112,1.22],
+  ['Charlotte, NC',2022,139,3.07],['Charlotte, NC',2023,456,3.66],['Charlotte, NC',2024,868,4.69],['Charlotte, NC',2025,583,4.87],['Charlotte, NC',2026,203,1.22],
+  ['Dallas, TX',2024,41,0.32],['Dallas, TX',2025,456,2.72],['Dallas, TX',2026,223,4.43],
+  ['Indianapolis, IN',2022,190,6.05],['Indianapolis, IN',2023,626,11.81],['Indianapolis, IN',2024,552,8.89],['Indianapolis, IN',2025,633,9.84],['Indianapolis, IN',2026,241,1.48],
+  ['Jacksonville, FL',2022,94,1.34],['Jacksonville, FL',2023,281,4.32],['Jacksonville, FL',2024,437,3.93],['Jacksonville, FL',2025,334,2.62],['Jacksonville, FL',2026,72,0.43],
+  ['Kalamazoo, MI',2022,9,0.30],['Kalamazoo, MI',2023,90,2.14],['Kalamazoo, MI',2024,499,6.18],['Kalamazoo, MI',2025,663,6.91],['Kalamazoo, MI',2026,349,2.35],
+  ['Louisville, KY',2025,20,0.37],['Louisville, KY',2026,82,1.00],
+  ['Michigan Center, MI',2022,54,2.61],['Michigan Center, MI',2023,221,4.54],['Michigan Center, MI',2024,349,5.42],['Michigan Center, MI',2025,480,4.95],['Michigan Center, MI',2026,229,2.06],
+  ['National',2022,192,18.39],['National',2023,152,10.92],['National',2024,268,30.12],['National',2025,113,12.83],['National',2026,42,5.03],
+  ['Orlando, FL',2022,49,0.92],['Orlando, FL',2023,260,3.59],['Orlando, FL',2024,495,7.90],['Orlando, FL',2025,374,3.68],['Orlando, FL',2026,131,2.98],
+  ['Pasco, WA',2022,76,6.97],['Pasco, WA',2023,582,16.22],['Pasco, WA',2024,746,15.12],['Pasco, WA',2025,938,12.60],['Pasco, WA',2026,385,5.48],
+  ['Phoenix, AZ',2022,107,4.66],['Phoenix, AZ',2023,221,2.99],['Phoenix, AZ',2024,206,1.69],['Phoenix, AZ',2025,633,7.96],['Phoenix, AZ',2026,255,2.18],
+  ['Pompano Beach, FL',2022,85,2.04],['Pompano Beach, FL',2023,207,3.70],['Pompano Beach, FL',2024,273,5.11],['Pompano Beach, FL',2025,148,2.98],['Pompano Beach, FL',2026,61,1.16],
+  ['Raleigh/Durham, NC',2022,50,1.06],['Raleigh/Durham, NC',2023,337,2.78],['Raleigh/Durham, NC',2024,421,4.46],['Raleigh/Durham, NC',2025,427,4.13],['Raleigh/Durham, NC',2026,220,2.33],
+  ['Sacramento (Fairfield)',2022,303,5.54],['Sacramento (Fairfield)',2023,506,6.35],['Sacramento (Fairfield)',2024,434,6.60],['Sacramento (Fairfield)',2025,423,4.54],['Sacramento (Fairfield)',2026,176,1.36],
+  ['Sacramento (Gold River)',2022,745,14.20],['Sacramento (Gold River)',2023,1243,30.17],['Sacramento (Gold River)',2024,1051,23.31],['Sacramento (Gold River)',2025,1074,23.90],['Sacramento (Gold River)',2026,488,4.70],
+  ['San Diego, CA',2022,1,0.03],['San Diego, CA',2023,6,0.15],['San Diego, CA',2024,26,3.75],['San Diego, CA',2025,409,14.09],['San Diego, CA',2026,394,11.80],
+  ['Santa Barbara, CA',2022,1,0.00],['Santa Barbara, CA',2023,68,0.40],['Santa Barbara, CA',2024,614,6.70],['Santa Barbara, CA',2025,792,9.16],['Santa Barbara, CA',2026,275,1.94],
+  ['Santa Maria, CA',2023,6,0.05],['Santa Maria, CA',2024,90,0.55],['Santa Maria, CA',2025,181,2.46],['Santa Maria, CA',2026,72,0.30],
+  ['Seattle, WA',2022,3,0.38],['Seattle, WA',2023,106,4.78],['Seattle, WA',2024,748,13.94],['Seattle, WA',2025,624,10.27],['Seattle, WA',2026,154,1.47],
+  ['Spokane, WA',2022,1,0.02],['Spokane, WA',2024,434,9.58],['Spokane, WA',2025,452,7.72],['Spokane, WA',2026,128,0.79],
+  ['Tacoma, WA',2022,38,5.87],['Tacoma, WA',2023,308,7.22],['Tacoma, WA',2024,756,13.63],['Tacoma, WA',2025,875,10.24],['Tacoma, WA',2026,147,1.29],
+  ['Tucson, AZ',2022,391,7.20],['Tucson, AZ',2023,1026,8.02],['Tucson, AZ',2024,865,7.46],['Tucson, AZ',2025,705,5.49],['Tucson, AZ',2026,179,1.20],
+  ['Ventura, CA',2023,25,5.06],['Ventura, CA',2024,142,2.09],['Ventura, CA',2025,344,5.55],['Ventura, CA',2026,171,0.64],
+  ['Yakima, WA',2023,1,0.14],['Yakima, WA',2024,210,5.51],['Yakima, WA',2025,200,3.03],['Yakima, WA',2026,82,2.70],
+];
+
+const officeMap = {};
+rawOffice.forEach(([name, year, jobs, vol]) => {
+  if (!officeMap[name]) officeMap[name] = {};
+  if (!officeMap[name][year]) officeMap[name][year] = { jobs: 0, vol: 0 };
+  officeMap[name][year].jobs += jobs;
+  officeMap[name][year].vol  += vol;
+});
+
+const officeNames = Object.keys(officeMap)
+  .sort((a, b) => ((officeMap[b][2025]||{}).jobs||0) - ((officeMap[a][2025]||{}).jobs||0))
+  .slice(0, 14);
+
+const years = [2022, 2023, 2024, 2025, 2026];
+const officeColors = [C.blue, C.green, C.amber, C.red, C.purple, C.teal, C.orange, C.pink,
+  '#60a5fa','#86efac','#fde68a','#fca5a5','#c4b5fd','#99f6e4','#fed7aa','#fbcfe8'];
+
+new Chart(document.getElementById('officeChart'), {
+  type: 'bar',
+  data: {
+    labels: officeNames,
+    datasets: years.map((yr, i) => ({
+      label: String(yr) + (yr === 2026 ? '*' : ''),
+      data: officeNames.map(n => (officeMap[n][yr]||{}).jobs || 0),
+      backgroundColor: officeColors[i] + (yr === 2026 ? '88' : 'bb'),
+      borderColor: officeColors[i],
+      borderWidth: 1
+    }))
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
+    scales: { x: { ticks: { maxRotation: 40, font: { size: 10 } } }, y: { title: { display: true, text: 'Jobs' } } }
+  }
+});
+
+const dollarOffices = Object.keys(officeMap)
+  .filter(n => ((officeMap[n][2025]||{}).vol||0) > 1)
+  .sort((a, b) => ((officeMap[b][2025]||{}).vol||0) - ((officeMap[a][2025]||{}).vol||0))
+  .slice(0, 12);
+
+new Chart(document.getElementById('officeDollarChart'), {
+  type: 'bar',
+  data: {
+    labels: dollarOffices,
+    datasets: [
+      { label: '2025', data: dollarOffices.map(n => (officeMap[n][2025]||{}).vol||0), backgroundColor: C.blue + 'bb', borderRadius: 3 },
+      { label: '2026 (partial)', data: dollarOffices.map(n => (officeMap[n][2026]||{}).vol||0), backgroundColor: C.amber + '99', borderRadius: 3 }
+    ]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
+    scales: { x: { title: { display: true, text: '$M' }, ticks: { callback: v => '$' + v + 'M' } }, y: { ticks: { font: { size: 11 } } } }
+  }
+});
+
+const growthOffices = ['San Diego, CA', 'Dallas, TX', 'Santa Barbara, CA', 'Spokane, WA', 'Ventura, CA', 'Kalamazoo, MI', 'Louisville, KY', 'Phoenix, AZ', 'Santa Maria, CA'];
+
+new Chart(document.getElementById('growthChart'), {
+  type: 'bar',
+  data: {
+    labels: growthOffices,
+    datasets: [
+      { label: '2022', data: growthOffices.map(n => (officeMap[n]?.[2022]||{}).jobs||0), backgroundColor: '#374151bb', borderRadius: 2 },
+      { label: '2023', data: growthOffices.map(n => (officeMap[n]?.[2023]||{}).jobs||0), backgroundColor: '#4b5563bb', borderRadius: 2 },
+      { label: '2024', data: growthOffices.map(n => (officeMap[n]?.[2024]||{}).jobs||0), backgroundColor: C.teal + '88', borderRadius: 2 },
+      { label: '2025', data: growthOffices.map(n => (officeMap[n]?.[2025]||{}).jobs||0), backgroundColor: C.blue + 'cc', borderRadius: 2 },
+      { label: '2026*', data: growthOffices.map(n => (officeMap[n]?.[2026]||{}).jobs||0), backgroundColor: C.green + '99', borderRadius: 2 },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12 } } },
+    scales: { x: { ticks: { maxRotation: 35, font: { size: 10 } } }, y: { title: { display: true, text: 'Jobs' } } }
+  }
+});
+
+const lossTypes = [
+  { t: 'Water',             jobs: 22448, avg: 13913 },
+  { t: 'Unknown/Blank',     jobs: 10221, avg: 29481 },
+  { t: 'Fire',              jobs:  2310, avg: 78518 },
+  { t: 'Mold Remediation',  jobs:  1785, avg:  8454 },
+  { t: 'Contract Work',     jobs:  1425, avg: 13419 },
+  { t: 'Storm',             jobs:  1341, avg: 18651 },
+  { t: 'CAT/Storm',         jobs:  1319, avg: 37260 },
+  { t: 'Emergency Response',jobs:  1311, avg: 26480 },
+  { t: 'Board-Up',          jobs:   825, avg: 15392 },
+  { t: 'Cleaning',          jobs:   488, avg: 10667 },
+  { t: 'Asbestos/Lead',     jobs:   386, avg:  7227 },
+  { t: 'TI/CI/Remodel',     jobs:   186, avg: 205878 },
+];
+
+const lossColors = [C.blue, '#4b5563', C.red, C.green, C.teal, C.amber, C.orange, C.purple, '#94a3b8', C.pink, '#6ee7b7', '#fde68a'];
+
+new Chart(document.getElementById('lossTypeCountChart'), {
+  type: 'bar',
+  data: {
+    labels: lossTypes.map(d => d.t),
+    datasets: [{ label: 'Jobs', data: lossTypes.map(d => d.jobs), backgroundColor: lossColors.map(c => c + 'cc'), borderRadius: 4 }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { title: { display: true, text: 'Jobs' } }, y: { ticks: { font: { size: 11 } } } }
+  }
+});
+
+const lossAvgSorted = [...lossTypes].sort((a,b) => b.avg - a.avg);
+new Chart(document.getElementById('lossTypeAvgChart'), {
+  type: 'bar',
+  data: {
+    labels: lossAvgSorted.map(d => d.t),
+    datasets: [{ label: 'Avg Estimate', data: lossAvgSorted.map(d => d.avg), backgroundColor: lossAvgSorted.map((d,i) => lossColors[i % lossColors.length] + 'cc'), borderRadius: 4 }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { title: { display: true, text: 'Avg Estimate ($)' }, ticks: { callback: v => v >= 1000 ? '$' + (v/1000).toFixed(0) + 'K' : '$' + v } }, y: { ticks: { font: { size: 11 } } } }
+  }
+});
+</script>
+</body>
+</html>
