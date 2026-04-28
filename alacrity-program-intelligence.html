@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alacrity Program Intelligence Report — April 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --blue: #1e40af; --blue-light: #dbeafe; --blue-mid: #3b82f6;
+    --green: #15803d; --green-light: #dcfce7;
+    --amber: #b45309; --amber-light: #fef3c7;
+    --red: #b91c1c; --red-light: #fee2e2;
+    --gray: #374151; --gray-light: #f3f4f6; --gray-mid: #6b7280;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: var(--gray); background: #fff; }
+  .page { max-width: 1280px; margin: 0 auto; padding: 40px 32px; }
+  .report-header { border-bottom: 3px solid var(--blue); padding-bottom: 20px; margin-bottom: 36px; }
+  .report-header h1 { font-size: 26px; color: var(--blue); font-weight: 700; }
+  .report-header .subtitle { color: var(--gray-mid); margin-top: 4px; font-size: 13px; }
+  .report-header .meta { display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
+  .meta-item { background: var(--gray-light); padding: 10px 16px; border-radius: 8px; }
+  .meta-item .label { font-size: 11px; color: var(--gray-mid); text-transform: uppercase; letter-spacing: .5px; }
+  .meta-item .value { font-size: 20px; font-weight: 700; color: var(--blue); }
+  .section { margin-bottom: 48px; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--blue); border-left: 4px solid var(--blue); padding-left: 12px; margin-bottom: 20px; }
+  .section-sub { font-size: 15px; font-weight: 600; color: var(--gray); margin-bottom: 12px; margin-top: 24px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .flow-container { display: flex; flex-direction: column; gap: 0; }
+  .flow-step { display: flex; align-items: flex-start; gap: 0; }
+  .flow-node { border-radius: 8px; padding: 12px 16px; min-width: 220px; font-size: 13px; line-height: 1.4; }
+  .flow-node .node-title { font-weight: 700; font-size: 13px; }
+  .flow-node .node-desc { font-size: 12px; color: #555; margin-top: 4px; }
+  .flow-node .node-sla { font-size: 11px; font-weight: 600; margin-top: 6px; background: rgba(0,0,0,.06); padding: 3px 8px; border-radius: 4px; display: inline-block; }
+  .status-cepw { background: #eff6ff; border: 1.5px solid #93c5fd; }
+  .status-ce { background: #eff6ff; border: 1.5px solid #93c5fd; }
+  .status-screen { background: #f0fdf4; border: 1.5px solid #86efac; }
+  .status-ar { background: #fefce8; border: 1.5px solid #fde047; }
+  .status-cr { background: #fff7ed; border: 1.5px solid #fdba74; }
+  .status-cpw { background: #fdf4ff; border: 1.5px solid #e879f9; }
+  .status-done { background: #f0fdf4; border: 1.5px solid #4ade80; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--gray-light); text-align: left; padding: 8px 10px; font-weight: 600; font-size: 12px; color: var(--gray-mid); text-transform: uppercase; letter-spacing: .4px; border-bottom: 2px solid var(--border); }
+  td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:hover td { background: #fafafa; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-amber { background: var(--amber-light); color: var(--amber); }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-blue { background: var(--blue-light); color: var(--blue); }
+  .callout { border-radius: 8px; padding: 16px 20px; margin: 12px 0; }
+  .callout-red { background: var(--red-light); border-left: 4px solid var(--red); }
+  .callout-amber { background: var(--amber-light); border-left: 4px solid var(--amber); }
+  .callout-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .callout h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .callout ul { padding-left: 18px; }
+  .callout li { margin-bottom: 4px; font-size: 13px; }
+  .audit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .audit-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 18px; }
+  .audit-card .card-title { font-weight: 700; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .audit-card .priority { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: .5px; }
+  .priority-high { background: var(--red-light); color: var(--red); }
+  .priority-med { background: var(--amber-light); color: var(--amber); }
+  .priority-low { background: var(--blue-light); color: var(--blue); }
+  .audit-card .card-metric { font-size: 22px; font-weight: 700; color: var(--red); }
+  .audit-card .card-metric.amber { color: var(--amber); }
+  .audit-card .card-metric.blue { color: var(--blue); }
+  .audit-card .card-desc { font-size: 12px; color: var(--gray-mid); margin-top: 4px; line-height: 1.5; }
+  .audit-card .signals { margin-top: 10px; }
+  .audit-card .signal { font-size: 12px; padding: 4px 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
+  .audit-card .signal:first-child { border-top: none; padding-top: 0; }
+  .chart-box { border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .chart-title { font-size: 13px; font-weight: 600; color: var(--gray-mid); margin-bottom: 12px; }
+  .predict-row td:first-child { font-weight: 600; }
+  .confidence { display: inline-block; height: 8px; border-radius: 4px; background: var(--blue-mid); }
+  .footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--gray-mid); }
+</style>
+</head>
+<body>
+<div class="page">
+<div class="report-header">
+  <h1>Alacrity Program Intelligence Report</h1>
+  <div class="subtitle">Program flows, carrier performance, compliance gaps, and audit signals — sourced from 7,182 closed jobs + 380 active · Generated April 28, 2026</div>
+  <div class="meta">
+    <div class="meta-item"><div class="label">Closed Jobs</div><div class="value">7,182</div></div>
+    <div class="meta-item"><div class="label">Active Pipeline</div><div class="value">380</div></div>
+    <div class="meta-item"><div class="label">Total Est. Value</div><div class="value">$50.6M</div></div>
+    <div class="meta-item"><div class="label">Active Pipeline Value</div><div class="value">$7.4M</div></div>
+    <div class="meta-item"><div class="label">Carriers Tracked</div><div class="value">35+</div></div>
+    <div class="meta-item"><div class="label">Data Since</div><div class="value">2022</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">1. Program Flows — SOP-Defined vs. What the Data Shows</div>
+  <div class="two-col">
+    <div>
+      <div class="section-sub">Mitigation / Emergency Flow</div>
+      <div class="flow-container">
+        <div class="flow-step"><div class="flow-node status-cepw"><div class="node-title">Contractor Estimating / Performing Work</div><div class="node-desc">Work is in progress. Estimate must be submitted within 24h of completion.</div><div class="node-sla">EMS: 8h scope upload · Standard: 24h from completion</div></div></div>
+        <div style="padding-left:95px;height:14px;border-left:2px solid #cbd5e1"></div>
+        <div class="flow-step"><div class="flow-node status-screen"><div class="node-title">Alacrity Screening</div><div class="node-desc">QR team reviews estimate. Rejection bounces back to CE/PW.</div><div class="node-sla">Target: 24h QA turnaround</div></div></div>
+        <div style="padding-left:95px;height:14px;border-left:2px solid #cbd5e1"></div>
+        <div class="flow-step"><div class="flow-node status-ar"><div class="node-title">Adjuster Review &amp; Closeout</div><div class="node-desc">Carrier reviews. Approval triggers PAS closeout.</div><div class="node-sla">Required: COS + Work Auth + Photos at closeout</div></div></div>
+        <div style="padding-left:95px;height:14px;border-left:2px solid #cbd5e1"></div>
+        <div class="flow-step"><div class="flow-node status-done"><div class="node-title">Completed</div><div class="node-desc">PAS closeout processed. Payment issued.</div></div></div>
+      </div>
+      <div class="callout callout-blue" style="margin-top:14px"><h4>Data Reality: Mitigation</h4><ul><li>181 Completed · 1,446 Closed · 324 Withdrawn</li><li>Contents Cleaning: <strong>30% rejection rate</strong> — highest of any trade</li><li>MICA: slightly higher rejection than Optional (11% vs 6%)</li></ul></div>
+    </div>
+    <div>
+      <div class="section-sub">Repair / GC Flow</div>
+      <div class="flow-container">
+        <div class="flow-step"><div class="flow-node status-ce"><div class="node-title">Contractor Estimating</div><div class="node-desc">Schedule inspection, build scope and estimate.</div><div class="node-sla">EMS: 2h site visit · Standard: 24h from insured contact</div></div></div>
+        <div style="padding-left:95px;height:14px;border-left:2px solid #cbd5e1"></div>
+        <div class="flow-step"><div class="flow-node status-screen"><div class="node-title">Alacrity Screening</div><div class="node-desc">QR team reviews. Rejection sends back to CE.</div><div class="node-sla">Re-submission required within 24h of rejection</div></div></div>
+        <div style="padding-left:95px;height:14px;border-left:2px solid #cbd5e1"></div>
+        <div class="flow-step"><div class="flow-node status-ar"><div class="node-title">Adjuster Review</div><div class="node-desc">Carrier reviews. Approval advances to Contractor Review.</div></div></div>
+        <div style="padding-left:95px;height:14px;border-left:2px solid #cbd5e1"></div>
+        <div class="flow-step"><div class="flow-node status-cr"><div class="node-title">Contractor Review</div><div class="node-desc">Attach signed Work Authorization to advance.</div><div class="node-sla">Work Auth required before work can begin</div></div></div>
+        <div style="padding-left:95px;height:14px;border-left:2px solid #cbd5e1"></div>
+        <div class="flow-step"><div class="flow-node status-cpw"><div class="node-title">Contractor Performing Work</div><div class="node-desc">Weekly progress updates required. Supplements before closeout.</div></div></div>
+        <div style="padding-left:95px;height:14px;border-left:2px solid #cbd5e1"></div>
+        <div class="flow-step"><div class="flow-node status-done"><div class="node-title">Closed (PAS Closeout)</div><div class="node-desc">COS + Work Auth + Lien waivers (≥$5k) + Photos required.</div></div></div>
+      </div>
+      <div class="callout callout-amber" style="margin-top:14px"><h4>Data Reality: Repair/GC</h4><ul><li>1,465 Closed · 1,039 Withdrawn · 154 Completed</li><li>GC avg estimate: $19,186</li><li><strong>51% withdrawal rate</strong> on GC</li><li>139 active GC jobs “Contractor Performing Work” · $2.8M</li></ul></div>
+    </div>
+  </div>
+  <div class="callout callout-amber" style="margin-top:16px"><h4>What “Withdrawn” Actually Means</h4><ul><li><strong>Job Not Sold (JNS):</strong> Most common. Homeowner chose different contractor. Especially State Farm GC (54.5%) and AFICS MRP (48.9%).</li><li><strong>Coverage Not Extended:</strong> Carrier determined claim isn’t covered.</li><li>Impact: 2,879 withdrawn jobs = real QR hours, $0 revenue. Roughly <strong>$1 in every $2.50 of estimating effort produces no revenue.</strong></li></ul></div>
+</div>
+
+<div class="section">
+  <div class="section-title">2. Volume, Value &amp; Mix</div>
+  <div class="two-col">
+    <div class="chart-box"><div class="chart-title">Monthly Job Volume (2022–2026)</div><canvas id="volumeChart" height="220"></canvas></div>
+    <div class="chart-box"><div class="chart-title">Monthly Estimate Value ($) — Closed Jobs</div><canvas id="valueChart" height="220"></canvas></div>
+  </div>
+  <div class="section-sub" style="margin-top:24px">Trade Breakdown — All 7,182 Closed Jobs</div>
+  <table><thead><tr><th>Trade Type</th><th class="num">Jobs</th><th class="num">Share</th><th class="num">XA Rate</th><th class="num">Rejection Rate</th><th class="num">Withdrawal Rate</th><th class="num">Avg Estimate</th><th class="num">Total Value</th></tr></thead><tbody id="tradeTable"></tbody></table>
+</div>
+
+<div class="section">
+  <div class="section-title">3. Carrier Performance — Rejection &amp; Withdrawal</div>
+  <div class="callout callout-red"><h4>Critical Finding: Allstate MCO — Systematic Rejection Problem</h4><ul><li>Every Allstate MCO/CSA office: <strong>35–45% rejection rates</strong> — double the CIP threshold of 20%</li><li>Systemic, carrier-specific estimating gap — likely Allstate-specific line item rules not being consistently applied</li><li>Sustained high rejections reduce bonus assignment eligibility and can trigger a Performance Improvement Plan</li></ul></div>
+  <div class="section-sub">Allstate Detail</div>
+  <table><thead><tr><th>Carrier</th><th class="num">Jobs</th><th class="num">Rejections</th><th class="num">Rejection %</th><th class="num">Withdrawn</th><th class="num">Withdrawal %</th></tr></thead><tbody id="allstateTable"></tbody></table>
+  <div class="section-sub">All Carriers — Scorecard</div>
+  <table><thead><tr><th>Carrier</th><th class="num">Jobs</th><th class="num">Rejection %</th><th class="num">Withdrawal %</th><th class="num">XA %</th><th class="num">Avg Estimate</th><th>Status</th></tr></thead><tbody id="carrierTable"></tbody></table>
+</div>
+
+<div class="section">
+  <div class="section-title">4. Paperwork &amp; Compliance</div>
+  <div class="three-col">
+    <div class="chart-box"><div class="chart-title">Document Compliance — Closed Jobs (7,182)</div><canvas id="complianceChart" height="240"></canvas></div>
+    <div class="chart-box"><div class="chart-title">Estimate Rejection Distribution</div><canvas id="rejectionChart" height="240"></canvas></div>
+    <div class="chart-box"><div class="chart-title">Job Outcomes</div><canvas id="outcomeChart" height="240"></canvas></div>
+  </div>
+  <div class="section-sub">Highest-Rejection Jobs</div>
+  <table><thead><tr><th>Claim Number</th><th>Trade</th><th>Carrier</th><th class="num">Rejections</th><th class="num">Est. Value</th><th>Status</th></tr></thead><tbody id="highRejTable"></tbody></table>
+</div>
+
+<div class="section">
+  <div class="section-title">5. Active Pipeline — April 28, 2026</div>
+  <div class="two-col">
+    <div>
+      <table><thead><tr><th>Status</th><th class="num">Jobs</th><th class="num">Pipeline Value</th><th class="num">Suspended</th><th class="num">Prior Rejections</th></tr></thead><tbody id="activeTable"></tbody></table>
+      <div style="margin-top:16px"><div class="section-sub">Suspension Reasons</div><table><thead><tr><th>Reason</th><th class="num">Count</th><th>Risk</th></tr></thead><tbody id="suspTable"></tbody></table></div>
+    </div>
+    <div class="callout callout-blue"><h4>Active Pipeline Signals</h4><ul><li><strong>160 in Contractor Performing Work</strong> — $3.3M. 89 suspended. 35 with prior rejection history.</li><li><strong>71 in Adjuster Review</strong> — $2.3M at carriers. Should resolve in 2–5 days per SLA.</li><li><strong>48 unknown status</strong> — $1.5M where scraper couldn’t resolve AlacNet status. Need manual check.</li><li><strong>28 in Contractor Estimating</strong> — no estimate submitted yet. Some may be approaching SLA deadlines.</li><li><strong>8: “HO Not Responding”</strong> — at risk of withdrawal.</li></ul></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">6. Predictable Patterns</div>
+  <table class="predict-row"><thead><tr><th>Pattern</th><th>Signal</th><th>What It Predicts</th><th class="num">Confidence</th></tr></thead>
+  <tbody>
+    <tr><td>Allstate file enters CE/PW</td><td>Carrier = any Allstate MCO/CSA</td><td>35–45% rejection chance. Pre-review Allstate-specific line items.</td><td class="num"><div class="confidence" style="width:90px"></div> High</td></tr>
+    <tr><td>State Farm GC assigned</td><td>Carrier = SF-GC, trade = GC</td><td>54% withdrawal probability. Budget estimating time accordingly.</td><td class="num"><div class="confidence" style="width:90px"></div> High</td></tr>
+    <tr><td>Job reaches Contractor Review</td><td>Status = Contractor Review</td><td>Work Auth is the only blocker. If not attached in 1–2 days, job stalls.</td><td class="num"><div class="confidence" style="width:85px"></div> High</td></tr>
+    <tr><td>Contents Cleaning assignment</td><td>Trade = Contents Cleaning</td><td>30% rejection — highest of any trade. Nearly all from Allstate.</td><td class="num"><div class="confidence" style="width:80px"></div> High</td></tr>
+    <tr><td>HO Not Responding suspension</td><td>suspension_reason contains “Not responding”</td><td>High withdrawal probability within 2–4 weeks if no contact documented.</td><td class="num"><div class="confidence" style="width:75px"></div> Med-High</td></tr>
+    <tr><td>Job at 2+ rejections</td><td>xa_rejections ≥ 2</td><td>Avg estimate $19K vs $9.5K baseline. QR escalation warranted.</td><td class="num"><div class="confidence" style="width:75px"></div> Med-High</td></tr>
+    <tr><td>Aug–Oct volume surge</td><td>Calendar month Aug–Oct</td><td>Historical CAT season. Volume can triple. Staff needed 6–8 weeks early.</td><td class="num"><div class="confidence" style="width:70px"></div> Medium</td></tr>
+    <tr><td>Large Loss EMS assignment</td><td>Trade = Large Loss EMS</td><td>Avg $218K. 92% XA rate. 25% rejection. Dedicated QR attention warranted.</td><td class="num"><div class="confidence" style="width:65px"></div> Medium</td></tr>
+  </tbody></table>
+</div>
+
+<div class="section">
+  <div class="section-title">7. Audit &amp; Compliance Systems — What to Build</div>
+  <div class="audit-grid">
+    <div class="audit-card"><div class="card-title"><span class="priority priority-high">P1 — Immediate</span> Allstate Rejection Firewall</div><div class="card-metric">37–45%</div><div class="card-desc">Pre-submission checklist triggered whenever any Allstate carrier job enters Alacrity Screening. Flag QR review of Allstate-specific line items before upload.</div><div class="signals"><div class="signal"><span>Trigger</span><span>Carrier name contains “Allstate”</span></div><div class="signal"><span>Check</span><span>Contents line items, O&amp;P, permit lines</span></div><div class="signal"><span>CIP Risk</span><span>Threshold = 20%. Current Allstate avg = 37%. At risk of PIP.</span></div></div></div>
+    <div class="audit-card"><div class="card-title"><span class="priority priority-high">P1 — Immediate</span> Work Auth &amp; COS Closeout Gate</div><div class="card-metric amber">46% / 40%</div><div class="card-desc">PAS closeout requires both documents. Gate 1: require Work Auth at Contractor Review. Gate 2: require COS before closeout. Gate 3: lien waiver flag if ≥$5,000.</div><div class="signals"><div class="signal"><span>Gate 1</span><span>Contractor Review → Work Auth upload required</span></div><div class="signal"><span>Gate 2</span><span>CPW → COS required before requesting closeout</span></div><div class="signal"><span>Gate 3</span><span>Lien waiver flag if estimate ≥ $5,000</span></div></div></div>
+    <div class="audit-card"><div class="card-title"><span class="priority priority-high">P1 — Immediate</span> SLA Clock Monitor</div><div class="card-metric blue">7 SLA events</div><div class="card-desc">Build SLA clock that flags jobs approaching or past deadline for each stage based on carrier-specific windows.</div><div class="signals"><div class="signal"><span>Allstate</span><span>Contact 30min · Onsite 4h · Estimate 5 days</span></div><div class="signal"><span>State Farm</span><span>Contact 1h · Onsite 4h · Estimate 24h from completion</span></div><div class="signal"><span>Re-submission</span><span>24h from rejection — universal</span></div></div></div>
+    <div class="audit-card"><div class="card-title"><span class="priority priority-high">P1 — Immediate</span> Stalled Estimate Alert</div><div class="card-metric">28 jobs</div><div class="card-desc">Daily check: flag CE/CEPW jobs where days-since-assignment exceeds carrier estimate window with no XA reference captured.</div><div class="signals"><div class="signal"><span>Signal</span><span>alacnet_status = CE or CEPW AND xa_reference IS NULL</span></div><div class="signal"><span>CIP impact</span><span>Submission SLA = Metric 3 (80% threshold)</span></div></div></div>
+    <div class="audit-card"><div class="card-title"><span class="priority priority-med">P2 — Near-Term</span> Withdrawal Rate Tracker</div><div class="card-metric amber">40%</div><div class="card-desc">Track monthly withdrawal rate by carrier. Varies 25–54%. Flag when a carrier’s JNS rate spikes ≥10pts.</div><div class="signals"><div class="signal"><span>Worst</span><span>State Farm GC 54.5% · AFICS MRP 48.9% · Erie 48.6%</span></div><div class="signal"><span>Best</span><span>AAA 24.8% · Liberty Mutual 33.2% · CSAA 32.2%</span></div></div></div>
+    <div class="audit-card"><div class="card-title"><span class="priority priority-med">P2 — Near-Term</span> Multi-Rejection Queue</div><div class="card-metric amber">221 files</div><div class="card-desc">Live queue of active files with ≥2 rejections for senior QR review before next resubmission.</div><div class="signals"><div class="signal"><span>Trigger</span><span>xa_rejections ≥ 2 AND job still active</span></div><div class="signal"><span>Pattern</span><span>Allstate dominates 4+ rejection files</span></div></div></div>
+    <div class="audit-card"><div class="card-title"><span class="priority priority-med">P2 — Near-Term</span> HO Contact Tracker</div><div class="card-metric amber">8 active</div><div class="card-desc">Daily flag for “HO Not Responding” jobs. CIP Metric 1: contact within 30min (emergency) or 1h (standard).</div><div class="signals"><div class="signal"><span>Signal</span><span>suspension_reason contains “Not responding”</span></div><div class="signal"><span>CIP threshold</span><span>Contact SLA must be met ≥95% of the time</span></div></div></div>
+    <div class="audit-card"><div class="card-title"><span class="priority priority-low">P3 — Strategic</span> CIP Score Simulator</div><div class="card-metric blue">11 metrics</div><div class="card-desc">Live CIP score estimate from DB: Metric 1 (contact), Metric 3 (submission), Metric 4 (resubmission), Metric 10 (rejections). Know your score before Alacrity publishes it.</div><div class="signals"><div class="signal"><span>M10 (rejections)</span><span>Target &lt;20% restoration. Allstate: failing.</span></div><div class="signal"><span>M3 (submission)</span><span>Target ≥80% on-time.</span></div></div></div>
+    <div class="audit-card"><div class="card-title"><span class="priority priority-low">P3 — Strategic</span> CAT Season Planner</div><div class="card-metric blue">+200%</div><div class="card-desc">Aug–Oct: 2–3x baseline volume. 2024 peak: 597 jobs in 3 months. Build capacity alert when 4-week rate exceeds 120% of baseline.</div><div class="signals"><div class="signal"><span>2024 peak</span><span>Aug 216 · Sep 185 · Oct 196</span></div><div class="signal"><span>Lead time</span><span>6–8 weeks for QR and estimating staff scaling</span></div></div></div>
+  </div>
+</div>
+
+<div class="footer"><strong>Data source:</strong> alacrity.db — 7,182 closed jobs + 380 active (2026-04-28) · Scraped from AlacNet · <strong>SOP sources:</strong> Alacrity University Library, CIP Playbook April 2025 · Generated April 28, 2026</div>
+</div>
+
+<script>
+const data = {
+  trades: [{"csv_trade_type":"General Contractor","n":3062,"avg_est":19186,"total_est":28165439,"xa_count":2134,"rejected":357,"withdrawn":1561},{"csv_trade_type":"Estimate Only","n":811,"avg_est":2663,"total_est":1723185,"xa_count":576,"rejected":64,"withdrawn":167},{"csv_trade_type":"Mitigation - Water (Optional)","n":796,"avg_est":3580,"total_est":2079697,"xa_count":533,"rejected":48,"withdrawn":212},{"csv_trade_type":"Mitigation - Water - MICA","n":525,"avg_est":2911,"total_est":1039201,"xa_count":357,"rejected":58,"withdrawn":165},{"csv_trade_type":"Board Up","n":456,"avg_est":1293,"total_est":353004,"xa_count":243,"rejected":17,"withdrawn":181},{"csv_trade_type":"Mitigation - Water","n":294,"avg_est":5358,"total_est":835806,"xa_count":154,"rejected":17,"withdrawn":141},{"csv_trade_type":"Mitigation - Contents Cleaning","n":250,"avg_est":8668,"total_est":1178859,"xa_count":144,"rejected":75,"withdrawn":111},{"csv_trade_type":"Large Loss EMS","n":12,"avg_est":218734,"total_est":2187339,"xa_count":11,"rejected":3,"withdrawn":0}],
+  carriers: [{"csv_carrier":"State Farm - GC","n":1184,"avg_est":12312,"rejected":57,"pct_rejected":4.8,"withdrawn":645,"pct_withdrawn":54.5,"xa_count":839,"pct_xa":70.9},{"csv_carrier":"(ASI) American Strategic Insurance","n":1069,"avg_est":10677,"rejected":73,"pct_rejected":6.8,"withdrawn":391,"pct_withdrawn":36.6,"xa_count":839,"pct_xa":78.5},{"csv_carrier":"AAA Insurance","n":767,"avg_est":14734,"rejected":67,"pct_rejected":8.7,"withdrawn":190,"pct_withdrawn":24.8,"xa_count":581,"pct_xa":75.7},{"csv_carrier":"Allstate - California","n":325,"avg_est":8310,"rejected":121,"pct_rejected":37.2,"withdrawn":148,"pct_withdrawn":45.5,"xa_count":198,"pct_xa":60.9},{"csv_carrier":"AFICS - MRP","n":311,"avg_est":15758,"rejected":43,"pct_rejected":13.8,"withdrawn":152,"pct_withdrawn":48.9,"xa_count":236,"pct_xa":75.9},{"csv_carrier":"Liberty Mutual - Safeco","n":214,"avg_est":5769,"rejected":0,"pct_rejected":0,"withdrawn":71,"pct_withdrawn":33.2,"xa_count":141,"pct_xa":65.9},{"csv_carrier":"Allstate - Northwest Property MCO","n":197,"avg_est":5122,"rejected":69,"pct_rejected":35,"withdrawn":79,"pct_withdrawn":40.1,"xa_count":136,"pct_xa":69},{"csv_carrier":"THIG - DRP","n":195,"avg_est":6608,"rejected":1,"pct_rejected":0.5,"withdrawn":84,"pct_withdrawn":43.1,"xa_count":33,"pct_xa":16.9},{"csv_carrier":"Allstate - Southeastern Property","n":144,"avg_est":5229,"rejected":53,"pct_rejected":36.8,"withdrawn":60,"pct_withdrawn":41.7,"xa_count":94,"pct_xa":65.3},{"csv_carrier":"Allstate - North Central CSA","n":110,"avg_est":13233,"rejected":50,"pct_rejected":45.5,"withdrawn":42,"pct_withdrawn":38.2,"xa_count":72,"pct_xa":65.5},{"csv_carrier":"Allstate - Florida","n":109,"avg_est":5230,"rejected":40,"pct_rejected":36.7,"withdrawn":46,"pct_withdrawn":42.2,"xa_count":78,"pct_xa":71.6},{"csv_carrier":"Allstate - Southwest Property MCO","n":107,"avg_est":6143,"rejected":38,"pct_rejected":35.5,"withdrawn":39,"pct_withdrawn":36.4,"xa_count":79,"pct_xa":73.8}],
+  allstate: [{"csv_carrier":"Allstate - California","n":325,"rejected":121,"rej_pct":37.2,"withdrawn":148,"wdn_pct":45.5},{"csv_carrier":"Allstate - Northwest Property MCO","n":197,"rejected":69,"rej_pct":35,"withdrawn":79,"wdn_pct":40.1},{"csv_carrier":"Allstate - Southeastern Property","n":144,"rejected":53,"rej_pct":36.8,"withdrawn":60,"wdn_pct":41.7},{"csv_carrier":"Allstate - North Central CSA","n":110,"rejected":50,"rej_pct":45.5,"withdrawn":42,"wdn_pct":38.2},{"csv_carrier":"Allstate - Florida","n":109,"rejected":40,"rej_pct":36.7,"withdrawn":46,"wdn_pct":42.2},{"csv_carrier":"Allstate - Southwest Property MCO","n":107,"rejected":38,"rej_pct":35.5,"withdrawn":39,"wdn_pct":36.4}],
+  monthly: [{"month":"2022-01","n":75,"mit":25,"gc":36,"withdrawn":15,"total_value":435466},{"month":"2022-06","n":68,"mit":22,"gc":31,"withdrawn":18,"total_value":377432},{"month":"2022-12","n":54,"mit":22,"gc":25,"withdrawn":12,"total_value":318261},{"month":"2023-03","n":68,"mit":32,"gc":29,"withdrawn":22,"total_value":348034},{"month":"2023-08","n":110,"mit":52,"gc":43,"withdrawn":29,"total_value":749814},{"month":"2023-12","n":70,"mit":25,"gc":33,"withdrawn":27,"total_value":335128},{"month":"2024-01","n":109,"mit":47,"gc":49,"withdrawn":32,"total_value":942894},{"month":"2024-06","n":98,"mit":26,"gc":55,"withdrawn":23,"total_value":1355904},{"month":"2024-08","n":216,"mit":93,"gc":81,"withdrawn":53,"total_value":1466440},{"month":"2024-09","n":185,"mit":63,"gc":91,"withdrawn":46,"total_value":1505984},{"month":"2024-10","n":196,"mit":64,"gc":94,"withdrawn":57,"total_value":2043168},{"month":"2024-12","n":100,"mit":32,"gc":45,"withdrawn":26,"total_value":556092},{"month":"2025-04","n":155,"mit":34,"gc":90,"withdrawn":52,"total_value":2381780},{"month":"2025-08","n":131,"mit":49,"gc":49,"withdrawn":29,"total_value":905605},{"month":"2025-12","n":116,"mit":39,"gc":44,"withdrawn":24,"total_value":709635},{"month":"2026-01","n":135,"mit":58,"gc":49,"withdrawn":38,"total_value":746151},{"month":"2026-02","n":119,"mit":48,"gc":39,"withdrawn":27,"total_value":386947},{"month":"2026-03","n":97,"mit":42,"gc":27,"withdrawn":28,"total_value":262471}],
+  rejections: [{"xa_rejections":0,"n":6441},{"xa_rejections":1,"n":520},{"xa_rejections":2,"n":122},{"xa_rejections":3,"n":43},{"xa_rejections":4,"n":22},{"xa_rejections":5,"n":18},{"xa_rejections":6,"n":10},{"xa_rejections":"7+","n":6}],
+  active: [{"alacnet_status":"Contractor Performing Work","n":160,"pipeline_value":3305015,"suspended":89,"rejected":35},{"alacnet_status":"Adjuster Review","n":71,"pipeline_value":2265679,"suspended":47,"rejected":5},{"alacnet_status":null,"n":48,"pipeline_value":1543741,"suspended":25,"rejected":3},{"alacnet_status":"Contractor Review","n":32,"pipeline_value":370229,"suspended":19,"rejected":4},{"alacnet_status":"Contractor Estimating","n":28,"pipeline_value":8646,"suspended":19,"rejected":0},{"alacnet_status":"CEPW","n":20,"pipeline_value":35048,"suspended":11,"rejected":0},{"alacnet_status":"Alacrity Screening","n":14,"pipeline_value":165193,"suspended":7,"rejected":0}],
+  suspReasons: [["Decreasing Due Date",75],["HO Scheduling",50],["Pending Mit Completion",36],["Other",30],["Work in Progress (EMS)",20],["HO Not Responding",8],["Hazardous Environment",2]],
+  highRej: [{"claim_number":"1005-19-7647","csv_trade_type":"General Contractor","csv_carrier":"CSAA","xa_rejections":15,"estimate_dollar":117171,"alacnet_status":"Closed"},{"claim_number":"0749632922","csv_trade_type":"Mitigation - Contents Cleaning","csv_carrier":"Allstate - North Central CSA","xa_rejections":10,"estimate_dollar":6320,"alacnet_status":"Closed"},{"claim_number":"0730995098","csv_trade_type":"Mitigation - Contents Cleaning","csv_carrier":"Allstate - SW Property MCO","xa_rejections":9,"estimate_dollar":11825,"alacnet_status":"Closed"},{"claim_number":"0726101942","csv_trade_type":"General Contractor","csv_carrier":"Allstate - California","xa_rejections":7,"estimate_dollar":37149,"alacnet_status":"Closed"},{"claim_number":"0754179760","csv_trade_type":"General Contractor","csv_carrier":"Allstate - North Central CSA","xa_rejections":6,"estimate_dollar":250338,"alacnet_status":"Closed"}]
+};
+
+const tradeBody = document.getElementById('tradeTable');
+data.trades.forEach(r => {
+  const rejPct = Math.round(100*r.rejected/r.n);
+  const wdnPct = Math.round(100*r.withdrawn/r.n);
+  const xaPct = Math.round(100*r.xa_count/r.n);
+  const rejBadge = rejPct >= 25 ? 'badge-red' : rejPct >= 15 ? 'badge-amber' : 'badge-green';
+  const wdnBadge = wdnPct >= 50 ? 'badge-red' : wdnPct >= 35 ? 'badge-amber' : 'badge-blue';
+  tradeBody.innerHTML += `<tr><td>${r.csv_trade_type}</td><td class="num">${r.n.toLocaleString()}</td><td class="num">${Math.round(100*r.n/7182)}%</td><td class="num">${xaPct}%</td><td class="num"><span class="badge ${rejBadge}">${rejPct}%</span></td><td class="num"><span class="badge ${wdnBadge}">${wdnPct}%</span></td><td class="num">$${(r.avg_est||0).toLocaleString()}</td><td class="num">$${Math.round(r.total_est/1000)}K</td></tr>`;
+});
+
+const allstateBody = document.getElementById('allstateTable');
+data.allstate.forEach(r => {
+  allstateBody.innerHTML += `<tr><td>${r.csv_carrier}</td><td class="num">${r.n}</td><td class="num">${r.rejected}</td><td class="num"><span class="badge badge-red">${r.rej_pct}%</span></td><td class="num">${r.withdrawn}</td><td class="num"><span class="badge badge-amber">${r.wdn_pct}%</span></td></tr>`;
+});
+
+const carrierBody = document.getElementById('carrierTable');
+data.carriers.forEach(r => {
+  const rejBadge = r.pct_rejected >= 25 ? 'badge-red' : r.pct_rejected >= 15 ? 'badge-amber' : 'badge-green';
+  const wdnBadge = r.pct_withdrawn >= 50 ? 'badge-red' : r.pct_withdrawn >= 40 ? 'badge-amber' : 'badge-blue';
+  const status = r.pct_rejected >= 25 ? '<span class="badge badge-red">At Risk</span>' : r.pct_rejected >= 15 ? '<span class="badge badge-amber">Watch</span>' : '<span class="badge badge-green">OK</span>';
+  carrierBody.innerHTML += `<tr><td>${r.csv_carrier}</td><td class="num">${r.n}</td><td class="num"><span class="badge ${rejBadge}">${r.pct_rejected}%</span></td><td class="num"><span class="badge ${wdnBadge}">${r.pct_withdrawn}%</span></td><td class="num">${r.pct_xa}%</td><td class="num">$${(r.avg_est||0).toLocaleString()}</td><td>${status}</td></tr>`;
+});
+
+const hrBody = document.getElementById('highRejTable');
+data.highRej.forEach(r => {
+  hrBody.innerHTML += `<tr><td><code>${r.claim_number}</code></td><td>${r.csv_trade_type}</td><td>${r.csv_carrier}</td><td class="num"><span class="badge badge-red">${r.xa_rejections}</span></td><td class="num">$${r.estimate_dollar.toLocaleString()}</td><td>${r.alacnet_status}</td></tr>`;
+});
+
+const activeBody = document.getElementById('activeTable');
+data.active.forEach(r => {
+  activeBody.innerHTML += `<tr><td>${r.alacnet_status || '<em style="color:#999">Unknown</em>'}</td><td class="num">${r.n}</td><td class="num">$${r.pipeline_value.toLocaleString()}</td><td class="num">${r.suspended}</td><td class="num">${r.rejected > 0 ? '<span class="badge badge-amber">'+r.rejected+'</span>' : '—'}</td></tr>`;
+});
+
+const suspBody = document.getElementById('suspTable');
+data.suspReasons.forEach(([reason, n]) => {
+  const risk = reason === 'HO Not Responding' ? '<span class="badge badge-red">High</span>' : reason === 'Hazardous Environment' ? '<span class="badge badge-amber">Medium</span>' : '<span class="badge badge-green">Normal</span>';
+  suspBody.innerHTML += `<tr><td>${reason}</td><td class="num">${n}</td><td>${risk}</td></tr>`;
+});
+
+new Chart(document.getElementById('volumeChart'), { type: 'bar', data: { labels: data.monthly.map(r=>r.month), datasets: [{ label: 'Mitigation/EMS', data: data.monthly.map(r=>r.mit), backgroundColor: '#3b82f6', stack: 'a' }, { label: 'GC/Large Loss', data: data.monthly.map(r=>r.gc), backgroundColor: '#8b5cf6', stack: 'a' }, { label: 'Other', data: data.monthly.map(r=>r.n-r.mit-r.gc), backgroundColor: '#94a3b8', stack: 'a' }] }, options: { plugins: { legend: { position: 'bottom' } }, scales: { x: { ticks: { font: { size: 9 }, maxRotation: 45 } }, y: { stacked: true } }, responsive: true, maintainAspectRatio: true } });
+new Chart(document.getElementById('valueChart'), { type: 'line', data: { labels: data.monthly.map(r=>r.month), datasets: [{ data: data.monthly.map(r=>r.total_value), borderColor: '#1e40af', backgroundColor: 'rgba(30,64,175,.1)', fill: true, tension: 0.3, pointRadius: 2 }] }, options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { font: { size: 9 }, maxRotation: 45 } }, y: { ticks: { callback: v => '$'+Math.round(v/1000)+'K' } } }, responsive: true, maintainAspectRatio: true } });
+new Chart(document.getElementById('complianceChart'), { type: 'bar', data: { labels: ['Xactimate', 'Work Auth', 'COS Form', 'Any Rejection', '2+ Rejections'], datasets: [{ data: [4770, 3298, 2854, 741, 221], backgroundColor: ['#3b82f6','#f59e0b','#f59e0b','#ef4444','#b91c1c'] }] }, options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { max: 7182 } }, responsive: true, maintainAspectRatio: true } });
+new Chart(document.getElementById('rejectionChart'), { type: 'bar', data: { labels: data.rejections.map(r=>r.xa_rejections+' rej'), datasets: [{ data: data.rejections.map(r=>r.n), backgroundColor: data.rejections.map(r=>r.xa_rejections===0?'#86efac':r.xa_rejections<=2?'#fde047':'#fca5a5') }] }, options: { plugins: { legend: { display: false } }, scales: { y: { type: 'logarithmic' } }, responsive: true, maintainAspectRatio: true } });
+new Chart(document.getElementById('outcomeChart'), { type: 'doughnut', data: { labels: ['Closed (54%)', 'Withdrawn (40%)', 'Completed (6%)'], datasets: [{ data: [3868, 2879, 435], backgroundColor: ['#3b82f6','#ef4444','#22c55e'] }] }, options: { plugins: { legend: { position: 'bottom' } }, responsive: true, maintainAspectRatio: true } });
+</script>
+</body>
+</html>
