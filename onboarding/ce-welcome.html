@@ -5,107 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Welcome to CE — Kustom Centralized Estimating</title>
 <style>
-:root {
-  --red: #C8102E;
-  --red-dim: #8f0b20;
-  --red-glow: rgba(200,16,46,0.15);
-  --bg: #0a0a0a;
-  --surface: #141414;
-  --surface2: #1e1e1e;
-  --border: #2a2a2a;
-  --text: #ffffff;
-  --muted: #888888;
-  --muted2: #555555;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;overflow-x:hidden;}
+:root{--red:#C8102E;--red-dim:#8f0b20;--red-glow:rgba(200,16,46,0.15);--bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--border:#2a2a2a;--text:#ffffff;--muted:#888888;--muted2:#555555;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;overflow-x:hidden;}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text);}
-.nav-logo span{color:var(--red);}
-.nav-links{display:flex;gap:28px;}
-.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.2s;}
-.nav-links a:hover{color:var(--text);}
+.nav-logo{font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text);}.nav-logo span{color:var(--red);}
+.nav-links{display:flex;gap:28px;}.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.2s;}.nav-links a:hover{color:var(--text);}
 section{padding:100px 40px;max-width:1100px;margin:0 auto;}
 .section-label{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
-h2{font-size:clamp(28px,4vw,42px);font-weight:700;line-height:1.15;margin-bottom:20px;}
-.sub{color:var(--muted);font-size:17px;line-height:1.7;max-width:600px;}
+h2{font-size:clamp(28px,4vw,42px);font-weight:700;line-height:1.15;margin-bottom:20px;}.sub{color:var(--muted);font-size:17px;line-height:1.7;max-width:600px;}
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:56px;position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;top:-200px;right:-300px;width:700px;height:700px;background:radial-gradient(circle,rgba(200,16,46,0.08) 0%,transparent 70%);pointer-events:none;}
 .hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--red);margin-bottom:24px;}
 .hero h1{font-size:clamp(40px,7vw,80px);font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin-bottom:24px;}
-.hero-sub{color:var(--muted);font-size:18px;max-width:560px;margin-bottom:48px;line-height:1.7;}
-.hero-sub strong{color:var(--text);}
-.stats{display:flex;gap:48px;flex-wrap:wrap;}
-.stat{display:flex;flex-direction:column;}
+.hero-sub{color:var(--muted);font-size:18px;max-width:560px;margin-bottom:48px;line-height:1.7;}.hero-sub strong{color:var(--text);}
+.stats{display:flex;gap:48px;flex-wrap:wrap;}.stat{display:flex;flex-direction:column;}
 .stat-num{font-size:48px;font-weight:800;color:var(--text);line-height:1;letter-spacing:-0.02em;}
 .stat-label{font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:0.04em;}
 .scroll-hint{position:absolute;bottom:40px;left:40px;display:flex;align-items:center;gap:10px;color:var(--muted2);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;}
 .scroll-line{width:40px;height:1px;background:var(--muted2);}
 .cards-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:48px;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;transition:border-color 0.3s,transform 0.3s;}
-.card:hover{border-color:var(--red);transform:translateY(-3px);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;transition:border-color 0.3s,transform 0.3s;}.card:hover{border-color:var(--red);transform:translateY(-3px);}
 .card-icon{width:44px;height:44px;border-radius:10px;background:var(--red-glow);border:1px solid var(--red-dim);display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
 .card-icon svg{width:22px;height:22px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.card h3{font-size:17px;font-weight:700;margin-bottom:10px;}
-.card p{color:var(--muted);font-size:14px;line-height:1.7;}
-.card .cpu{display:flex;flex-direction:column;gap:6px;margin-top:14px;}
-.cpu-row{display:flex;gap:10px;font-size:13px;}
-.cpu-letter{color:var(--red);font-weight:800;width:14px;flex-shrink:0;}
-.cpu-text{color:var(--muted);}
+.card h3{font-size:17px;font-weight:700;margin-bottom:10px;}.card p{color:var(--muted);font-size:14px;line-height:1.7;}
+.card .cpu{display:flex;flex-direction:column;gap:6px;margin-top:14px;}.cpu-row{display:flex;gap:10px;font-size:13px;}
+.cpu-letter{color:var(--red);font-weight:800;width:14px;flex-shrink:0;}.cpu-text{color:var(--muted);}
 .flow-wrap{margin-top:48px;overflow-x:auto;padding-bottom:16px;}
 .flow{display:flex;align-items:center;gap:0;min-width:700px;}
 .flow-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;}
 .flow-bubble{width:52px;height:52px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:12px;position:relative;z-index:1;transition:border-color 0.3s;}
 .flow-bubble svg{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.3s;}
-.flow-step:hover .flow-bubble{border-color:var(--red);}
-.flow-step:hover .flow-bubble svg{stroke:var(--red);}
-.flow-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;}
-.flow-detail{font-size:11px;color:var(--muted);max-width:90px;}
+.flow-step:hover .flow-bubble{border-color:var(--red);}.flow-step:hover .flow-bubble svg{stroke:var(--red);}
+.flow-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;}.flow-detail{font-size:11px;color:var(--muted);max-width:90px;}
 .flow-arrow{flex-shrink:0;color:var(--muted2);font-size:18px;padding:0 4px;margin-top:-28px;}
 .flow-platform{display:flex;gap:6px;margin-top:8px;justify-content:center;}
 .pill{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;}
-.pill-red{background:var(--red-glow);color:var(--red);border:1px solid var(--red-dim);}
-.pill-gray{background:#1e1e1e;color:var(--muted);border:1px solid var(--border);}
+.pill-red{background:var(--red-glow);color:var(--red);border:1px solid var(--red-dim);}.pill-gray{background:#1e1e1e;color:var(--muted);border:1px solid var(--border);}
 .platforms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:48px;}
-.flip-card{height:160px;perspective:1000px;cursor:pointer;}
-.flip-card:hover .flip-inner{transform:rotateY(180deg);}
+.flip-card{height:160px;perspective:1000px;cursor:pointer;}.flip-card:hover .flip-inner{transform:rotateY(180deg);}
 .flip-inner{position:relative;width:100%;height:100%;transition:transform 0.5s;transform-style:preserve-3d;}
 .flip-front,.flip-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:12px;border:1px solid var(--border);padding:20px;display:flex;flex-direction:column;}
-.flip-front{background:var(--surface);justify-content:flex-end;}
-.flip-back{background:var(--surface2);border-color:var(--red-dim);transform:rotateY(180deg);justify-content:center;}
-.plat-name{font-size:15px;font-weight:700;color:var(--text);}
-.plat-type{font-size:11px;color:var(--muted);margin-top:2px;}
-.plat-icon{font-size:28px;margin-bottom:auto;}
-.plat-desc{font-size:12px;color:var(--muted);line-height:1.6;}
-.plat-desc strong{color:var(--red);font-weight:600;}
+.flip-front{background:var(--surface);justify-content:flex-end;}.flip-back{background:var(--surface2);border-color:var(--red-dim);transform:rotateY(180deg);justify-content:center;}
+.plat-name{font-size:15px;font-weight:700;color:var(--text);}.plat-type{font-size:11px;color:var(--muted);margin-top:2px;}.plat-icon{font-size:28px;margin-bottom:auto;}
+.plat-desc{font-size:12px;color:var(--muted);line-height:1.6;}.plat-desc strong{color:var(--red);font-weight:600;}
 .week-phases{display:flex;flex-direction:column;gap:24px;margin-top:48px;}
 .week-phase{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
 .week-phase-header{padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;border-bottom:1px solid var(--border);}
 .week-phase-header:hover{background:var(--surface2);}
-.phase-dot-w{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.phase-title-w{font-size:14px;font-weight:700;flex:1;}
-.phase-count{font-size:12px;color:var(--muted);}
-.phase-tog{font-size:11px;color:var(--muted2);transition:transform 0.2s;}
-.phase-tog.open{transform:rotate(180deg);}
-.week-flow-header{padding:8px 20px 4px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;}
+.phase-dot-w{width:10px;height:10px;border-radius:50%;flex-shrink:0;}.phase-title-w{font-size:14px;font-weight:700;flex:1;}
+.phase-count{font-size:12px;color:var(--muted);}.phase-tog{font-size:11px;color:var(--muted2);transition:transform 0.2s;}.phase-tog.open{transform:rotate(180deg);}
 .week-section-label{padding:8px 20px 4px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);}
 .week-note{margin:8px 20px;border-radius:6px;padding:8px 12px;font-size:12px;line-height:1.5;}
 .witem{display:flex;align-items:flex-start;gap:10px;padding:8px 20px;border-bottom:1px solid #1a1a1a;}
-.witem:last-child{border-bottom:none;}
-.witem.done .witem-text{text-decoration:line-through;color:var(--muted2);}
-.witem.done .witem-note{color:#3a3a3a !important;}
+.witem:last-child{border-bottom:none;}.witem.done .witem-text{text-decoration:line-through;color:var(--muted2);}.witem.done .witem-note{color:#3a3a3a !important;}
 .witem input[type=checkbox]{margin-top:2px;flex-shrink:0;accent-color:var(--red);width:14px;height:14px;cursor:pointer;}
-.witem-body{flex:1;min-width:0;}
-.witem-text{font-size:13px;color:var(--text);line-height:1.4;}
+.witem-body{flex:1;min-width:0;}.witem-text{font-size:13px;color:var(--text);line-height:1.4;}
 .witem-note{display:block;font-size:11px;color:var(--muted2);margin-top:2px;font-style:italic;line-height:1.4;}
-.wbadges{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;}
-.wb{font-size:10px;padding:1px 7px;border-radius:20px;font-weight:700;}
+.wbadges{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;}.wb{font-size:10px;padding:1px 7px;border-radius:20px;font-weight:700;}
 .wb-seth{background:rgba(49,100,200,0.15);color:#6fa3ff;border:1px solid rgba(49,100,200,0.3);}
-.wb-it{background:rgba(200,16,46,0.12);color:#ff6b7a;border:1px solid rgba(200,16,46,0.25);}
 .wb-hire{background:rgba(29,158,117,0.12);color:#4ecca3;border:1px solid rgba(29,158,117,0.25);}
-.wb-kim{background:rgba(127,119,221,0.12);color:#b8b0ff;border:1px solid rgba(127,119,221,0.25);}
-.wb-lin{background:rgba(186,117,23,0.15);color:#ffb347;border:1px solid rgba(186,117,23,0.3);}
 .week-progress{margin:0 20px 16px;background:#1a1a1a;border-radius:4px;height:4px;overflow:hidden;}
 .week-progress-fill{height:100%;background:var(--red);border-radius:4px;transition:width 0.4s;}
 .links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:40px;}
@@ -113,26 +71,17 @@ h2{font-size:clamp(28px,4vw,42px);font-weight:700;line-height:1.15;margin-bottom
 .link-card:hover{border-color:var(--red);background:var(--surface2);}
 .link-icon{width:36px;height:36px;border-radius:8px;background:var(--red-glow);border:1px solid var(--red-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .link-icon svg{width:16px;height:16px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.link-name{font-size:14px;font-weight:600;color:var(--text);}
-.link-desc{font-size:12px;color:var(--muted);margin-top:2px;}
+.link-name{font-size:14px;font-weight:600;color:var(--text);}.link-desc{font-size:12px;color:var(--muted);margin-top:2px;}
 footer{border-top:1px solid var(--border);padding:32px 40px;display:flex;justify-content:space-between;align-items:center;}
-footer p{color:var(--muted2);font-size:12px;}
-footer strong{color:var(--muted);}
-.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease;}
-.fade-in.visible{opacity:1;transform:translateY(0);}
+footer p{color:var(--muted2);font-size:12px;}footer strong{color:var(--muted);}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease;}.fade-in.visible{opacity:1;transform:translateY(0);}
 .red-line{width:48px;height:3px;background:var(--red);margin-bottom:24px;border-radius:2px;}
 </style>
 </head>
 <body>
 <nav>
   <div class="nav-logo"><span>CE</span> &nbsp;|&nbsp; Kustom Centralized Estimating</div>
-  <div class="nav-links">
-    <a href="#mission">Mission</a>
-    <a href="#flow">The Flow</a>
-    <a href="#platforms">Platforms</a>
-    <a href="#firstweek">First Week</a>
-    <a href="#links">Quick Links</a>
-  </div>
+  <div class="nav-links"><a href="#mission">Mission</a><a href="#flow">The Flow</a><a href="#platforms">Platforms</a><a href="#firstweek">First Week</a><a href="#links">Quick Links</a></div>
 </nav>
 <section class="hero" style="max-width:none;padding-left:max(40px,8vw);padding-right:max(40px,8vw);">
   <div class="hero-eyebrow">Welcome to the team</div>
@@ -152,28 +101,9 @@ footer strong{color:var(--muted);}
   <p class="sub">Revenue, speed, and accuracy matter — but the three things that will define your success here go deeper than the numbers.</p>
   <div class="red-line" style="margin-top:32px;"></div>
   <div class="cards-3">
-    <div class="card">
-      <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-      <h3>CPU Communication</h3>
-      <p>Every note, email, and message you send should answer three things before the reader asks.</p>
-      <div class="cpu">
-        <div class="cpu-row"><span class="cpu-letter">C</span><span class="cpu-text">Content &amp; Context — don't be vague. Include all relevant information.</span></div>
-        <div class="cpu-row"><span class="cpu-letter">P</span><span class="cpu-text">Purpose — explain why your communication matters and why you're reaching out.</span></div>
-        <div class="cpu-row"><span class="cpu-letter">U</span><span class="cpu-text">Urgency — always include timelines. If you don't define it, no one knows when to act.</span></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg></div>
-      <h3>Curiosity</h3>
-      <p>The defining characteristic of excellent estimators is curiosity — to want to find the full story of every loss, every property, every scope of work.</p>
-      <p style="margin-top:10px;color:var(--muted);font-size:14px;">Estimators are storytellers and revenue drivers. Tell the full story every time. It also pays better.</p>
-    </div>
-    <div class="card">
-      <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <h3>Accountability</h3>
-      <p>You are responsible for the success and profitability of every job you're assigned to. No "not my job" here.</p>
-      <p style="margin-top:10px;color:var(--muted);font-size:14px;">It's okay to make mistakes. We want $10 mistakes, not $10,000 ones. Own them, fix them, move forward.</p>
-    </div>
+    <div class="card"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>CPU Communication</h3><p>Every note, email, and message you send should answer three things before the reader asks.</p><div class="cpu"><div class="cpu-row"><span class="cpu-letter">C</span><span class="cpu-text">Content &amp; Context — don't be vague. Include all relevant information.</span></div><div class="cpu-row"><span class="cpu-letter">P</span><span class="cpu-text">Purpose — explain why your communication matters and why you're reaching out.</span></div><div class="cpu-row"><span class="cpu-letter">U</span><span class="cpu-text">Urgency — always include timelines. If you don't define it, no one knows when to act.</span></div></div></div>
+    <div class="card"><div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg></div><h3>Curiosity</h3><p>The defining characteristic of excellent estimators is curiosity — to want to find the full story of every loss, every property, every scope of work.</p><p style="margin-top:10px;color:var(--muted);font-size:14px;">Estimators are storytellers and revenue drivers. Tell the full story every time. It also pays better.</p></div>
+    <div class="card"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Accountability</h3><p>You are responsible for the success and profitability of every job you're assigned to. No "not my job" here.</p><p style="margin-top:10px;color:var(--muted);font-size:14px;">It's okay to make mistakes. We want $10 mistakes, not $10,000 ones. Own them, fix them, move forward.</p></div>
   </div>
 </section>
 <section id="flow" class="fade-in" style="padding-top:0;">
@@ -182,72 +112,46 @@ footer strong{color:var(--muted);}
   <p class="sub">Every estimate you write follows this path. DASH is where the work happens. Monday.com is where you see it all in one place.</p>
   <div class="flow-wrap">
     <div class="flow">
-      <div class="flow-step">
-        <div class="flow-bubble"><svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-        <div class="flow-name">Job Created</div><div class="flow-detail">Auto-created via DASH activity</div>
-        <div class="flow-platform"><span class="pill pill-red">DASH</span><span class="pill pill-gray">Monday</span></div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step">
-        <div class="flow-bubble"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <div class="flow-name">Assigned</div><div class="flow-detail">Intake coordinator assigns in DASH + Monday</div>
-        <div class="flow-platform"><span class="pill pill-gray">Intake</span></div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step">
-        <div class="flow-bubble"><svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <div class="flow-name">You Review</div><div class="flow-detail">Matterport, DASH notes, docs, photos</div>
-        <div class="flow-platform"><span class="pill pill-red">DASH</span><span class="pill pill-gray">Matterport</span></div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step">
-        <div class="flow-bubble"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        <div class="flow-name">Write Estimate</div><div class="flow-detail">Xactimate or Symbility</div>
-        <div class="flow-platform"><span class="pill pill-red">Xactimate</span></div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step">
-        <div class="flow-bubble"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="flow-name">Approved</div><div class="flow-detail">Estimate approved, upload to DASH</div>
-        <div class="flow-platform"><span class="pill pill-red">DASH</span><span class="pill pill-gray">Monday</span></div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step">
-        <div class="flow-bubble"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-        <div class="flow-name">Settled</div><div class="flow-detail">Job handed back to division for production</div>
-        <div class="flow-platform"><span class="pill pill-gray">Division</span></div>
-      </div>
+      <div class="flow-step"><div class="flow-bubble"><svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="flow-name">Job Created</div><div class="flow-detail">Auto-created via DASH activity</div><div class="flow-platform"><span class="pill pill-red">DASH</span><span class="pill pill-gray">Monday</span></div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step"><div class="flow-bubble"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="flow-name">Assigned</div><div class="flow-detail">Intake coordinator assigns in DASH + Monday</div><div class="flow-platform"><span class="pill pill-gray">Intake</span></div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step"><div class="flow-bubble"><svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="flow-name">You Review</div><div class="flow-detail">Matterport, DASH notes, docs, photos</div><div class="flow-platform"><span class="pill pill-red">DASH</span><span class="pill pill-gray">Matterport</span></div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step"><div class="flow-bubble"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><div class="flow-name">Write Estimate</div><div class="flow-detail">Xactimate or Symbility</div><div class="flow-platform"><span class="pill pill-red">Xactimate</span></div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step"><div class="flow-bubble"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="flow-name">Approved</div><div class="flow-detail">Estimate approved, upload to DASH</div><div class="flow-platform"><span class="pill pill-red">DASH</span><span class="pill pill-gray">Monday</span></div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step"><div class="flow-bubble"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="flow-name">Settled</div><div class="flow-detail">Job handed back to division for production</div><div class="flow-platform"><span class="pill pill-gray">Division</span></div></div>
     </div>
   </div>
-  <div style="margin-top:28px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:8px;font-size:13px;color:var(--muted);max-width:700px;">
-    <strong style="color:var(--text);">Monday.com is automatic.</strong> You never manually change a status on Monday — DASH note headers do it for you. Document in DASH, tag Centralized Estimating, and Monday reflects it instantly.
-  </div>
+  <div style="margin-top:28px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:8px;font-size:13px;color:var(--muted);max-width:700px;"><strong style="color:var(--text);">Monday.com is automatic.</strong> You never manually change a status on Monday — DASH note headers do it for you. Document in DASH, tag Centralized Estimating, and Monday reflects it instantly.</div>
 </section>
 <section id="platforms" class="fade-in" style="padding-top:0;">
   <div class="section-label">Platforms &amp; Technology</div>
   <h2>Your toolkit.</h2>
   <p class="sub">You'll live across these platforms daily. Hover each card to see what it's actually for.</p>
   <div class="platforms-grid">
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">📋</div><div class="plat-name">DASH</div><div class="plat-type">Job documentation</div></div><div class="flip-back"><div class="plat-desc"><strong>Primary home base.</strong> All job notes, photos, Matterport links, contacts, and DASH note headers that drive Monday. 14 separate instances across Kustom.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">📊</div><div class="plat-name">Monday.com</div><div class="plat-type">Job visualization</div></div><div class="flip-back"><div class="plat-desc"><strong>The dashboard.</strong> Real-time view of all active jobs. Statuses auto-update from DASH. Never manually change anything — just document in DASH.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">📐</div><div class="plat-name">Xactimate</div><div class="plat-type">Estimation software</div></div><div class="flip-back"><div class="plat-desc"><strong>The scope builder.</strong> Industry-standard estimation tool for repair scopes. 26 shared license emails across 6 regions — credentials in 1Password.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">🌐</div><div class="plat-name">Xactanalysis</div><div class="plat-type">TPA program portal</div></div><div class="flip-back"><div class="plat-desc"><strong>Program work hub.</strong> Where TPA assignments come in and estimates go out for carrier programs. Requires program-specific registration per carrier.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">🏠</div><div class="plat-name">Matterport</div><div class="plat-type">3D scanning</div></div><div class="flip-back"><div class="plat-desc"><strong>Your eyes on the job.</strong> 3D scan viewer for every loss site. Deep-link to exact points in the scan when asking questions in DASH or Teams.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">🔐</div><div class="plat-name">1Password</div><div class="plat-type">Credential vault</div></div><div class="flip-back"><div class="plat-desc"><strong>Set this up first.</strong> All 14 DASH logins, 26 Xactimate license emails, and every other platform credential lives here. Save as you go.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">🎥</div><div class="plat-name">Loom</div><div class="plat-type">Screen recording</div></div><div class="flip-back"><div class="plat-desc"><strong>Show, don't just tell.</strong> Record short videos to accompany Teams messages and emails. Use the desktop app for audio. Always include a written message too.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">📧</div><div class="plat-name">Outlook</div><div class="plat-type">External comms</div></div><div class="flip-back"><div class="plat-desc"><strong>External only.</strong> Adjusters, customers, carriers. Set up 6 regional folder rules on Day 1 — you'll get a flood of shared license emails without them.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">💬</div><div class="plat-name">Teams</div><div class="plat-type">Internal comms</div></div><div class="flip-back"><div class="plat-desc"><strong>Internal home.</strong> Message Seth anytime — literally anytime. CE All Chat and Mit/Repair chats for the team. Never use Monday.com to communicate.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">🤖</div><div class="plat-name">Claude / Cowork</div><div class="plat-type">AI assistant</div></div><div class="flip-back"><div class="plat-desc"><strong>Connected AI.</strong> Integrated with Monday, DASH workflows, and CE systems. Use for estimate research, communication drafts, scope questions, and more.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">📁</div><div class="plat-name">Alacrity</div><div class="plat-type">Program platform</div></div><div class="flip-back"><div class="plat-desc"><strong>TPA assignments.</strong> Company-wide access across all instances. Program work assignments come through here for applicable carriers.</div></div></div></div>
-    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">🛠</div><div class="plat-name">Symbility</div><div class="plat-type">Carrier platform</div></div><div class="flip-back"><div class="plat-desc"><strong>Estimate submission.</strong> Used for specific carrier programs and Claims Workspace. Requires 2FA — setup guide in Coda.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#128203;</div><div class="plat-name">DASH</div><div class="plat-type">Job documentation</div></div><div class="flip-back"><div class="plat-desc"><strong>Primary home base.</strong> All job notes, photos, Matterport links, contacts, and note headers that drive Monday. 14 separate instances across Kustom.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#128202;</div><div class="plat-name">Monday.com</div><div class="plat-type">Job visualization</div></div><div class="flip-back"><div class="plat-desc"><strong>The dashboard.</strong> Real-time view of all active jobs. Statuses auto-update from DASH. Never manually change anything here.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#128208;</div><div class="plat-name">Xactimate</div><div class="plat-type">Estimation software</div></div><div class="flip-back"><div class="plat-desc"><strong>The scope builder.</strong> Industry-standard estimation tool. 26 shared license emails across 6 regions — all credentials in 1Password.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#127760;</div><div class="plat-name">Xactanalysis</div><div class="plat-type">TPA program portal</div></div><div class="flip-back"><div class="plat-desc"><strong>Program work hub.</strong> Where TPA assignments come in and estimates go out for carrier programs.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#127968;</div><div class="plat-name">Matterport</div><div class="plat-type">3D scanning</div></div><div class="flip-back"><div class="plat-desc"><strong>Your eyes on the job.</strong> 3D scan viewer for every loss site. Deep-link to exact scan points when asking questions in DASH or Teams.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#128272;</div><div class="plat-name">1Password</div><div class="plat-type">Credential vault</div></div><div class="flip-back"><div class="plat-desc"><strong>Set this up first.</strong> All 14 DASH logins, 26 Xactimate license emails, and every other platform credential lives here.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#127909;</div><div class="plat-name">Loom</div><div class="plat-type">Screen recording</div></div><div class="flip-back"><div class="plat-desc"><strong>Show, don't just tell.</strong> Short videos alongside Teams messages and emails. Use the desktop app for audio recordings.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#128231;</div><div class="plat-name">Outlook</div><div class="plat-type">External comms</div></div><div class="flip-back"><div class="plat-desc"><strong>External only.</strong> Adjusters, customers, carriers. Set up 6 regional folder rules on Day 1 — you'll get a flood of emails without them.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#128172;</div><div class="plat-name">Teams</div><div class="plat-type">Internal comms</div></div><div class="flip-back"><div class="plat-desc"><strong>Internal home.</strong> Message Seth anytime — literally anytime. All CE chats are here. Never use Monday.com to communicate.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#129302;</div><div class="plat-name">Claude / Cowork</div><div class="plat-type">AI assistant</div></div><div class="flip-back"><div class="plat-desc"><strong>Connected AI.</strong> Integrated with Monday, DASH workflows, and CE systems. Estimate research, communication drafts, scope questions.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#128194;</div><div class="plat-name">Alacrity</div><div class="plat-type">Program platform</div></div><div class="flip-back"><div class="plat-desc"><strong>TPA assignments.</strong> Company-wide access across all instances. Program work assignments come through here for applicable carriers.</div></div></div></div>
+    <div class="flip-card"><div class="flip-inner"><div class="flip-front"><div class="plat-icon">&#128295;</div><div class="plat-name">Symbility</div><div class="plat-type">Carrier platform</div></div><div class="flip-back"><div class="plat-desc"><strong>Estimate submission.</strong> Used for specific carrier programs and Claims Workspace. Requires 2FA — setup guide in Coda.</div></div></div></div>
   </div>
 </section>
 <section id="firstweek" class="fade-in" style="padding-top:0;">
   <div class="section-label">Your Onboarding</div>
   <h2>The full picture — Day 1 through Week 1.</h2>
-  <p class="sub">Everything happening around you and everything you need to do, in order. Check items off as you go — progress saves in your browser.</p>
+  <p class="sub">Everything happening around you and everything you need to do, in order. Check items off as you go — saves in your browser.</p>
   <div id="week-progress-bar" style="margin-top:24px;">
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;"><span>Your overall progress</span><span id="overall-prog-text">0 / 0</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;"><span>Your progress</span><span id="overall-prog-text">0 / 0</span></div>
     <div style="background:#1a1a1a;border-radius:4px;height:6px;overflow:hidden;"><div id="overall-prog-fill" style="height:100%;background:var(--red);border-radius:4px;width:0%;transition:width 0.4s;"></div></div>
   </div>
   <div class="week-phases" id="week-phases"></div>
@@ -257,58 +161,51 @@ footer strong{color:var(--muted);}
   <h2>Everything in one place.</h2>
   <div class="links-grid">
     <a class="link-card" href="https://coda.io/d/Centralized-Estimating-HubTownPortal_d7fMsHReTlD/Onboarding_sukyJIED" target="_blank"><div class="link-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><div><div class="link-name">Coda CE Toolbox</div><div class="link-desc">Onboarding, SOPs, tutorials, all platforms</div></div></a>
-    <a class="link-card" href="https://dash-ngs.net/NextGear/Enterprise/Module/User/Login.aspx" target="_blank"><div class="link-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div><div class="link-name">DASH Login 1</div><div class="link-desc">dash-ngs.net — primary NGS portal</div></div></a>
-    <a class="link-card" href="https://kustom.ngsapps.net/Enterprise/Module/User/Login.aspx" target="_blank"><div class="link-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div><div class="link-name">DASH Login 2</div><div class="link-desc">kustom.ngsapps.net — Kustom portal</div></div></a>
+    <a class="link-card" href="https://dash-ngs.net/NextGear/Enterprise/Module/User/Login.aspx" target="_blank"><div class="link-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div><div class="link-name">DASH Login 1</div><div class="link-desc">dash-ngs.net</div></div></a>
+    <a class="link-card" href="https://kustom.ngsapps.net/Enterprise/Module/User/Login.aspx" target="_blank"><div class="link-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div><div class="link-name">DASH Login 2</div><div class="link-desc">kustom.ngsapps.net</div></div></a>
     <a class="link-card" href="https://forms.monday.com/forms/485333f68a7106f233d8be8df79fd7da?r=use1" target="_blank"><div class="link-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><div><div class="link-name">Estimator Capabilities Form</div><div class="link-desc">Fill out on Day 1 — first thing</div></div></a>
     <a class="link-card" href="https://coda.io/d/Centralized-Estimating-HubTownPortal_d7fMsHReTlD/Outlook-Email-Setup_sujpT447" target="_blank"><div class="link-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="link-name">Outlook Email Setup</div><div class="link-desc">Regional folders, rules, RemoteEstimating</div></div></a>
     <a class="link-card" href="https://coda.io/d/Centralized-Estimating-HubTownPortal_d7fMsHReTlD/DASH-Help-Desk_suLjXvM5" target="_blank"><div class="link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div class="link-name">DASH Help Desk</div><div class="link-desc">Tutorials, note headers, tagging standards</div></div></a>
   </div>
 </section>
-<footer style="max-width:1100px;margin:0 auto;">
-  <p>CE Onboarding &mdash; <strong>Kustom Centralized Estimating</strong> &mdash; Questions? Message <strong style="color:var(--red);">Seth Harrison</strong> on Teams.</p>
-  <p style="color:var(--muted2);">Updated June 2026</p>
-</footer>
+<footer style="max-width:1100px;margin:0 auto;"><p>CE Onboarding &mdash; <strong>Kustom Centralized Estimating</strong> &mdash; Questions? Message <strong style="color:var(--red);">Seth Harrison</strong> on Teams.</p><p style="color:var(--muted2);">Updated June 2026</p></footer>
 <script>
-function animateCounter(el){const target=parseInt(el.dataset.target);let current=0;const step=Math.ceil(target/30);const timer=setInterval(()=>{current=Math.min(current+step,target);el.textContent=current;if(current>=target)clearInterval(timer);},40);}
+function animateCounter(el){const target=parseInt(el.dataset.target);let c=0;const s=Math.ceil(target/30);const t=setInterval(()=>{c=Math.min(c+s,target);el.textContent=c;if(c>=target)clearInterval(t);},40);}
 const counters=document.querySelectorAll('[data-target]');
-const counterObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){animateCounter(e.target);counterObs.unobserve(e.target);}});},{threshold:0.3});
-counters.forEach(c=>counterObs.observe(c));
+const cObs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){animateCounter(x.target);cObs.unobserve(x.target);}});},{threshold:0.3});
+counters.forEach(c=>cObs.observe(c));
 const fadeEls=document.querySelectorAll('.fade-in');
-const fadeObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');fadeObs.unobserve(e.target);}});},{threshold:0.05});
-fadeEls.forEach(el=>fadeObs.observe(el));
+const fObs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');fObs.unobserve(x.target);}});},{threshold:0.05});
+fadeEls.forEach(el=>fObs.observe(el));
 const PHASES=[
-  {id:'p0',title:"Before You Arrive — what's being set up",color:'#D85A30',open:true,flows:[
-    {label:'IT is handling',color:'#ff6b7a',items:[
-      {id:'w0_01',owner:'it',text:'M365 account, hardware, app installs (Xactimate, Symbility, Loom, Claude Desktop)'},
-      {id:'w0_02',owner:'it',text:"Outlook rules configured BEFORE you're added to email lists",note:'So your inbox is organized from minute one, not flooded'},
-      {id:'w0_03',owner:'it',text:'DASH credentials for all 14 instances (arriving via Tech Sheet)'},
-      {id:'w0_04',owner:'it',text:'Matterport — added as Admin across all instances'},
-      {id:'w0_05',owner:'it',text:'Monday.com account created, CE user groups added'},
-    ]},
-    {label:'Seth is handling',color:'#6fa3ff',items:[
-      {id:'w0_06',owner:'seth',text:'1Password account created — invite sent to your email'},
-      {id:'w0_07',owner:'seth',text:'CE Partner Pairing Program planned — 4-5 peers ready to pair with you Days 1-5'},
-      {id:'w0_08',owner:'seth',text:'Estimator Capabilities Form link sent to you'},
-    ]},
-    {label:'Lindsay / Kim Marks are handling',color:'#ffb347',items:[
-      {id:'w0_09',owner:'linkm',text:'Alacrity — company-wide program platform access'},
-      {id:'w0_10',owner:'linkm',text:'Xactanalysis — program registration / account creation'},
+  {id:'p0',title:'Before you arrive — what will be ready',color:'#D85A30',open:true,sections:[
+    {label:'Arriving for you',items:[
+      {id:'w0_01',owner:'ready',text:'Your laptop, monitors, and hardware staged and ready'},
+      {id:'w0_02',owner:'ready',text:'M365 account active — Outlook, Teams, and SharePoint access'},
+      {id:'w0_03',owner:'ready',text:'1Password invite in your email — set this up first on Day 1'},
+      {id:'w0_04',owner:'ready',text:'Monday.com invite in your email'},
+      {id:'w0_05',owner:'ready',text:'DASH Tech Sheet with credentials for all 14 instances'},
+      {id:'w0_06',owner:'ready',text:'Xactimate, Symbility, Loom desktop, and Claude Desktop installed'},
+      {id:'w0_07',owner:'ready',text:'Matterport access across all instances'},
+      {id:'w0_08',owner:'ready',text:'Alacrity and Xactanalysis program platform access provisioned'},
+      {id:'w0_09',owner:'ready',text:'Estimator Capabilities Form link — fill out on Day 1'},
+      {id:'w0_10',owner:'ready',text:'CE Partner Pairing Program — 4-5 teammates lined up to pair with you across your first week'},
     ]},
   ]},
   {id:'p1',title:'Day 1 — your sequence (in this order)',color:'#7F77DD',open:true,note:'Start with 1Password. Save every credential you create into the vault as you go.',sections:[
     {label:'You',items:[
       {id:'w1_01',owner:'hire',text:'Accept 1Password invite + set up vault',note:'First. Everything else gets saved here.'},
       {id:'w1_02',owner:'hire',text:'Fill out Estimator Capabilities Form (link sent by Seth)'},
-      {id:'w1_03',owner:'hire',text:'Accept Monday.com invite + configure My Work tab',note:'Seth will walk through this with you live'},
+      {id:'w1_03',owner:'hire',text:'Accept Monday.com invite + configure My Work tab',note:'Seth will walk through this with you on Day 1'},
       {id:'w1_04',owner:'hire',text:'Add mobile number to Microsoft Teams profile'},
-      {id:'w1_05',owner:'hire',text:'Outlook: set up 6 regional folders + rules (NCR, NWR, SER, SWR, SMR, QR) + RemoteEstimating folder',note:'Skip if IT pre-configured. If not, do this before your inbox gets hit.'},
+      {id:'w1_05',owner:'hire',text:'Outlook: set up 6 regional folders + rules (NCR, NWR, SER, SWR, SMR, QR) + RemoteEstimating folder',note:'Do this early — before emails start coming in.'},
       {id:'w1_06',owner:'hire',text:'Log into all 14 DASH instances using Tech Sheet credentials — save all in 1Password'},
       {id:'w1_07',owner:'hire',text:'Confirm Loom desktop app is installed (use desktop app for audio — Chrome extension has no mic)'},
       {id:'w1_08',owner:'hire',text:'Configure Out of Office / PTO Outlook forward rules — then disable them',note:'Reference for when you take PTO, not for today'},
     ]},
     {label:'Seth',items:[
       {id:'w1_09',owner:'seth',text:'Sends welcome message + introduces you to the 99-RE team in CE chats'},
-      {id:'w1_10',owner:'seth',text:'Adds you to CE Teams channels (only Seth has access to these)'},
+      {id:'w1_10',owner:'seth',text:'Adds you to the remaining CE Teams channels'},
       {id:'w1_11',owner:'seth',text:'Walks through Coda CE Toolbox together — every Onboarding subpage, top to bottom'},
     ]},
   ]},
@@ -323,33 +220,26 @@ const PHASES=[
       {id:'w2_07',owner:'hire',text:'Complete DASH platform tutorials (Coda DASH Help Desk + Tutorials)'},
       {id:'w2_08',owner:'hire',text:'Complete Xactimate / Xactanalysis orientation (Coda help desk)'},
       {id:'w2_09',owner:'hire',text:'Complete Matterport orientation (Coda tutorials + training sessions)'},
-      {id:'w2_10',owner:'hire',text:"Record your intro Loom video (1-2 min: background, passions, something personal, your phone # + invite to message on Teams)",note:"See Coda Loom page for Seth's example and full instructions"},
-      {id:'w2_11',owner:'hire',text:'Set up Bookings link: 30 min, public, 2-3 hr daily window, min lead time 1/8/12 hrs — send personal booking page link to Seth via Teams'},
+      {id:'w2_10',owner:'hire',text:'Record your intro Loom video (1-2 min: background, passions, something personal, phone # + invite to Teams)',note:"See Coda Loom page for Seth's example and full instructions"},
+      {id:'w2_11',owner:'hire',text:'Set up Bookings link: 30 min, public, 2-3 hr daily window, min lead time 1/8/12 hrs — send personal page link to Seth via Teams'},
       {id:'w2_12',owner:'hire',text:'Add Homeowner Progress Update email template to Outlook My Templates',note:'Message Seth on Teams to receive the template'},
       {id:'w2_13',owner:'hire',text:'Review division preferences in Coda for your assigned division(s)'},
     ]},
     {label:'Seth',items:[
-      {id:'w2_14',owner:'seth',text:'Executes CE Partner Pairing Program — 4-5 teammates over 4-5 days'},
-      {id:'w2_15',owner:'seth',text:'Walks through CE SOP SharePoint: Best Practices & SOPs, Division Contact Sheet, Carrier Guidelines (mit + repair folders)'},
+      {id:'w2_14',owner:'seth',text:'Executes CE Partner Pairing — 4-5 teammates over 4-5 days'},
+      {id:'w2_15',owner:'seth',text:'Walks through CE SOP SharePoint: Best Practices & SOPs, Division Contact Sheet, Carrier Guidelines'},
     ]},
   ]},
 ];
-const BADGE={
-  seth:'<span class="wb wb-seth">Seth</span>',
-  it:'<span class="wb wb-it">IT</span>',
-  hire:'<span class="wb wb-hire">You</span>',
-  kim:'<span class="wb wb-kim">Kim Marks</span>',
-  lin:'<span class="wb wb-lin">Lindsay</span>',
-  linkm:'<span class="wb wb-lin">Lindsay</span><span class="wb wb-kim" style="margin-left:4px">Kim Marks</span>',
-};
-function allCheckItems(){const all=[];PHASES.forEach(ph=>{if(ph.flows)ph.flows.forEach(f=>f.items.forEach(i=>all.push(i)));if(ph.sections)ph.sections.forEach(s=>s.items.forEach(i=>all.push(i)));});return all;}
-function getChecked(){try{return JSON.parse(localStorage.getItem('cew_checked')||'{}');}catch{return {};}}
-function setChecked(o){localStorage.setItem('cew_checked',JSON.stringify(o));}
-function updateOverall(){const all=allCheckItems(),checked=getChecked();const done=all.filter(i=>checked[i.id]).length;document.getElementById('overall-prog-text').textContent=done+' / '+all.length;document.getElementById('overall-prog-fill').style.width=(all.length?Math.round(done/all.length*100):0)+'%';}
-function toggleW(id,cb){const checked=getChecked();checked[id]=cb.checked;setChecked(checked);cb.closest('.witem').classList.toggle('done',cb.checked);updateOverall();}
-function togglePhaseW(id){const body=document.getElementById('wbody-'+id);const tog=document.getElementById('wtog-'+id);const open=body.style.display!=='none';body.style.display=open?'none':'block';tog.className='phase-tog'+(open?'':' open');}
-function renderWItems(items,checked){return items.map(item=>{const done=!!checked[item.id];return `<div class="witem${done?' done':''}"><input type="checkbox" ${done?'checked':''} onchange="toggleW('${item.id}',this)"><div class="witem-body"><div class="witem-text">${item.text}</div>${item.note?`<span class="witem-note">${item.note}</span>`:''}<div class="wbadges">${BADGE[item.owner]||''}</div></div></div>`;}).join('');}
-function renderWeek(){const checked=getChecked();document.getElementById('week-phases').innerHTML=PHASES.map(ph=>{const allPh=[];if(ph.flows)ph.flows.forEach(f=>f.items.forEach(i=>allPh.push(i)));if(ph.sections)ph.sections.forEach(s=>s.items.forEach(i=>allPh.push(i)));const done=allPh.filter(i=>checked[i.id]).length;const pct=allPh.length?Math.round(done/allPh.length*100):0;const isOpen=ph.open;let body='';if(ph.note)body+=`<div class="week-note" style="background:rgba(200,16,46,0.08);border-left:3px solid var(--red);color:#ff8896;">${ph.note}</div>`;if(ph.flows){ph.flows.forEach(f=>{body+=`<div class="week-flow-header" style="color:${f.color}">${f.label}</div>`;body+=renderWItems(f.items,checked);});}if(ph.sections){ph.sections.forEach(s=>{body+=`<div class="week-section-label">${s.label}</div>`;body+=renderWItems(s.items,checked);});}return `<div class="week-phase"><div class="week-phase-header" onclick="togglePhaseW('${ph.id}')"><div class="phase-dot-w" style="background:${ph.color}"></div><span class="phase-title-w">${ph.title}</span><span class="phase-count">${done}/${allPh.length}</span><span class="phase-tog${isOpen?' open':''}" id="wtog-${ph.id}">▼</span></div><div id="wbody-${ph.id}" style="display:${isOpen?'block':'none'}"><div class="week-progress"><div class="week-progress-fill" style="width:${pct}%"></div></div>${body}</div></div>`;}).join('');updateOverall();}
+const BADGE={ready:'',seth:'<span class="wb wb-seth">Seth</span>',hire:'<span class="wb wb-hire">You</span>'};
+function allItems(){const a=[];PHASES.forEach(ph=>{if(ph.sections)ph.sections.forEach(s=>s.items.forEach(i=>a.push(i)));});return a;}
+function getChecked(){try{return JSON.parse(localStorage.getItem('cew2_checked')||'{}');}catch{return {};}}
+function setChecked(o){localStorage.setItem('cew2_checked',JSON.stringify(o));}
+function updateOverall(){const all=allItems(),c=getChecked();const d=all.filter(i=>c[i.id]).length;document.getElementById('overall-prog-text').textContent=d+' / '+all.length;document.getElementById('overall-prog-fill').style.width=(all.length?Math.round(d/all.length*100):0)+'%';}
+function toggleW(id,cb){const c=getChecked();c[id]=cb.checked;setChecked(c);cb.closest('.witem').classList.toggle('done',cb.checked);updateOverall();}
+function togglePhaseW(id){const b=document.getElementById('wb-'+id);const t=document.getElementById('wt-'+id);const o=b.style.display!=='none';b.style.display=o?'none':'block';t.className='phase-tog'+(o?'':' open');}
+function renderItems(items,checked){return items.map(item=>{const done=!!checked[item.id];return '<div class="witem'+(done?' done':'')+'"><input type="checkbox" '+(done?'checked':'')+' onchange="toggleW(\''+item.id+'\',this)"><div class="witem-body"><div class="witem-text">'+item.text+'</div>'+(item.note?'<span class="witem-note">'+item.note+'</span>':'')+'<div class="wbadges">'+(BADGE[item.owner]||'')+'</div></div></div>';}).join('');}
+function renderWeek(){const checked=getChecked();document.getElementById('week-phases').innerHTML=PHASES.map(ph=>{const allPh=[];if(ph.sections)ph.sections.forEach(s=>s.items.forEach(i=>allPh.push(i)));const done=allPh.filter(i=>checked[i.id]).length;const pct=allPh.length?Math.round(done/allPh.length*100):0;const isOpen=ph.open;let body='';if(ph.note)body+='<div class="week-note" style="background:rgba(200,16,46,0.08);border-left:3px solid var(--red);color:#ff8896;">'+ph.note+'</div>';if(ph.sections)ph.sections.forEach(s=>{body+='<div class="week-section-label">'+s.label+'</div>';body+=renderItems(s.items,checked);});return '<div class="week-phase"><div class="week-phase-header" onclick="togglePhaseW(\''+ph.id+'\')"><div class="phase-dot-w" style="background:'+ph.color+'"></div><span class="phase-title-w">'+ph.title+'</span><span class="phase-count">'+done+'/'+allPh.length+'</span><span class="phase-tog'+(isOpen?' open':'')+'" id="wt-'+ph.id+'">&#9660;</span></div><div id="wb-'+ph.id+'" style="display:'+(isOpen?'block':'none')+'"><div class="week-progress"><div class="week-progress-fill" style="width:'+pct+'%"></div></div>'+body+'</div></div>';}).join('');updateOverall();}
 renderWeek();
 </script>
 </body>
