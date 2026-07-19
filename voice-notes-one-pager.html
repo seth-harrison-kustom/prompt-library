@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voice Notes — Quick Start</title>
+<style>
+  :root {
+    --red: #c8252b;
+    --red-bright: #e23a40;
+    --ink: #17171c;
+    --muted: #5b5b66;
+    --line: #e4e4ea;
+    --soft: #f6f6f8;
+    --amber-bg: #fff7e0;
+    --amber-line: #e0a800;
+    --amber-ink: #7a5b00;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  @page { size: letter; margin: 0.45in; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    font-size: 10.5pt;
+    line-height: 1.35;
+    max-width: 7.6in;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  @media print { body { padding: 0; } }
+
+  /* Header */
+  .head { display: flex; align-items: center; gap: 12px; border-bottom: 3px solid var(--red); padding-bottom: 8px; }
+  .mark {
+    width: 44px; height: 44px; border-radius: 10px; background: #0f0f12; flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mark svg { width: 28px; height: 28px; }
+  .head h1 { font-size: 19pt; letter-spacing: -0.5px; }
+  .head h1 .accent { color: var(--red); }
+  .head .tag { color: var(--muted); font-size: 10.5pt; margin-top: 1px; }
+  .pill {
+    margin-left: auto; background: var(--red); color: #fff; font-weight: 700; font-size: 8.5pt;
+    padding: 4px 10px; border-radius: 999px; letter-spacing: 0.06em; white-space: nowrap;
+  }
+
+  /* Two-column rows */
+  .cols { display: flex; gap: 12px; margin-top: 10px; }
+  .col { flex: 1; }
+  .card { border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; height: 100%; }
+  .card h2 { font-size: 10.5pt; text-transform: uppercase; letter-spacing: 0.05em; color: var(--red); margin-bottom: 5px; }
+  .card ol, .card ul { padding-left: 17px; }
+  .card li { margin-bottom: 3px; }
+  .rule {
+    background: var(--amber-bg); border: 2px solid var(--amber-line); border-radius: 10px; padding: 9px 11px;
+  }
+  .rule h2 { color: var(--amber-ink); font-size: 10.5pt; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
+  .rule p { color: var(--amber-ink); font-weight: 600; }
+  .rule .big { font-size: 11.5pt; font-weight: 800; }
+
+  /* Steps */
+  .steps { margin-top: 12px; }
+  .steps h2 { font-size: 11pt; text-transform: uppercase; letter-spacing: 0.05em; color: var(--red); margin-bottom: 6px; }
+  .step { display: flex; gap: 10px; align-items: flex-start; padding: 5px 0; border-bottom: 1px dashed var(--line); }
+  .step:last-child { border-bottom: none; }
+  .num {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--red); color: #fff; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; font-size: 10pt; flex: 0 0 auto; margin-top: 1px;
+  }
+  .step .do { font-weight: 700; }
+  .step .check { color: var(--muted); }
+  .step .check strong { color: var(--ink); }
+
+  kbd {
+    background: var(--soft); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px;
+    font-family: inherit; font-weight: 700; font-size: 9.5pt; white-space: nowrap;
+  }
+  .url { font-weight: 800; color: var(--red); }
+
+  /* Footer */
+  .foot {
+    margin-top: 12px; background: #0f0f12; color: #f4f4f5; border-radius: 10px; padding: 10px 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .foot .emoji { font-size: 16pt; }
+  .foot .msg strong { color: var(--red-bright); }
+  .foot .msg { font-size: 10pt; }
+</style>
+</head>
+<body>
+
+  <div class="head">
+    <div class="mark">
+      <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#c8252b" stroke-width="30" stroke-linecap="round" fill="none">
+          <rect x="206" y="106" width="100" height="170" rx="50" fill="#c8252b" stroke="none"/>
+          <path d="M 156 226 v 20 a 100 100 0 0 0 200 0 v -20"/>
+          <line x1="256" y1="346" x2="256" y2="396"/>
+          <line x1="196" y1="400" x2="316" y2="400"/>
+        </g>
+      </svg>
+    </div>
+    <div>
+      <h1>Voice <span class="accent">Notes</span> — Quick Start</h1>
+      <div class="tag">Talk your daily job notes. They land in DASH. Done in about a minute.</div>
+    </div>
+    <div class="pill">PILOT — YOUR OFFICE GOES FIRST</div>
+  </div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h2>One-time setup (2 min)</h2>
+        <ol>
+          <li>On your phone, go to <span class="url">kustom-voice-notes.vercel.app</span></li>
+          <li>Sign in with your <strong>Kustom Microsoft account</strong> (same as email)</li>
+          <li><strong>Add to home screen:</strong><br>
+              iPhone: Safari <kbd>Share</kbd> → <kbd>Add to Home Screen</kbd><br>
+              Android: Chrome <kbd>⋮</kbd> → <kbd>Add to Home screen</kbd></li>
+        </ol>
+      </div>
+    </div>
+    <div class="col">
+      <div class="rule">
+        <h2>⚠️ The one rule</h2>
+        <p class="big">After you tap Stop — WAIT.</p>
+        <p>Don't continue until <u>every word you said</u> shows on the screen. The app shows a yellow banner to remind you. Forgot something? Tap <kbd>Record more</kbd>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps">
+    <h2>Every note — 5 steps</h2>
+    <div class="step"><div class="num">1</div><div>
+      <span class="do">Type the job number</span> (like 26-04-210048) —
+      <span class="check">check the <strong>customer name</strong> and <strong>recent notes</strong> match your job</span>
+    </div></div>
+    <div class="step"><div class="num">2</div><div>
+      <span class="do">Read the "Cover these" list</span> —
+      <span class="check">it's tailored to your job type; hit those topics while you talk</span>
+    </div></div>
+    <div class="step"><div class="num">3</div><div>
+      <span class="do">Tap <kbd>● Record</kbd> and talk</span> like you're briefing your coordinator —
+      <span class="check">your words appear as you speak and the mic bar bounces <strong>green</strong></span>
+    </div></div>
+    <div class="step"><div class="num">4</div><div>
+      <span class="do">Tap <kbd>Stop</kbd> — then WAIT</span> for all your words —
+      <span class="check">then tap <kbd>Continue →</kbd></span>
+    </div></div>
+    <div class="step"><div class="num">5</div><div>
+      <span class="do">Read the summary, fix anything, tap <kbd>Send to DASH</kbd></span> —
+      <span class="check">your note is on the job: <strong>summary first, your exact words below, your name at the bottom</strong>. Then "Another note — same job" or "Different job" to keep rolling</span>
+    </div></div>
+  </div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h2>¿Hablas español?</h2>
+        <ul>
+          <li>Tap <kbd>Español</kbd> before recording — prompts, buttons, and your live transcript all switch</li>
+          <li>Speak Spanish; the office gets an <strong>English summary</strong> <em>plus</em> your exact Spanish words — nothing is lost</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h2>Good to know</h2>
+        <ul>
+          <li><strong>Job not found?</strong> Brand-new jobs (created today) do that. Check every digit, then tap <kbd>continue anyway</kbd> — you'll get an email receipt of your note</li>
+          <li><strong>Mic bar red / "can't hear you"?</strong> The phone is recording silence — unmute/uncover the mic and re-record</li>
+          <li><strong>Wrong job pulled up?</strong> <kbd>← Different job</kbd> at the top</li>
+          <li><strong>Rambling is fine</strong> — the app writes the clean version and you approve it before it sends</li>
+          <li>Top-right shows <strong>who's signed in</strong> — that name goes on the note</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="emoji">🎙️</div>
+    <div class="msg">
+      <strong>You're the test crew.</strong> If anything is confusing, slow, or wrong — that's a win, report it:
+      <strong>Seth Harrison · seth.harrison@kustom.us</strong> (include the job number and what happened).
+    </div>
+  </div>
+
+</body>
+</html>
