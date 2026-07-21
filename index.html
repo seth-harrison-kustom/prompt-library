@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kustom — Prompt & Resource Library</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap');
+:root{
+  --bg:#0e1015; --card:#181b22; --card2:#1c2029; --border:#23272f; --border2:#2d323c;
+  --text:#e6eaf2; --muted:#6b7688; --muted2:#8b96a8;
+  --blue:#4f8ef7; --blue-br:rgba(79,142,247,0.30);
+  --green:#4ec994; --purple:#a78bfa; --amber:#f0b44a; --teal:#45c8d8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(1100px 500px at 80% -8%, rgba(79,142,247,0.08), transparent 60%),
+    radial-gradient(900px 450px at 8% 2%, rgba(167,139,250,0.06), transparent 55%),
+    var(--bg);
+  color:var(--text); font-family:'Geist Mono','IBM Plex Mono',ui-monospace,monospace;
+  font-size:13px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:52px 26px 80px;}
+.eyebrow{font-size:10.5px;letter-spacing:2.4px;text-transform:uppercase;color:var(--blue);font-weight:600;}
+h1{font-size:28px;font-weight:700;letter-spacing:-0.3px;margin:12px 0 8px;}
+.sub{font-size:13px;color:var(--muted2);max-width:640px;line-height:1.6;}
+.section{margin-top:42px;}
+.section-head{display:flex;align-items:center;gap:10px;margin-bottom:15px;}
+.section-head .bar{width:3px;height:15px;border-radius:3px;}
+.section-head h2{font-size:12px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:var(--muted2);}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;}
+.card{display:block;text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;transition:border-color .15s,transform .15s,background .15s;}
+.card:hover{border-color:var(--blue-br);transform:translateY(-2px);background:var(--card2);}
+.card .t{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.card .t .arrow{color:var(--blue);opacity:.7;}
+.card .d{font-size:11px;color:var(--muted2);margin-top:5px;line-height:1.5;}
+footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--border);font-size:10.5px;color:var(--muted);line-height:1.7;}
+@media(max-width:680px){.grid{grid-template-columns:1fr;}h1{font-size:23px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Kustom US</div>
+  <h1>Prompt &amp; Resource Library</h1>
+  <p class="sub">A shared home for training recaps, prompt libraries, and estimating references. Each page is a standalone, shareable link — pick a shelf below.</p>
+
+  <div class="section">
+    <div class="section-head"><span class="bar" style="background:var(--green)"></span><h2>Training &amp; Education</h2></div>
+    <div class="grid">
+      <a class="card" href="xactimate-training-recap.html"><div class="t">Xactimate Training — Class Recap <span class="arrow">→</span></div><div class="d">What we covered across the four-session Concepts, Application &amp; Pricing Mechanics series.</div></a>
+      <a class="card" href="program-tpa-flow.html"><div class="t">Program / TPA Job Flow <span class="arrow">→</span></div><div class="d">The end-to-end job flow through a TPA / carrier program environment.</div></a>
+      <a class="card" href="xact-fluency.html"><div class="t">Xactimate Fluency <span class="arrow">→</span></div><div class="d">Concepts that move the money — the pricing mechanics reference.</div></a>
+      <a class="card" href="ce-training-tracker.html"><div class="t">CE Training Tracker <span class="arrow">→</span></div><div class="d">Session-by-session topic tracker for Centralized Estimating training.</div></a>
+      <a class="card" href="onboarding/ce-welcome.html"><div class="t">Welcome to CE <span class="arrow">→</span></div><div class="d">Onboarding orientation for new Centralized Estimating team members.</div></a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><span class="bar" style="background:var(--purple)"></span><h2>Prompts &amp; Voice</h2></div>
+    <div class="grid">
+      <a class="card" href="gm-prompts.html"><div class="t">GM Prompt Library <span class="arrow">→</span></div><div class="d">The working library of General Manager prompts (v10).</div></a>
+      <a class="card" href="kustom-voice-one-pager.html"><div class="t">Kustom Voice — Quick Start <span class="arrow">→</span></div><div class="d">One-page guide to writing in the Kustom voice.</div></a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><span class="bar" style="background:var(--amber)"></span><h2>Performance &amp; Analytics</h2></div>
+    <div class="grid">
+      <a class="card" href="gp_comparison_stack_vs_proj.html"><div class="t">GP$ — Stack Rankings vs Projections <span class="arrow">→</span></div><div class="d">Gross-profit stack rankings against projections, Q1 2026.</div></a>
+      <a class="card" href="re_stack_rankings_q1_2026.html"><div class="t">Q1 2026 Results — 99-RE Team <span class="arrow">→</span></div><div class="d">Estimating team stack-ranking results for Q1 2026.</div></a>
+      <a class="card" href="re_stack_rankings_analysis.html"><div class="t">Stack Rankings — RE vs Non-RE <span class="arrow">→</span></div><div class="d">Comparative analysis of RE vs non-RE estimating performance.</div></a>
+      <a class="card" href="job_trends.html"><div class="t">Job Trends Dashboard <span class="arrow">→</span></div><div class="d">Company-wide job volume and trend view.</div></a>
+      <a class="card" href="note_trends.html"><div class="t">Note Activity Trends <span class="arrow">→</span></div><div class="d">Trends in job-note activity across the org.</div></a>
+      <a class="card" href="altimeter-history.html"><div class="t">All Jobs — All Time <span class="arrow">→</span></div><div class="d">Full historical job record from Altimeter.</div></a>
+      <a class="card" href="alacrity-program-intelligence.html"><div class="t">Alacrity Program Intelligence <span class="arrow">→</span></div><div class="d">Program intelligence report — April 2026.</div></a>
+    </div>
+  </div>
+
+  <footer>
+    <b style="color:var(--muted2)">Kustom US · Prompt &amp; Resource Library.</b> Each page is self-contained and shareable. Hosted on GitHub Pages.
+  </footer>
+
+</div>
+</body>
+</html>
