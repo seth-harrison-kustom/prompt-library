@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xactimate Fluency — Concepts That Move the Money</title>
+<style>
+  :root{
+    --ink:#1c2833; --muted:#5d6d7e; --line:#e3e7eb; --bg:#eef1f4; --card:#fff;
+    --rcv:#1e8449; --rcv-bg:#e9f7ef;
+    --acv:#2471a3; --acv-bg:#eaf2fa;
+    --dep:#e67e22; --dep-bg:#fdf1e6;
+    --op:#7d3c98;  --op-bg:#f4ecfa;
+    --accent:#0e7c86;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5;}
+  header{background:#fff;border-bottom:1px solid var(--line);padding:20px 26px 14px;}
+  header h1{margin:0;font-size:23px;letter-spacing:.2px;}
+  header p{margin:5px 0 0;color:var(--muted);font-size:14px;max-width:820px;}
+  nav{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:10px 26px;display:flex;flex-wrap:wrap;gap:8px;}
+  nav a{font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;padding:7px 13px;border-radius:8px;border:1px solid var(--line);transition:.14s;}
+  nav a:hover{background:#eef2f5;color:var(--ink);}
+  main{max-width:1000px;margin:0 auto;padding:26px 26px 80px;}
+  section{scroll-margin-top:66px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin-bottom:26px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+  section.tinted{border-top:5px solid var(--tc);}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--tc,var(--muted));margin-bottom:6px;}
+  section h2{margin:0 0 4px;font-size:22px;}
+  section .lede{color:var(--muted);font-size:14.5px;margin:0 0 20px;}
+  h3{font-size:15.5px;margin:22px 0 8px;}
+  p{font-size:14.5px;}
+  ul{font-size:14.5px;margin:8px 0;padding-left:20px;}
+  li{margin:5px 0;}
+  .def{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;align-items:baseline;margin:14px 0;}
+  .def dt{font-weight:800;white-space:nowrap;}
+  .def dd{margin:0;color:#33404d;font-size:14px;}
+  .pill{display:inline-block;font-weight:800;font-size:11px;letter-spacing:.4px;padding:3px 8px;border-radius:6px;}
+  .callout{border-left:4px solid var(--tc,var(--accent));background:var(--tcbg,#f3f6f8);border-radius:0 10px 10px 0;padding:12px 15px;margin:16px 0;font-size:14px;}
+  .callout b{color:var(--tc,var(--accent));}
+  .note{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:10px;}
+  /* generic controls */
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;background:#f7f9fb;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field label{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);}
+  .field input[type=number]{width:120px;font-size:15px;font-weight:700;padding:8px 10px;border:1px solid #cfd6dc;border-radius:8px;}
+  .field input[type=range]{width:200px;}
+  .toggle{display:inline-flex;border:1px solid #cfd6dc;border-radius:8px;overflow:hidden;}
+  .toggle button{border:none;background:#fff;font-size:12.5px;font-weight:700;padding:8px 12px;cursor:pointer;border-left:1px solid var(--line);color:var(--muted);}
+  .toggle button:first-child{border-left:none;}
+  .toggle button.on{background:var(--op);color:#fff;}
+  /* result tiles */
+  .tiles{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0;}
+  .tile{flex:1 1 130px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px;}
+  .tile .k{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);}
+  .tile .v{font-size:22px;font-weight:800;margin-top:3px;}
+  .tile.hl{background:var(--op-bg);border-color:#e0cef0;}
+  .tile.hl .v{color:var(--op);}
+  /* stacked bar for ACV/RCV */
+  .bar{display:flex;height:52px;border-radius:10px;overflow:hidden;border:1px solid var(--line);font-size:12.5px;font-weight:800;color:#fff;margin:8px 0 4px;}
+  .bar .seg{display:flex;align-items:center;justify-content:center;transition:flex-basis .2s;white-space:nowrap;overflow:hidden;}
+  .bar .acv{background:var(--acv);}
+  .bar .dep{background:var(--dep);}
+  .barlab{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:700;}
+  /* tables */
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;}
+  th{background:#f4f6f8;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  tr.hl td{background:var(--op-bg);font-weight:800;}
+  .formula{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#f4f6f8;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:8px 0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr;}}
+  footer{max-width:1000px;margin:0 auto;padding:0 26px 60px;color:var(--muted);font-size:12px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Xactimate Fluency — Concepts That Move the Money</h1>
+  <p>A plain-English tour of the estimating &amp; invoicing ideas carriers and adjusters use constantly. You don't need to build estimates to follow the conversation — you need to know what these terms mean and how they change the number.</p>
+</header>
+<nav>
+  <a href="#acv">ACV vs. RCV</a>
+  <a href="#op">Overhead &amp; Profit</a>
+  <a href="#margin">Margin vs. Markup</a>
+  <a href="#bid">Bid Items</a>
+  <a href="#labor">Labor Efficiencies</a>
+</nav>
+<main>
+
+<section id="acv" class="tinted" style="--tc:var(--acv);--tcbg:var(--acv-bg);">
+  <div class="eyebrow">Value</div>
+  <h2>ACV vs. RCV &amp; Depreciation</h2>
+  <p class="lede">Two ways to state what a damaged item is worth. Carriers and adjusters switch between them constantly — you need to follow which one is being discussed.</p>
+  <dl class="def">
+    <dt>RCV</dt><dd><b>Replacement Cost Value</b> — what it costs to replace the damaged item with new, at today's prices.</dd>
+    <dt>ACV</dt><dd><b>Actual Cash Value</b> — RCV <i>minus</i> depreciation.</dd>
+    <dt>Depreciation</dt><dd>The reduction in value from age, wear, and condition of the damaged item.</dd>
+  </dl>
+  <div class="callout" style="--tc:var(--dep);">Depreciation can be <b>recoverable</b> — held back, then paid out after repairs are complete and invoiced — or <b>non-recoverable</b>, which is never paid.</div>
+
+  <h3>See it: RCV = ACV + Depreciation</h3>
+  <div class="controls">
+    <div class="field"><label>RCV (replacement cost)</label><input type="number" id="rcv" value="10000" step="500" min="0"></div>
+    <div class="field"><label>Depreciation <span id="depPctLab">30%</span></label><input type="range" id="depPct" min="0" max="70" value="30"></div>
+    <div class="field"><label>Depreciation type</label>
+      <div class="toggle" id="depType"><button class="on" data-t="rec">Recoverable</button><button data-t="non">Non-recoverable</button></div>
+    </div>
+  </div>
+  <div class="bar" id="acvBar">
+    <div class="seg acv" id="segAcv">ACV</div>
+    <div class="seg dep" id="segDep">Depreciation</div>
+  </div>
+  <div class="barlab"><span>$0</span><span id="rcvLab">RCV $10,000</span></div>
+  <div class="tiles">
+    <div class="tile"><div class="k">RCV (full replacement)</div><div class="v" id="tRcv">$10,000</div></div>
+    <div class="tile" style="background:var(--dep-bg);border-color:#f3d9bd;"><div class="k">Depreciation</div><div class="v" id="tDep" style="color:var(--dep)">$3,000</div></div>
+    <div class="tile" style="background:var(--acv-bg);border-color:#cfe0ee;"><div class="k">ACV (paid up front)</div><div class="v" id="tAcv" style="color:var(--acv)">$7,000</div></div>
+    <div class="tile hl" style="--op:var(--rcv);background:var(--rcv-bg);border-color:#c7e6d3;"><div class="k" id="tRecK">Recoverable (paid after repairs)</div><div class="v" id="tRec" style="color:var(--rcv)">$3,000</div></div>
+  </div>
+  <p id="acvExplain" style="font-size:14px;"></p>
+  <div class="callout"><b>Most Xactimate estimates are built to RCV</b> — the full replacement cost. You'll see depreciation fields on estimate reports; you don't need to set or manage them for this training — just know what they represent and which number the adjuster is talking about.</div>
+</section>
+
+<section id="op" class="tinted" style="--tc:var(--op);--tcbg:var(--op-bg);">
+  <div class="eyebrow">The GC coordination fee</div>
+  <h2>O&amp;P — Overhead &amp; Profit</h2>
+  <p class="lede">The general contractor's coordination fee, added on top of the direct costs in the estimate.</p>
+  <ul>
+    <li><b>Set in the Parameters tab</b> — typically <b>10% overhead / 10% profit</b> ("10 and 10").</li>
+    <li>O&amp;P applies <b>on top of the direct costs</b> in the estimate — it is not baked into the unit prices.</li>
+    <li><b>When it's appropriate:</b> when a general contractor is coordinating <b>two or more subcontracted trades</b>.</li>
+    <li>Some <b>program guidelines restrict or limit O&amp;P</b> — always check before including it.</li>
+  </ul>
+  <h3>What "overhead" actually covers (per Verisk)</h3>
+  <p>Verisk's price list is built <i>without</i> general O&amp;P, job-related O&amp;P, or sales tax in the unit prices — those get added after the line items. Verisk recognizes three overhead categories:</p>
+  <dl class="def">
+    <dt>General</dt><dd>Business-operation costs not tied to any one job — office rent, utilities, admin salaries, licenses, advertising. This is the "O" in the O&amp;P you add in Parameters.</dd>
+    <dt>Job-related</dt><dd>Tied to a project but not a task — project managers, portable offices/restrooms, temp power &amp; fencing, security. Added as <i>separate line items</i>, not the O&amp;P %.</dd>
+    <dt>Job-personnel</dt><dd>The cost of the people doing the work (vehicles, phones, tool depreciation) — already inside the <b>labor</b> portion of each unit price. When work is subcontracted this is "subcontractor O&amp;P," and it's baked into labor, not the GC O&amp;P line.</dd>
+  </dl>
+  <div class="callout">Takeaway: the "O&amp;P" you toggle in Parameters is the <b>general contractor's</b> overhead + profit for coordinating the job — a markup on the whole estimate. Subcontractor O&amp;P is a different thing already living in the labor rates.</div>
+</section>
+
+<section id="margin" class="tinted" style="--tc:var(--op);--tcbg:var(--op-bg);">
+  <div class="eyebrow">The number everyone gets wrong</div>
+  <h2>The Margin vs. Markup Problem</h2>
+  <p class="lede">10% overhead + 10% profit sounds like 20%. It is not a 20% margin. These are <b>markups on cost</b>, not a <b>margin on revenue</b>.</p>
+  <div class="formula">markup = profit &divide; <b>cost</b> &nbsp;&nbsp;|&nbsp;&nbsp; margin = profit &divide; <b>revenue</b> &nbsp;&nbsp;|&nbsp;&nbsp; margin = markup &divide; (1 + markup)</div>
+
+  <h3>Try it</h3>
+  <div class="controls">
+    <div class="field"><label>Direct costs</label><input type="number" id="dc" value="10000" step="500" min="0"></div>
+    <div class="field"><label>Overhead %</label><input type="number" id="ovh" value="10" step="1" min="0"></div>
+    <div class="field"><label>Profit %</label><input type="number" id="prf" value="10" step="1" min="0"></div>
+    <div class="field"><label>How O&amp;P is applied</label>
+      <div class="toggle" id="opMode"><button class="on" data-m="add">Additive (Xactimate)</button><button data-m="comp">Compounded</button></div>
+    </div>
+  </div>
+  <div class="tiles">
+    <div class="tile"><div class="k">Direct costs</div><div class="v" id="rDc">$10,000</div></div>
+    <div class="tile"><div class="k">O&amp;P added</div><div class="v" id="rOp">$2,000</div></div>
+    <div class="tile"><div class="k">Total revenue</div><div class="v" id="rRev">$12,000</div></div>
+    <div class="tile"><div class="k">Markup on cost</div><div class="v" id="rMk">20.0%</div></div>
+    <div class="tile hl"><div class="k">Margin on revenue</div><div class="v" id="rMg">16.67%</div></div>
+  </div>
+  <p class="note" id="modeNote"></p>
+
+  <h3>Markup → Margin reference matrix</h3>
+  <table>
+    <thead><tr><th>Markup on cost</th><th class="num">Revenue on $10,000 cost</th><th class="num">Profit</th><th class="num">Margin on revenue</th></tr></thead>
+    <tbody id="matrix"></tbody>
+  </table>
+  <div class="callout"><b>Why it matters:</b> "10 and 10" O&amp;P is a 20% markup on cost, which is only a <b>16.67% margin</b> on revenue. Contractors building a business model around insurance work have to price against the <i>margin</i>, not the markup — the gap is real money.</div>
+</section>
+
+<section id="bid" class="tinted" style="--tc:var(--accent);--tcbg:#e6f5f6;">
+  <div class="eyebrow">Off-price-list line items</div>
+  <h2>Bid Items</h2>
+  <p class="lede">Line items entered at a fixed, contractor-determined price rather than the Xactimate price list.</p>
+  <ul>
+    <li>Used when the price list doesn't carry the item, or a real subcontractor/vendor bid sets the price.</li>
+    <li>Each bid item has a <b>per-line O&amp;P setting</b>. When the estimate carries O&amp;P, bid items typically pick it up like any other line — and if one isn't, you just flip the O&amp;P toggle on for that line.</li>
+    <li>Knowing that toggle exists helps you sanity-check that a bid item is being treated the way you intend.</li>
+  </ul>
+  <div class="callout" style="--tc:var(--accent);">Bottom line: O&amp;P on a bid item is a per-line setting you control — not an automatic exclusion. If a bid item should carry O&amp;P and isn't, turn it on.</div>
+</section>
+
+<section id="labor" class="tinted" style="--tc:var(--rcv);--tcbg:var(--rcv-bg);">
+  <div class="eyebrow">Also on the Parameters tab</div>
+  <h2>Labor Efficiencies</h2>
+  <p class="lede">Labor is the largest variable in construction. Xactimate adjusts labor productivity by job size and conditions through a labor-efficiency model — chosen on the Parameters tab.</p>
+  <dl class="def">
+    <dt>Restoration / Remodel / Service</dt><dd><b>Default.</b> Finished structures, often occupied, coordinated schedules. Prices include drive time, mobilization, material delivery, and the productivity hit of matching existing work. Fits the vast majority of estimates.</dd>
+    <dt>Large Restoration / Remodel</dt><dd><b>New option (Jan 2026 price lists).</b> Larger jobs that are easily accessible and separated from finished areas, usually unoccupied. Sits between the default and Total Rebuild.</dd>
+    <dt>Total Rebuild or Similar</dt><dd>Replaces "New Construction." Very large, freely accessible, unoccupied — ground-up rebuilds. Most efficient labor productivity.</dd>
+  </dl>
+  <h3>Labor minimums</h3>
+  <p>Peripheral time (drive, pick up materials, set up/tear down) is averaged into normal unit prices — but on a tiny task it dominates. A 1-sq-ft drywall patch might be 45 minutes of work but 2–3 hours all-in. So trades carry a <b>minimum labor charge</b>; each efficiency setting can auto-apply it, and Xactimate tops up the labor on the task until the minimum is met.</p>
+  <div class="callout" style="--tc:var(--rcv);">Pick the efficiency that matches reality: even a large job with scaffolding, hard access, and complex scheduling may belong in the default model, not a higher-efficiency one. The wrong model quietly moves the labor number.</div>
+</section>
+
+</main>
+<footer>
+  Kustom · Centralized Estimating — Xactimate conceptual fluency. Sources: Verisk PES "Overhead and Profit" &amp; "Labor Efficiencies Design" (2026) white papers. Figures are teaching illustrations. Not for setting live estimate parameters.
+</footer>
+
+<script>
+const fmt = n => '$'+Math.round(n).toLocaleString('en-US');
+const pct = n => n.toFixed(2).replace(/\.00$/,'')+'%';
+
+// ---- ACV / RCV ----
+const rcvIn=document.getElementById('rcv'), depPct=document.getElementById('depPct');
+let depKind='rec';
+function renderACV(){
+  const rcv=+rcvIn.value||0, dp=+depPct.value;
+  const dep=rcv*dp/100, acv=rcv-dep;
+  document.getElementById('depPctLab').textContent=dp+'%';
+  document.getElementById('rcvLab').textContent='RCV '+fmt(rcv);
+  document.getElementById('tRcv').textContent=fmt(rcv);
+  document.getElementById('tDep').textContent=fmt(dep);
+  document.getElementById('tAcv').textContent=fmt(acv);
+  const segAcv=document.getElementById('segAcv'), segDep=document.getElementById('segDep');
+  segAcv.style.flexBasis=(acv/rcv*100||0)+'%'; segDep.style.flexBasis=(dep/rcv*100||0)+'%';
+  segAcv.textContent = acv/rcv>0.12 ? 'ACV '+fmt(acv) : '';
+  segDep.textContent = dep/rcv>0.12 ? 'Dep '+fmt(dep) : '';
+  const recTile=document.getElementById('tRec'), recK=document.getElementById('tRecK'), tileEl=recTile.closest('.tile');
+  if(depKind==='rec'){
+    recK.textContent='Recoverable (paid after repairs)'; recTile.textContent=fmt(dep);
+    recTile.style.color='var(--rcv)'; tileEl.style.background='var(--rcv-bg)'; tileEl.style.borderColor='#c7e6d3';
+    document.getElementById('acvExplain').innerHTML='<b>Recoverable:</b> the carrier pays the <b>ACV of '+fmt(acv)+'</b> up front. Once repairs are complete and invoiced, the held-back <b>'+fmt(dep)+'</b> is released — so the job ultimately collects the full RCV of '+fmt(rcv)+'.';
+  }else{
+    recK.textContent='Non-recoverable (never paid)'; recTile.textContent=fmt(0);
+    recTile.style.color='#b03a2e'; tileEl.style.background='#fdecea'; tileEl.style.borderColor='#f2c9c2';
+    document.getElementById('acvExplain').innerHTML='<b>Non-recoverable:</b> the carrier pays the <b>ACV of '+fmt(acv)+'</b> and the <b>'+fmt(dep)+'</b> of depreciation is <b>never paid</b>. The job collects ACV, not RCV — the customer absorbs the gap unless another arrangement is made.';
+  }
+}
+rcvIn.oninput=renderACV; depPct.oninput=renderACV;
+document.querySelectorAll('#depType button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#depType button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); depKind=b.dataset.t; renderACV();
+});
+
+// ---- Margin vs Markup ----
+const dc=document.getElementById('dc'), ovh=document.getElementById('ovh'), prf=document.getElementById('prf');
+let opMode='add';
+function renderOP(){
+  const cost=+dc.value||0, o=+ovh.value||0, p=+prf.value||0;
+  let op;
+  if(opMode==='add'){ op=cost*(o+p)/100; }
+  else { const afterO=cost*(1+o/100); op=afterO*(1+p/100)-cost; }
+  const rev=cost+op, markup=cost?op/cost*100:0, margin=rev?op/rev*100:0;
+  document.getElementById('rDc').textContent=fmt(cost);
+  document.getElementById('rOp').textContent=fmt(op);
+  document.getElementById('rRev').textContent=fmt(rev);
+  document.getElementById('rMk').textContent=pct(markup);
+  document.getElementById('rMg').textContent=pct(margin);
+  document.getElementById('modeNote').textContent = opMode==='add'
+    ? 'Additive: overhead and profit are each a percentage of the same direct-cost subtotal, added together — how Xactimate applies O&P by default. 10 + 10 = a flat 20% markup.'
+    : 'Compounded: profit is taken on top of (cost + overhead). 10 then 10 = a 21% markup — a slightly bigger number Xactimate does not produce by default.';
+}
+dc.oninput=renderOP; ovh.oninput=renderOP; prf.oninput=renderOP;
+document.querySelectorAll('#opMode button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#opMode button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); opMode=b.dataset.m; renderOP();
+});
+
+// matrix
+const markups=[10,15,20,25,30,33.33,50,100];
+const mrows=markups.map(m=>{
+  const rev=10000*(1+m/100), profit=rev-10000, margin=profit/rev*100;
+  const hl=Math.abs(m-20)<0.01?' class="hl"':'';
+  const lab=Math.abs(m-20)<0.01?'20% <span class="pill" style="background:var(--op-bg);color:var(--op)">= 10 + 10 O&P</span>':m+'%';
+  return `<tr${hl}><td>${lab}</td><td class="num">${fmt(rev)}</td><td class="num">${fmt(profit)}</td><td class="num">${margin.toFixed(2)}%</td></tr>`;
+}).join('');
+document.getElementById('matrix').innerHTML=mrows;
+
+renderACV(); renderOP();
+</script>
+</body>
+</html>

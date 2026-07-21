@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Program / TPA Job Flow — Kustom CE Training</title>
+<style>
+  :root{
+    --carrier:#c0392b; --carrier-bg:#fdecea;
+    --rss:#2471a3;     --rss-bg:#eaf2fa;
+    --ce:#7d3c98;      --ce-bg:#f4ecfa;
+    --pd:#1e8449;      --pd-bg:#e9f7ef;
+    --field:#0e7c86;   --field-bg:#e6f5f6;
+    --pc:#3949ab;      --pc-bg:#e8eaf6;
+    --ink:#1c2833; --muted:#607080; --loop:#e67e22;
+    --panelW:440px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:#eef1f4;}
+  body{display:flex;flex-direction:column;overflow:hidden;}
+  header{padding:13px 24px 10px;background:#fff;border-bottom:1px solid #e3e7eb;}
+  header h1{margin:0;font-size:20px;letter-spacing:.2px;}
+  header p{margin:3px 0 0;color:var(--muted);font-size:13px;}
+  .bar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:9px 24px;background:#fff;border-bottom:1px solid #e3e7eb;}
+  .tabs{display:inline-flex;background:#eef1f4;border-radius:9px;padding:3px;gap:3px;}
+  .tab{border:none;background:transparent;color:var(--muted);font-size:13.5px;font-weight:700;padding:7px 18px;border-radius:7px;cursor:pointer;transition:.14s;}
+  .tab.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14);}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-left:auto;}
+  .chip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;}
+  .swatch{width:14px;height:14px;border-radius:4px;}
+  .btn{border:1px solid #cfd6dc;background:#fff;color:var(--ink);font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:8px;cursor:pointer;transition:.14s;}
+  .btn:hover{background:#eef2f5;border-color:#9aa7b1;}
+  .btn.concept{border-color:#e0cef0;color:var(--ce);background:#faf5ff;}
+  .btn.concept:hover{background:#f0e3fb;}
+  .btn.doc{border-color:#f0c69a;color:#c0651a;background:#fff6ee;}
+  .btn.doc:hover{background:#fdeedd;}
+  .btn.ref{border-color:#cdd7df;color:#41566a;background:#f5f8fa;}
+  .btn.tour{border:none;color:#fff;background:var(--loop);box-shadow:0 1px 3px rgba(230,126,34,.4);}
+  .btn.tour:hover{filter:brightness(.95);background:var(--loop);}
+  .btn.tour.stop{background:#7b8794;box-shadow:none;}
+  .seg{display:inline-flex;border:1px solid #cfd6dc;border-radius:8px;overflow:hidden;}
+  .seg button{border:none;background:#fff;color:var(--ink);font-size:13px;font-weight:700;padding:7px 11px;cursor:pointer;border-left:1px solid #e3e7eb;}
+  .seg button:first-child{border-left:none;}
+  .seg button:hover{background:#eef2f5;}
+  .docstrip{display:flex;align-items:center;gap:9px;padding:8px 24px;background:linear-gradient(90deg,#fff6ee,#fffaf4);border-bottom:1px solid #f2e3d2;font-size:12.5px;color:#8a4b12;}
+  .docstrip b{color:#c0651a;font-weight:800;}
+  .docstrip .em{font-size:15px;}
+  #stage{flex:1;display:flex;min-height:0;}
+  #viewport{flex:1;min-width:0;position:relative;overflow:auto;display:flex;align-items:safe center;justify-content:safe center;}
+  #canvasWrap{transform-origin:0 0;}
+  #board{position:relative;}
+  svg.links{position:absolute;top:0;left:0;pointer-events:none;}
+  .laneband{position:absolute;left:0;display:flex;align-items:center;}
+  .lanepill{margin-left:16px;font-weight:800;font-size:11px;letter-spacing:.5px;text-transform:uppercase;line-height:1.25;padding:8px 10px;border-radius:8px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12);border-left:5px solid var(--lc);color:var(--lc);width:98px;}
+  .stage{position:absolute;border-radius:12px;background:#fff;border:1px solid #e2e6ea;border-left:6px solid var(--lc);padding:10px 12px 11px;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.09);transition:transform .13s,box-shadow .13s;display:flex;flex-direction:column;}
+  .stage:hover{transform:translateY(-3px);box-shadow:0 9px 20px rgba(0,0,0,.16);}
+  .stage.active{outline:3px solid var(--lc);outline-offset:2px;transform:translateY(-2px) scale(1.02);z-index:6;box-shadow:0 10px 22px rgba(0,0,0,.18);}
+  .stage .num{position:absolute;top:-13px;left:-13px;width:27px;height:27px;border-radius:50%;background:var(--lc);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.28);}
+  .stage .tag{font-size:9px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--lc);opacity:.9;margin-bottom:2px;}
+  .stage h3{margin:0 0 5px;font-size:14px;line-height:1.18;font-weight:700;}
+  .stage .blurb{font-size:11.5px;color:var(--muted);line-height:1.34;}
+  .dash{display:flex;flex-wrap:wrap;gap:3px;margin-top:8px;}
+  .dchip{font:800 8.5px/1.35 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.2px;background:#eef1f4;color:#546374;padding:3px 5px;border-radius:4px;white-space:nowrap;}
+  .fchip{font-size:9px;font-weight:800;letter-spacing:.2px;text-transform:uppercase;color:#2f6b74;background:#e6f5f6;border:1px solid #c6e6e9;padding:3px 6px;border-radius:4px;}
+  .stage.loopnode{border-style:dashed;border-left-style:solid;}
+  .looplabel{position:absolute;background:var(--loop);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:14px;box-shadow:0 2px 5px rgba(0,0,0,.2);white-space:nowrap;}
+  #panel{width:0;flex:0 0 auto;background:#fff;border-left:1px solid #e3e7eb;box-shadow:-8px 0 22px rgba(0,0,0,.10);overflow:hidden;transition:width .22s ease;}
+  #panel.open{width:var(--panelW);}
+  .pinner{width:var(--panelW);height:100%;display:flex;flex-direction:column;}
+  .phead{padding:19px 24px 14px;border-bottom:1px solid #eee;position:relative;flex:0 0 auto;}
+  .ptag{font-size:11px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;}
+  .phead h2{margin:7px 0 0;font-size:20px;line-height:1.16;padding-right:34px;}
+  #closeBtn{position:absolute;top:15px;right:18px;border:none;background:#eef2f5;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;color:#5d6d7e;}
+  #closeBtn:hover{background:#e2e8ee;}
+  .pbody{padding:19px 24px;overflow:auto;flex:1 1 auto;}
+  .sec{margin-bottom:19px;}
+  .sec .lbl{font-size:11px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+  .sec p{margin:0;font-size:14.5px;line-height:1.55;}
+  .why{background:#fff8f1;border-left:4px solid var(--loop);padding:12px 15px;border-radius:0 8px 8px 0;}
+  .why .lbl{color:#c0651a;}
+  .drow{display:flex;gap:9px;align-items:baseline;margin-bottom:7px;font-size:13px;line-height:1.4;}
+  .drow .dchip{flex:0 0 auto;font-size:9.5px;padding:4px 6px;}
+  .drow span.mean{color:#4a5866;}
+  .frow{margin-bottom:11px;font-size:13px;line-height:1.45;}
+  .frow .fname{font-weight:800;color:#2f6b74;text-decoration:none;}
+  .frow a.fname:hover{text-decoration:underline;}
+  .frow .ftypes{font:700 11px ui-monospace,Menlo,Consolas,monospace;color:#607080;}
+  .glossgrp{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:16px 0 9px;}
+  .pnav{border-top:1px solid #eee;display:none;align-items:center;justify-content:space-between;gap:8px;padding:13px 24px;flex:0 0 auto;}
+  .pnav.on{display:flex;}
+  .pnav button{border:1px solid #cfd6dc;background:#fff;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;}
+  .pnav button:hover:not(:disabled){background:#eef2f5;}
+  .pnav button:disabled{opacity:.35;cursor:default;}
+  .pnav .cnt{font-size:12.5px;color:var(--muted);font-weight:800;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Program / TPA Job Flow — from First Notice of Loss to Closeout</h1>
+  <p>Centralized Estimating · Session 4 — how a program job moves across the whole Kustom team, and how each role (and its documentation) shapes what gets paid.</p>
+</header>
+
+<div class="bar">
+  <div class="tabs">
+    <button class="tab on" data-flow="mit">Mitigation</button>
+    <button class="tab" data-flow="repair">Repair</button>
+  </div>
+  <div class="legend" id="legend"></div>
+</div>
+
+<div class="docstrip">
+  <span class="em">📸</span>
+  <div><b>Documentation is the whole game.</b> If we can't see it and prove it, the program reviewer can't — and the adjuster won't pay it. Every approved dollar rides on the field team's capture: photos, scans, readings, and written justification — for the estimate, and <b>especially the supplement.</b></div>
+</div>
+
+<div class="bar">
+  <button class="btn tour" id="tourBtn">▶ Start walkthrough</button>
+  <div class="concepts" id="concepts" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+  <div style="margin-left:auto;display:flex;gap:6px;">
+    <button class="btn ref" id="mpBtn">Matterport scanning</button>
+    <button class="btn ref" id="formsBtn">Request forms</button>
+    <button class="btn ref" id="glossBtn">DASH headers</button>
+  </div>
+  <div class="seg">
+    <button id="zout" title="Zoom out">−</button>
+    <button id="zfit" title="Fit whole flow">Fit</button>
+    <button id="z100" title="Actual size">100%</button>
+    <button id="zin" title="Zoom in">+</button>
+  </div>
+</div>
+
+<div id="stage">
+  <div id="viewport"><div id="canvasWrap"><div id="board"></div></div></div>
+  <aside id="panel">
+    <div class="pinner">
+      <div class="phead">
+        <button id="closeBtn">×</button>
+        <div class="ptag" id="ptag"></div>
+        <h2 id="ptitle"></h2>
+      </div>
+      <div class="pbody" id="pbody"></div>
+      <div class="pnav" id="pnav">
+        <button id="prevBtn">◀ Prev</button>
+        <span class="cnt" id="pcnt"></span>
+        <button id="nextBtn">Next ▶</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+// ---- DASH note headers (ordered) ----
+const NOTES = [
+ ["INSPECTION SCHEDULED","Inspection appointment booked"],
+ ["POST INSPECTION","Findings logged right after the site visit"],
+ ["SALES UPDATE","RSS / sales status update"],
+ ["CUSTOMER CONTACT","Homeowner contact — locally owned (RSS / Coordinator / PD), not CE"],
+ ["ADJUSTER CONTACT","Contact with the carrier's adjuster"],
+ ["EST IP","Estimate in progress"],
+ ["NEED INFO","Waiting on information to proceed"],
+ ["ON HOLD","Work paused"],
+ ["T&M","Time & materials (has its own request form)"],
+ ["PRELIM SENT","Preliminary estimate sent"],
+ ["EST UPLOADED","Estimate uploaded to the program portal"],
+ ["REV REQ","Revision request — our answer to the review's exceptions"],
+ ["EST APPROVED","Estimate approved by the carrier (logged by CE)"],
+ ["HAND OFF","Vendor exchange into DASH → work-order budgets → PD can start"],
+ ["JOB UPDATE","General production status update"],
+ ["SUP NEEDED","Supplement needed (use the SUP/CO form — the note just flags it)"],
+ ["SUP IP","Supplement in progress"],
+ ["SUP WAIT","Waiting on the supplement (info / approval)"],
+ ["SUP UPLOADED","Supplement uploaded to the program"],
+ ["SUP APPROVED","Supplement approved by the carrier"],
+ ["CO NEEDED","Change order needed"],
+ ["CO IP","Change order in progress"],
+ ["CO SENT","Change order sent"],
+ ["INVOICE REQ","Invoice requested"],
+ ["INVOICE CREATED","Invoice created"],
+ ["INVOICE SENT","Invoice sent to the carrier"],
+ ["AR$","Accounts receivable — payment tracking"],
+ ["JNS","Job not sold — e.g. we decline the assignment (rare)"]
+];
+const NOTE_MEAN = Object.fromEntries(NOTES);
+
+// ---- request forms ----
+const FORMS = {
+ repair:{short:"REPAIR EST FORM", name:"Repair Estimate Order Request Form", types:"04, 07", use:"Order a repair estimate from CE", url:"https://forms.monday.com/forms/02ea76580553684fa9022bccb7ca684d?r=use1"},
+ mit:{short:"MIT EST FORM", name:"Mitigation Estimate Request Form", types:"01 02 03 05 06 08 10", use:"Order a mitigation estimate/invoice from CE", url:"https://forms.monday.com/forms/99c859e6315b778c2d0db99c871ac268?r=use1"},
+ tm:{short:"T&M FORM", name:"T&M Estimate Request Form", types:"01 02 06 08", use:"Order a time & materials estimate (mitigation)", url:"https://forms.monday.com/forms/614562d83dab3cc40afd19c994928e55?r=use1"},
+ supco:{short:"SUP/CO FORM", name:"Supplement / Change Order Request Form", types:"04", use:"Request a supplement or a change order", url:"https://forms.monday.com/forms/4a997dd5869e12790b9d25f2d11b160f?r=use1"}
+};
+
+// ---- concepts ----
+const concepts = [
+ {key:"doc", cls:"doc", btn:"📸 Documentation = getting paid", tag:"The Big Idea", title:"Documentation = Getting Paid",
+  what:"Program work runs on proof. If we can't see it and show it, the program reviewer can't verify it — and the adjuster won't pay it. Every approved dollar traces back to what the field team captured: photos, scans, moisture readings, measurements, and the written justification behind each line. The company rule of thumb: if it's not in DASH, it doesn't exist.",
+  why:"This is the whole team's job, not just CE's — and it's why this session exists: so everyone who touches program work, whether or not they know Xactimate, understands how the estimate and invoice are built and can document and communicate around it. Get documentation right and this system is very winnable: the better we capture and justify, the more we recover and the faster jobs close — especially on the supplement, where the money is most often won or lost."},
+ {key:"dings", cls:"doc", btn:"⏱ Program timers & dings", tag:"The Big Idea", title:"Program Timers, Scores & Assignment Flow",
+  what:"Every program measures us against the clock and a scorecard, and ties our assignment volume to the results. Alacrity's CIP (Contractor Incentive Program) sets the SLA metrics: contact the insured within 30 min (emergency) / 1 hr (non-emergency), inspect within 2 hrs / 24 hrs, submit the estimate within 24 hrs of completion / 2 days of inspection, re-submit a rejected estimate within 24 hrs, keep the rejection rate under 20% (restoration) / 30% (mitigation), closeout rejections under 5% — plus customer-survey scores of 3.5+/4. Contractor Connection runs the equivalent as POMS, scoring each assignment 1–5 on the same kinds of categories.",
+  why:"Two things follow. First, these timers and scores live in the PROGRAM platform (AlacNet, XactAnalysis/Cotality, JobTrack) — NOT DASH — so acting on time isn't enough: you have to document and communicate the effort IN their system (Alacrity literally scores whether you logged your attempts and clicked the indicators). Second, performance drives how much work we get: Alacrity's CIP starts everyone at 100 points and awards bonus assignments to contractors who score above it, while rejections, valid issues, and missed SLAs drop you down the rotation. The extreme is being RED-LIGHTED — the office removed from active rotation until the issue is resolved; a single late estimate submission can trigger it. A delay outside our control can be excused, but only if it's documented and an exception is entered in time (a Claims Coordinator's job). Documentation and timely communication aren't paperwork; they're how we keep and grow the work."},
+ {key:"comms", cls:"doc", btn:"🗣 Customer comms = locally owned", tag:"The Big Idea", title:"Customer Comms — Locally Owned",
+  what:"Customer communication on program jobs is LOCALLY owned — by the production team, not CE. On a repair job the ideal is that the homeowner only ever talks to three local people: the RSS (sales), the Coordinator (usually a Project Coordinator — some offices have a Claims Coordinator for local program admin), and the Project Director (execution). Sales → coordination → execution: simple, local, and close to the customer.",
+  why:"CE estimators sit remote and don't own the customer relationship. While a job is at CE, an estimator may send a brief weekly email on the estimate's progress — in neutral, program-friendly language (programs don't want us disparaging them to the insured) — but the goal is for the RSS, when one is assigned, to give the weekly homeowner updates using what the estimator documents. That's the deal: estimators document the job thoroughly so the local team can communicate accurately and often. Meanwhile the Claims Coordinator keeps the weekly notes, JobTrack progress bars, and late-item exception reasons current — which is what keeps the office from getting red-lighted."},
+ {key:"prog", cls:"concept", btn:"Program vs. non-program", tag:"Key Concept", title:"Program vs. Non-Program Work",
+  what:"Program: the FNOL went to the carrier, so the carrier (through a TPA / program administrator) controls the claim and sets the software, profile, rules, and process. Non-program: the customer called us first, so we choose the software and approach — still reasonable and justifiable, but on our terms.",
+  why:"Program work is a large and durable part of the industry — carriers rely on programs to service claims at scale. Knowing which lane a job is in tells you which rulebook applies before you touch the estimate. Same trade, different constraints."},
+ {key:"profile", cls:"concept", btn:"What a carrier profile controls", tag:"Key Concept", title:"What the Carrier Profile Controls",
+  what:"Carriers generally can't set their own unit prices — pricing is regulated — so the price list works as the price list across profiles. What the carrier-specific profile and rules DO control: waste percentages, square-foot deductions, yields, and conditional rules — the levers that shape overall quantities and the resulting total.",
+  why:"This is why the same loss can total differently across carriers on the same regional price list. In program work you're working within their profile; the conversation happens around quantities and inclusions, not the unit prices themselves."},
+ {key:"negot", cls:"concept", btn:"Why review & supplements exist", tag:"Key Concept", title:"Why Review & Supplements Exist",
+  what:"At its core, property insurance is simple: a covered loss obligates the carrier to indemnify reasonable incurred costs — the provider does the work, submits the invoice, and is paid. Program review and supplements are the structured way carriers confirm costs fit their guidelines before and after paying.",
+  why:"Because programs review estimates against defined guidelines, some items get resolved up front and others are supported and supplemented later. Working the process well — documenting the why, using the guidelines, supplementing with justification — is how we reach an agreed scope efficiently and keep the homeowner out of the middle."}
+];
+
+// ================= FLOWS =================
+const FLOWS = {
+ repair:{
+  name:"Repair",
+  lanes:[{key:"carrier",name:"Carrier / TPA"},{key:"rss",name:"RSS — Sales / Inspection"},{key:"ce",name:"Centralized Estimating"},{key:"pc",name:"Project Coordinator"},{key:"pd",name:"Project Director"}],
+  loops:[{from:7,to:6,dir:"up",label:"our Revision Requests (REV REQ) until it conforms"},
+         {from:13,to:6,dir:"down",label:"supplement re-enters review — its own REV REQ round"}],
+  stages:[
+   {n:1,col:1,lane:"carrier",title:"First Notice of Loss / Assignment",dash:[],
+    blurb:"Homeowner reports the loss to their carrier, who assigns it to Kustom through their program.",
+    what:"The homeowner reports the loss to their carrier — not to a contractor. The carrier (or its program administrator / TPA — Alacrity, Contractor Connection, Sedgwick) controls the claim from first notice and assigns it to Kustom through their program.",
+    why:"This one fact defines program work: because the first call went to the carrier, the carrier owns the claim — its software, its profile, its rules. To do the work, we work inside their program. (Non-program work, where the customer calls us first, doesn't carry these constraints.)"},
+   {n:2,col:2,lane:"rss",title:"Assignment Accepted",dash:["INSPECTION SCHEDULED","CUSTOMER CONTACT","JNS"],
+    blurb:"Kustom accepts in the carrier/TPA portal (AlacNet). The service-level clock starts.",
+    what:"Kustom accepts the program assignment in the carrier/TPA portal (AlacNet, etc.) and the service-level clock starts. In the rare case we decline the assignment, it's marked Job Not Sold (JNS).",
+    why:"Program work comes with service-level deadlines and performance scoring we don't set (Alacrity's timelines, Contractor Connection's POMS). Standing in the program depends on meeting them from this moment on — see “Program timers & dings.”"},
+   {n:3,col:3,lane:"rss",title:"RSS Inspection + Matterport Scan",dash:["POST INSPECTION","SALES UPDATE","CUSTOMER CONTACT"],
+    blurb:"RSS onsite: inspect · document · communicate — scan, photos, moisture, scope notes.",
+    what:"RSS goes onsite: INSPECT – DOCUMENT – COMMUNICATE. A Matterport scan, photos, moisture readings, and scope notes capture the loss. (RSS is a repair-side role — there is no RSS step on mitigation.)",
+    why:"Everything downstream is built from what RSS captures here. The scan is the source of truth CE estimates from — what isn't documented now is far harder to justify later. It's also the customer's first impression and the foundation of their trust."},
+   {n:4,col:4,lane:"ce",title:"CE Writes the Estimate",dash:["EST IP","NEED INFO","ON HOLD"],forms:["repair"],
+    blurb:"CE estimates in the carrier-mandated software + profile + rules — none of it optional.",
+    what:"Work is requested to CE on a Repair Estimate Order Request Form. CE writes the estimate in the carrier-mandated software (Xactimate or Symbility) using the required profile and program rules — the conditional environment the carrier built. Software, profile, and rule set are all dictated; we don't choose them.",
+    why:"Unit prices are essentially the same everywhere — pricing is regulated. What the carrier's profile and rules control are the quantity levers: waste %, square-foot deductions, yields, and conditional rules. Those settings — not the prices — shape the total, which is why two near-identical losses can price differently across carriers."},
+   {n:5,col:5,lane:"ce",title:"Submit to Program",dash:["PRELIM SENT","EST UPLOADED","ADJUSTER CONTACT"],
+    blurb:"The finished estimate is uploaded into the program/TPA portal for review.",
+    what:"The completed estimate is submitted into the program/TPA portal for review. This is also a common point of adjuster contact.",
+    why:"In program work we don't just do the work and bill it. The estimate has to clear the program's review before anyone is authorized to proceed."},
+   {n:6,col:6,lane:"carrier",title:"Program Review (QR)",loop:true,dash:[],
+    blurb:"The program's QR team screens it against carrier guidelines and returns exceptions.",
+    what:"The program's Quality Review team screens the estimate against the carrier's guidelines and returns off-guideline items as exceptions. The estimate cycles here until it conforms, then moves to the carrier's adjuster for approval.",
+    why:"This review is the gate that gets the estimate compliant with the carrier's rules before it reaches the adjuster — a clean, guideline-aligned estimate lets the adjuster approve quickly. Guidelines are written down, but they leave gray areas that reviewers interpret case by case — and what you can hold onto here depends entirely on how well the field documented it."},
+   {n:7,col:7,lane:"ce",title:"Negotiation (Revision Requests)",loop:true,dash:["REV REQ","ADJUSTER CONTACT","NEED INFO"],
+    blurb:"Our REV REQ answers: justify with documentation, or pull items to supplement later.",
+    what:"We answer the review's exceptions with Revision Requests (REV REQ) — our side of the exchange. Two ways: (a) justify the item with the documentation on hand and hold it, or (b) accept the removal now and flag it for a later supplement. On clearly defined guidelines there's little room to push; in the gray areas we make the case, and interpretation can go either way or escalate to the adjuster.",
+    why:"This is where documentation pays off — you can only hold what you can prove. Log what gets removed and WHY so the field knows before the job starts what to capture and supplement later. The goal is an agreed, guideline-aligned scope, reached efficiently, without putting the homeowner in the middle of the difference."},
+   {n:8,col:8,lane:"carrier",title:"Scope Approved / Authorization",dash:[],
+    blurb:"The carrier's adjuster approves the reviewed scope — the authorization to begin work.",
+    what:"The carrier's adjuster approves the reviewed scope. The approved estimate becomes the authorization to begin work.",
+    why:"Only now is there a green light. The approved scope — plus the running list of items pulled for supplement — defines what's in, what's out, and why, for everyone who touches the job next."},
+   {n:9,col:9,lane:"ce",title:"Estimate Approved & Hand-Off",dash:["EST APPROVED","HAND OFF"],
+    blurb:"CE logs approval and does the vendor exchange into DASH so budgets generate and PD can start.",
+    what:"CE logs the approval (EST APPROVED) and performs the hand-off: the vendor exchange into DASH that generates the work-order budgets, with a note tagging PC / RSS / PD / GM (HAND OFF). The items pulled for supplement carry forward here too.",
+    why:"The hand-off is the bridge from estimate to production — it's what turns an approved scope into work-order budgets the field can execute against. Do it cleanly and the office starts on solid footing; miss it and production stalls before it begins."},
+   {n:10,col:10,lane:"pc",title:"Contract & Production Setup",dash:["CUSTOMER CONTACT"],
+    blurb:"PC turns the approved job live: executed contract, budget synced, welcome-to-production, deductible.",
+    what:"The Project Coordinator turns the approved job into a live production file: obtains and uploads the executed Construction Agreement, syncs the budget/contract to Intacct, sends the Welcome-to-Production email, and invoices the deductible. Homeowner contact here is the Coordinator's — see “Customer comms.”",
+    why:"This is the coordinator's bridge between an approved estimate and boots on the ground. Clean setup means the PD executes against a real budget, with the contract and deductible already handled."},
+   {n:11,col:11,lane:"pd",title:"Project Director Executes",dash:["JOB UPDATE"],
+    blurb:"The Project Director runs the job against the budgets: scheduling, crews and subs, production.",
+    what:"The Project Director takes the approved scope and work-order budgets and runs the job — scheduling, crews and subs, production. Weekly customer updates are the PD's (and Coordinator's) to give.",
+    why:"PD starts already knowing the supplement targets, so the field isn't discovering surprises blind. Everyone's on the same page about what was removed and what we intend to recover."},
+   {n:12,col:12,lane:"pd",title:"Field Discovery & Documentation",dash:["JOB UPDATE","SUP NEEDED"],
+    blurb:"The whole team's job: find hidden damage and CAPTURE the proof that makes it payable.",
+    what:"During execution the team finds additional or hidden damage — and captures the photos, measurements, and written justification for it, along with the items pre-flagged during negotiation. When a supplement is needed it's flagged (the SUP/CO form is the real trigger; the SUP NEEDED note just documents the need).",
+    why:"This is where profitability is made or lost, and it's on the whole team — not just CE. If we can't prove it, the program won't pay it. When the field documents deliberately (going in knowing what we'll need), supplements get approved; when it's reconstructed after the fact, they don't. Program work is no joke: proof is the difference between a scope that's covered and one that isn't."},
+   {n:13,col:13,lane:"ce",title:"Supplement Written & Submitted",loop:true,dash:["SUP NEEDED","SUP IP","SUP WAIT","SUP UPLOADED","REV REQ","SUP APPROVED","CO NEEDED","CO IP","CO SENT"],forms:["supco"],
+    blurb:"Requested on the SUP/CO form. CE writes it, back through review — its own REV REQ round.",
+    what:"Supplements and change orders are requested on the Supplement/Change Order Request Form. CE writes the supplement — newly discovered damage plus the pre-flagged items — and submits it back into program review, where it gets its own round of Revision Requests (REV REQ) before approval.",
+    why:"Items the program wouldn't approve up front can often be approved later, once there's field justification or the adjuster is directly involved. The supplement is where the approved scope is brought in line with what the loss actually required — and it lives or dies on documentation."},
+   {n:14,col:14,lane:"pd",title:"Work Complete",dash:["JOB UPDATE"],
+    blurb:"Production finishes; final walk-through, punch list, and Certificate of Satisfaction (COS) logged.",
+    what:"Production finishes: the final walk-through and punch list with the customer, and the signed Certificate of Satisfaction / Completion is logged. The Coordinator records the majority-completion date.",
+    why:"The physical scope closes out — but the financial picture isn't finished until the invoice is billed and collected."},
+   {n:15,col:15,lane:"pc",title:"Invoice & Collections",dash:["INVOICE REQ","INVOICE CREATED","INVOICE SENT","AR$"],
+    blurb:"PC bills in Intacct, sends the invoice, and works weekly AR$ collections until paid.",
+    what:"The Project Coordinator bills the job in Intacct, sends the invoice to the customer / TPA / adjuster, uploads copies to DASH, confirms receipt within 48 hours, and works weekly collections (AR$ notes) — depositing and applying payments. Past 30 days, collections escalate to RFD for lien / legal guidance.",
+    why:"The job isn't done when the work is; it's done when it's billed and collected. Clean documentation upstream is what gets us paid promptly here."},
+   {n:16,col:16,lane:"carrier",title:"Closeout / Paid",dash:[],
+    blurb:"Carrier reconciles and pays (Alacrity: via PAS); a clean closeout package gets us paid; job closes.",
+    what:"The carrier reconciles and pays (Alacrity closeout runs through PAS — the Paying Agent Solution). Closeout requires the signed Certificate of Satisfaction and work authorization, unconditional lien waivers on trade work $5,000+, and completion photos (used to release recoverable depreciation). Date Paid is recorded and the job closes.",
+    why:"This is the point of the whole process — indemnification: a covered loss means the carrier makes the policyholder whole for reasonable incurred costs. The provider does the work and is paid for it. Everything upstream exists to get a clean, justified estimate to this moment — and a clean closeout package is what gets us paid promptly."}
+  ]
+ },
+ mit:{
+  name:"Mitigation",
+  lanes:[{key:"carrier",name:"Carrier / TPA"},{key:"field",name:"Mitigation Field Team"},{key:"pc",name:"Project Coordinator"},{key:"ce",name:"Centralized Estimating"}],
+  loops:[{from:10,to:9,dir:"up",label:"our Revision Requests (REV REQ) until it conforms"}],
+  stages:[
+   {n:1,col:1,lane:"carrier",title:"FNOL / Emergency Assignment",dash:[],
+    blurb:"Carrier / program assigns the loss — often active water; we mobilize quickly.",
+    what:"The carrier or program assigns the loss to Kustom — frequently an active-water emergency. The carrier still controls the claim, its software, profile, and rules.",
+    why:"Speed matters: the faster we stabilize the loss, the less secondary damage — and emergency response is scored in minutes. Documentation starts the moment we arrive."},
+   {n:2,col:2,lane:"pc",title:"Customer Contact & Dispatch",dash:["CUSTOMER CONTACT","INSPECTION SCHEDULED"],
+    blurb:"Coordinator contacts the customer fast, updates the program, and dispatches the field team.",
+    what:"The Project Coordinator makes first customer contact (target: within ~5 minutes of assignment), updates the TPA/program, logs the contact and dates in DASH, and the mitigation team is dispatched.",
+    why:"Customer communication is locally owned from minute one. Fast, documented contact meets the program's response SLA and sets expectations with the homeowner."},
+   {n:3,col:3,lane:"field",title:"Day 1 — Pre-Mit Scan, Setup & Dry Start",dash:["CUSTOMER CONTACT","JOB UPDATE"],
+    blurb:"Signed WA, Pre-Mit scan BEFORE touching anything, then containment, equipment & extraction/demo.",
+    what:"The lead tech and team go onsite: obtain the signed Mitigation Work Authorization, capture the Pre-Mit Matterport scan and photos BEFORE any equipment or demo, initiate the MICA / Mitigate dry logs, set containment and drying equipment per IICRC standards, and begin extraction/demo. A DASH note follows every site visit.",
+    why:"The Pre-Mit scan is the 'before' — it protects us on pre-existing damage and anchors the whole claim. What isn't captured before we start can't be proven later. (See Matterport scanning.)"},
+   {n:4,col:4,lane:"field",title:"Daily Monitoring (Drying)",dash:["JOB UPDATE","ON HOLD"],
+    blurb:"Back every day: moisture readings, adjust equipment, document to the MICA standard.",
+    what:"The team returns each day (e.g. Day 3, 4, 5…) to take moisture readings, adjust equipment placement and count to keep the structure drying, and — if needed — seek permission for extended drying. Each visit is documented; the MICA / mitigation software defines the drying standard.",
+    why:"The daily logs justify equipment days and labor. No readings, no proof the equipment was warranted — and undocumented days get trimmed. (See the MICA audit for the compliance standard.)"},
+   {n:5,col:5,lane:"field",title:"Dry Standard Met — Post-Demo Scan & Breakdown",dash:["JOB UPDATE"],
+    blurb:"Final day: Post-Demo scan before pulling equipment, then breakdown, final dry logs, COC.",
+    what:"Once the structure is acceptably dry, the team captures the Post-Demo Matterport scan (before pulling equipment) and post-drying photos, breaks down and removes equipment, finalizes the dry logs, and obtains the signed Certificate of Completion.",
+    why:"The Post-Demo scan and final logs are the proof of everything performed — the backbone of a non-negotiable mitigation invoice. Capture it before the equipment comes out; you won't get another chance."},
+   {n:6,col:6,lane:"field",title:"Invoice Request to CE",dash:[],forms:["mit","tm"],
+    blurb:"Mit PD / lead tech submits the Mitigation Estimate Request Form once all docs are in DASH.",
+    what:"With the job documented, the mit Project Director or lead tech completes and submits the Mitigation Estimate Request Form (or T&M form) to CE. The Project Coordinator backs this up and confirms the documentation is complete in DASH — labeled photos, MICA dry logs, both Matterport scans, and the scope. If it's not in DASH, it doesn't exist.",
+    why:"CE can only invoice what's captured and organized. A clean package = a fast, defensible invoice; a thin one stalls in NEED INFO."},
+   {n:7,col:7,lane:"ce",title:"CE Writes the Mitigation Invoice",dash:["EST IP","NEED INFO","ON HOLD"],
+    blurb:"CE builds the invoice from the documentation, in the carrier-mandated software + profile.",
+    what:"CE writes the mitigation invoice from the field's documentation, using the carrier-mandated software, profile, and rules. On mitigation it's an INVOICE, not an estimate — the work is already performed.",
+    why:"Because it's work performed, it's only non-negotiable if everything is documented and justified. Mitigation is the king of documentation: photos, dry logs, and both scans are what make the invoice hold."},
+   {n:8,col:8,lane:"ce",title:"Submit to Program",dash:["PRELIM SENT","EST UPLOADED","ADJUSTER CONTACT"],
+    blurb:"The mitigation invoice is uploaded to the program portal for review.",
+    what:"The completed mitigation invoice is submitted into the program/TPA portal for review and marked sent in DASH.",
+    why:"As with repair, it must clear program review before it's approved and paid."},
+   {n:9,col:9,lane:"carrier",title:"Program Review (QR)",loop:true,dash:[],
+    blurb:"The program's QR team screens the invoice against guidelines and returns exceptions.",
+    what:"The program's Quality Review team screens the mitigation invoice against carrier guidelines and returns off-guideline items as exceptions. It cycles until it conforms, then goes to the adjuster.",
+    why:"The reviewer checks the documentation against the rules — moisture logs, equipment days, affected materials. What's well-documented holds; what isn't gets cut."},
+   {n:10,col:10,lane:"ce",title:"Revision Requests / Negotiation",loop:true,dash:["REV REQ","ADJUSTER CONTACT"],
+    blurb:"Answer the exceptions with REV REQ, backed by the field documentation.",
+    what:"CE answers the exceptions with Revision Requests (REV REQ), justifying items with the field documentation or adjusting the invoice. Gray areas are interpreted case by case and can escalate to the adjuster.",
+    why:"You can only hold what you can prove. This is where the Day-1 Pre-Mit scan and daily logs earn their keep. (Note: mitigation doesn't run supplements — it's one invoice for work performed.)"},
+   {n:11,col:11,lane:"carrier",title:"Invoice Approved",dash:["EST APPROVED"],
+    blurb:"The carrier's adjuster approves the mitigation invoice.",
+    what:"The carrier's adjuster approves the mitigation invoice. CE uploads the final and marks it approved in DASH, then notes to PC/PD that the job is ready to invoice.",
+    why:"Approval confirms the documented scope of work. From here it's billing and collections."},
+   {n:12,col:12,lane:"pc",title:"Invoice & Collections",dash:["INVOICE REQ","INVOICE CREATED","INVOICE SENT","AR$"],
+    blurb:"PC invoices in Intacct, sends it out, and works weekly AR$ collections until paid.",
+    what:"The Project Coordinator invoices in Intacct, sends it to the customer / TPA / adjuster, uploads copies to DASH, confirms receipt within 48 hours, and works weekly collections (AR$ notes) — depositing and applying payments as they come in.",
+    why:"The job isn't done when the drying is; it's done when it's billed and collected. Clean documentation upstream is what gets us paid promptly here."},
+   {n:13,col:13,lane:"carrier",title:"Closeout / Paid",dash:[],
+    blurb:"Carrier pays (Alacrity: via PAS); job closes when billed and paid in full.",
+    what:"The carrier pays (Alacrity closeout runs through PAS — the Paying Agent Solution). The job is closed in DASH once it's complete, billed in full, paid in full, all costs are entered, and contracts match.",
+    why:"Indemnification in action: the documented, reviewed, approved work is paid. Every dollar traces back to what the field proved on Day 1."}
+  ]
+ }
+};
+
+// ================= RENDER =================
+const RAIL=132, COLW=286, CARDW=248, GAP=34, BANDPAD=24, Y0=48, PAD=44;
+let LANES=[], stages=[], loops=[], totalW=0, totalH=0, svg=null, activeKey="repair";
+const cardEl={}, geom={};
+const board=document.getElementById('board');
+const laneX0 = c => RAIL + (c-1)*COLW;
+const laneIndex = k => LANES.findIndex(l=>l.key===k);
+const laneName = k => {const l=LANES.find(x=>x.key===k);return l?l.name:k;};
+const sById={};
+
+function renderFlow(key){
+  activeKey=key;
+  const flow=FLOWS[key];
+  LANES=flow.lanes; stages=flow.stages; loops=flow.loops;
+  for(const k in sById) delete sById[k]; stages.forEach(s=>sById[s.n]=s);
+  for(const k in cardEl) delete cardEl[k];
+  for(const k in geom) delete geom[k];
+
+  const maxCol=Math.max(...stages.map(s=>s.col));
+  totalW=laneX0(maxCol)+CARDW+PAD;
+  board.innerHTML='<svg class="links" id="links"></svg>';
+  svg=document.getElementById('links');
+
+  // bands first (behind), positions set after measuring cards
+  const bands=LANES.map(ln=>{
+    const band=document.createElement('div');
+    band.className='laneband';
+    band.style.width=totalW+"px";
+    band.style.background=getComputedStyle(document.documentElement).getPropertyValue('--'+ln.key+'-bg');
+    const pill=document.createElement('div');
+    pill.className='lanepill';
+    pill.style.setProperty('--lc','var(--'+ln.key+')');
+    pill.textContent=ln.name;
+    band.appendChild(pill);
+    board.appendChild(band);
+    return band;
+  });
+
+  // cards (height auto) — create + measure
+  stages.forEach(s=>{
+    const d=document.createElement('div');
+    d.className='stage'+(s.loop?' loopnode':'');
+    d.style.setProperty('--lc','var(--'+s.lane+')');
+    d.style.left=laneX0(s.col)+"px";
+    d.style.top="0px";
+    d.style.width=CARDW+"px";
+    const chips=(s.dash||[]).map(h=>'<span class="dchip">'+h+'</span>').join('');
+    const forms=(s.forms||[]).map(f=>'<span class="fchip">'+FORMS[f].short+'</span>').join('');
+    d.innerHTML='<div class="num">'+s.n+'</div>'+
+      '<div class="tag">'+laneName(s.lane)+'</div>'+
+      '<h3>'+s.title+'</h3>'+
+      '<div class="blurb">'+s.blurb+'</div>'+
+      (chips?'<div class="dash">'+chips+'</div>':'')+
+      (forms?'<div class="dash">'+forms+'</div>':'');
+    d.onclick=()=>openStep(stages.indexOf(s));
+    board.appendChild(d);
+    cardEl[s.n]=d;
+  });
+
+  // measure heights, compute lane layout
+  const heights={}; stages.forEach(s=>heights[s.n]=cardEl[s.n].offsetHeight);
+  const laneMax=LANES.map(()=>0);
+  stages.forEach(s=>{const li=laneIndex(s.lane);laneMax[li]=Math.max(laneMax[li],heights[s.n]);});
+  const laneTop=[]; let y=Y0;
+  LANES.forEach((ln,i)=>{laneTop[i]=y; y+=laneMax[i]+GAP;});
+  totalH=y+8;
+
+  // position bands + cards, build geometry
+  LANES.forEach((ln,i)=>{
+    bands[i].style.top=(laneTop[i]-BANDPAD)+"px";
+    bands[i].style.height=(laneMax[i]+2*BANDPAD)+"px";
+  });
+  stages.forEach(s=>{
+    const li=laneIndex(s.lane), top=laneTop[li];
+    cardEl[s.n].style.top=top+"px";
+    geom[s.n]={x:laneX0(s.col),top:top,h:heights[s.n],cx:laneX0(s.col)+CARDW/2,cy:top+heights[s.n]/2};
+  });
+
+  board.style.width=totalW+"px"; board.style.height=totalH+"px";
+  drawConnectors();
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.flow===key));
+  updateLegend();
+  scale=1; applyScale(); closePanel();
+}
+
+function drawConnectors(){
+  svg.setAttribute('width',totalW); svg.setAttribute('height',totalH);
+  svg.innerHTML='<defs>'+
+    '<marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#8fa0b0"/></marker>'+
+    '<marker id="arrl" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3 L0,6 Z" fill="#e67e22"/></marker>'+
+    '</defs>';
+  for(let i=0;i<stages.length-1;i++) fwd(stages[i].n,stages[i+1].n);
+  loops.forEach(lp=>{
+    const a=geom[lp.from], b=geom[lp.to]; if(!a||!b)return;
+    if(lp.dir==="up"){
+      const up=b.top-30;
+      pathEl(`M${a.cx},${a.top} V${up} H${b.cx} V${b.top}`,'loop');
+      addLoopLabel((a.cx+b.cx)/2,up-8,lp.label);
+    }else{
+      const down=totalH-6;
+      pathEl(`M${a.cx},${a.top+a.h} V${down} H${b.cx} V${b.top+b.h}`,'loop');
+      addLoopLabel(b.cx+12,down-8,lp.label);
+    }
+  });
+}
+function fwd(an,bn){
+  const a=geom[an],b=geom[bn];
+  const sx=a.x+CARDW, sy=a.cy, tx=b.x, ty=b.cy, mx=(sx+tx)/2;
+  pathEl(`M${sx},${sy} H${mx} V${ty} H${tx}`,'fwd');
+}
+function pathEl(d,cls){const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',d);p.setAttribute('class',cls);svg.appendChild(p);}
+function addLoopLabel(x,y,txt){const d=document.createElement('div');d.className='looplabel';d.style.left=x+"px";d.style.top=y+"px";d.style.transform='translate(-50%,-50%)';d.textContent=txt;board.appendChild(d);}
+const connStyle=document.createElement('style');
+connStyle.textContent='.fwd{fill:none;stroke:#8fa0b0;stroke-width:2.25;marker-end:url(#arr);}.loop{fill:none;stroke:#e67e22;stroke-width:2.25;stroke-dasharray:7 5;marker-end:url(#arrl);}';
+document.head.appendChild(connStyle);
+
+function updateLegend(){
+  const el=document.getElementById('legend'); el.innerHTML='';
+  LANES.forEach(l=>{
+    const c=document.createElement('span'); c.className='chip';
+    c.innerHTML='<span class="swatch" style="background:var(--'+l.key+')"></span>'+l.name+(l.key==='carrier'?' <span style="font-weight:400;color:var(--muted)">controls the claim</span>':'');
+    el.appendChild(c);
+  });
+}
+
+// ---- concept + reference buttons ----
+const cwrap=document.getElementById('concepts');
+concepts.forEach(c=>{
+  const b=document.createElement('button');
+  b.className='btn '+(c.cls||'concept'); b.textContent=c.btn;
+  b.onclick=()=>openConcept(c);
+  cwrap.appendChild(b);
+});
+document.getElementById('glossBtn').onclick=openGloss;
+document.getElementById('formsBtn').onclick=openForms;
+document.getElementById('mpBtn').onclick=openMP;
+
+// ================= PANEL =================
+const panel=document.getElementById('panel'), pbody=document.getElementById('pbody');
+const pnav=document.getElementById('pnav'), pcnt=document.getElementById('pcnt');
+const prevBtn=document.getElementById('prevBtn'), nextBtn=document.getElementById('nextBtn'), tourBtn=document.getElementById('tourBtn');
+let curIdx=-1;
+function clearActive(){Object.values(cardEl).forEach(el=>el.classList.remove('active'));}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function formRow(F){
+  const name = F.url
+    ? '<a class="fname" href="'+esc(F.url)+'" target="_blank" rel="noopener">'+esc(F.name)+' ↗</a>'
+    : '<span class="fname">'+esc(F.name)+'</span>';
+  return '<div class="frow">'+name+' <span class="ftypes">('+esc(F.types)+')</span><br>'+esc(F.use)+'</div>';
+}
+function openPanel(tag,color,title,bodyHTML){
+  const t=document.getElementById('ptag'); t.textContent=tag; t.style.color=color;
+  document.getElementById('ptitle').textContent=title;
+  pbody.innerHTML=bodyHTML; panel.classList.add('open');
+}
+function stepBody(s){
+  let html='<div class="sec"><div class="lbl">What happens</div><p>'+esc(s.what)+'</p></div>'+
+           '<div class="sec why"><div class="lbl">Why it matters</div><p>'+esc(s.why)+'</p></div>';
+  if(s.forms&&s.forms.length){
+    html+='<div class="sec"><div class="lbl">Request form used here</div>'+
+      s.forms.map(f=>formRow(FORMS[f])).join('')+'</div>';
+  }
+  if(s.dash&&s.dash.length){
+    html+='<div class="sec"><div class="lbl">DASH note headers at this step</div>'+
+      s.dash.map(h=>'<div class="drow"><span class="dchip">'+h+'</span><span class="mean">'+esc(NOTE_MEAN[h]||'')+'</span></div>').join('')+'</div>';
+  }
+  return html;
+}
+function openStep(idx){
+  curIdx=idx; const s=stages[idx];
+  clearActive(); cardEl[s.n].classList.add('active');
+  openPanel(laneName(s.lane),'var(--'+s.lane+')',s.n+'. '+s.title,stepBody(s));
+  pnav.classList.add('on');
+  pcnt.textContent='Step '+s.n+' of '+stages.length;
+  prevBtn.disabled=(idx===0); nextBtn.disabled=(idx===stages.length-1);
+  setTourUI(true); centerCard(s.n);
+}
+function openConcept(c){
+  curIdx=-1; clearActive();
+  openPanel(c.tag,c.cls==='doc'?'#c0651a':'var(--ce)',c.title,
+    '<div class="sec"><div class="lbl">What it is</div><p>'+esc(c.what)+'</p></div>'+
+    '<div class="sec why"><div class="lbl">Why it matters</div><p>'+esc(c.why)+'</p></div>');
+  pnav.classList.remove('on'); setTourUI(false);
+}
+function openGloss(){
+  curIdx=-1; clearActive();
+  const rows=NOTES.map(([h,m])=>'<div class="drow"><span class="dchip">'+h+'</span><span class="mean">'+esc(m)+'</span></div>').join('');
+  openPanel('Reference','#41566a','DASH Note Headers — the job in order',
+    '<div class="sec"><p style="margin-bottom:14px">The DASH note headers you\'ll see on a job, in roughly the order they occur. Match the note you receive to where the job is on the chart.</p>'+rows+
+    '<div class="glossgrp">Shorthand</div><p style="font-size:13px;line-height:1.6">IP = in progress · SUP = supplement · CO = change order · EST = estimate · PRELIM = preliminary · REV REQ = revision request · AR$ = accounts receivable · JNS = job not sold</p></div>');
+  pnav.classList.remove('on'); setTourUI(false);
+}
+function openForms(){
+  curIdx=-1; clearActive();
+  const rows=Object.values(FORMS).map(formRow).join('');
+  openPanel('Reference','#41566a','Request Forms — how work is ordered to CE',
+    '<div class="sec"><p style="margin-bottom:14px">Work is requested to Centralized Estimating on the right form for the job type. The form is how the request — and the documentation — reaches CE.</p>'+rows+'</div>');
+  pnav.classList.remove('on'); setTourUI(false);
+}
+function openMP(){
+  curIdx=-1; clearActive();
+  openPanel('Reference','#0e7c86','Matterport Scanning — Timing & Why',
+    '<div class="sec"><div class="lbl">Two scans, two moments</div><p><b>Pre-Mit</b> — captured BEFORE any equipment, extraction, or demo: the true “before” state and any pre-existing damage. <b>Post-Demo</b> — captured after demo / dry-out and <b>before pulling equipment</b>: proof of everything done, with all equipment still in place.</p></div>'+
+    '<div class="sec why"><div class="lbl">Why the timing matters</div><p>“If it’s not captured, the estimator can’t see it, won’t charge for it, and the adjuster won’t approve it.” The Pre-Mit scan protects us against pre-existing-damage disputes; the Post-Demo scan is what justifies the mitigation invoice. Miss the moment and the proof is gone — you don’t get it back.</p></div>'+
+    '<div class="sec"><div class="lbl">Naming & coverage</div><p>Name scans “[Customer Full Name] Pre Mit” or “Post Demo”; Internal ID = the DASH job number. Capture all affected rooms, the construction path, and one room beyond in every direction (accurate measurements), plus every room in a continuous flooring / finish run.</p></div>'+
+    '<div class="sec"><div class="lbl">Technique</div><p>“7 &amp; 7”: ~7 ft between waypoints, 7 in on each side of every door. ~5 scans per room (the 5-face of a die, corners + center). Open all doors first; mark mirrors in the app; and don’t close the app while a scan uploads.</p></div>');
+  pnav.classList.remove('on'); setTourUI(false);
+}
+function closePanel(){panel.classList.remove('open');pnav.classList.remove('on');clearActive();curIdx=-1;setTourUI(false);}
+function step(dir){const ni=curIdx+dir; if(ni<0||ni>=stages.length)return; openStep(ni);}
+function setTourUI(on){tourBtn.textContent=on?'■ Stop walkthrough':'▶ Start walkthrough';tourBtn.classList.toggle('stop',on);}
+document.getElementById('closeBtn').onclick=closePanel;
+prevBtn.onclick=()=>step(-1); nextBtn.onclick=()=>step(1);
+tourBtn.onclick=()=>{ if(curIdx>=0) closePanel(); else openStep(0); };
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closePanel();return;}
+  if(curIdx<0)return;
+  if(e.key==='ArrowRight'){e.preventDefault();step(1);}
+  if(e.key==='ArrowLeft'){e.preventDefault();step(-1);}
+});
+
+// ---- tabs ----
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>renderFlow(t.dataset.flow));
+
+// ================= ZOOM =================
+const viewport=document.getElementById('viewport'), wrap=document.getElementById('canvasWrap');
+let scale=1;
+function applyScale(){board.style.transform='scale('+scale+')';board.style.transformOrigin='0 0';wrap.style.width=(totalW*scale)+'px';wrap.style.height=(totalH*scale)+'px';}
+function fit(){const w=viewport.clientWidth-32,h=viewport.clientHeight-32;scale=Math.max(0.3,Math.min(1.4,Math.min(w/totalW,h/totalH)));applyScale();}
+function centerCard(n){requestAnimationFrame(()=>{const r=cardEl[n].getBoundingClientRect(),vr=viewport.getBoundingClientRect();viewport.scrollBy({left:r.left-vr.left-(vr.width-r.width)/2,top:r.top-vr.top-(vr.height-r.height)/2,behavior:'smooth'});});}
+document.getElementById('zin').onclick=()=>{scale=Math.min(1.6,+(scale+0.15).toFixed(2));applyScale();};
+document.getElementById('zout').onclick=()=>{scale=Math.max(0.3,+(scale-0.15).toFixed(2));applyScale();};
+document.getElementById('z100').onclick=()=>{scale=1;applyScale();};
+document.getElementById('zfit').onclick=fit;
+window.addEventListener('resize',()=>{if(scale<1)fit();});
+
+// go
+renderFlow('mit');
+</script>
+</body>
+</html>
