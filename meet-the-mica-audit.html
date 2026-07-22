@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meet the MICA Compliance Audit</title>
+<style>
+  :root{
+    --paper:#F4F1EC; --card:#FFFFFF; --ink:#1A2A33; --muted:#556570; --hair:#E0DAD0;
+    --deep:#0E3A44;            /* petrol — brand ground */
+    --deep-soft:#123C47;
+    --accent:#0E7C86;          /* teal — the one bold hue */
+    --accent-ink:#0A5D66;
+    --fix:#C0503B; --fix-bg:#F7E7E2;
+    --verify:#B7822A; --verify-bg:#F7EFDD;
+    --ready:#2E8A5F; --ready-bg:#E4F1E9;
+    --feedbk:#7A4FB0; --feedbk-bg:#EFE8F6;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0E141A; --card:#161F27; --ink:#E8EDF1; --muted:#9BAAB5; --hair:#26323C;
+      --deep:#0C2F38; --deep-soft:#0E3640; --accent:#3FB6BF; --accent-ink:#66C7CE;
+      --fix:#E27963; --fix-bg:#2C1712; --verify:#D9A64B; --verify-bg:#2A2213;
+      --ready:#57C08C; --ready-bg:#14271D; --feedbk:#B79AE0; --feedbk-bg:#211830;
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#F4F1EC; --card:#FFFFFF; --ink:#1A2A33; --muted:#556570; --hair:#E0DAD0;
+    --deep:#0E3A44; --accent:#0E7C86; --accent-ink:#0A5D66;
+    --fix:#C0503B; --fix-bg:#F7E7E2; --verify:#B7822A; --verify-bg:#F7EFDD;
+    --ready:#2E8A5F; --ready-bg:#E4F1E9; --feedbk:#7A4FB0; --feedbk-bg:#EFE8F6;
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E141A; --card:#161F27; --ink:#E8EDF1; --muted:#9BAAB5; --hair:#26323C;
+    --deep:#0C2F38; --accent:#3FB6BF; --accent-ink:#66C7CE;
+    --fix:#E27963; --fix-bg:#2C1712; --verify:#D9A64B; --verify-bg:#2A2213;
+    --ready:#57C08C; --ready-bg:#14271D; --feedbk:#B79AE0; --feedbk-bg:#211830;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:0 clamp(16px,4vw,32px) 80px}
+
+  /* hero */
+  .hero{background:var(--deep);color:#EAF3F4;margin:0 calc(-1*clamp(16px,4vw,32px)) 0;padding:clamp(40px,7vw,76px) clamp(16px,4vw,32px) clamp(36px,6vw,60px);position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-80px;bottom:-120px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(63,182,191,.28),transparent 62%);pointer-events:none}
+  .hero-inner{max-width:940px;margin:0 auto;position:relative}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:#7FD3D9;margin:0 0 18px;font-weight:600}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,6vw,58px);line-height:1.04;margin:0;letter-spacing:-.015em;text-wrap:balance}
+  .lede{font-size:clamp(16px,2.2vw,20px);max-width:60ch;margin:20px 0 0;color:#CFE4E6}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:28px;font-size:13.5px;color:#9DC5C9}
+  .hero-meta b{color:#EAF3F4;font-weight:600}
+
+  section{margin-top:clamp(40px,6vw,64px)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);font-weight:700;margin:0 0 6px}
+  h2{font-family:var(--serif);font-size:clamp(23px,3.4vw,32px);font-weight:600;margin:0 0 14px;letter-spacing:-.01em;text-wrap:balance}
+  h2 .u{color:var(--accent)}
+  p.big{font-size:17px;color:var(--ink);max-width:66ch}
+  p.sub{color:var(--muted);max-width:68ch}
+
+  /* how it reaches you — steps */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:2px;background:var(--hair);border:1px solid var(--hair);border-radius:14px;overflow:hidden;margin-top:8px}
+  .step{background:var(--card);padding:22px 20px}
+  .step .n{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.08em}
+  .step h3{font-size:15.5px;margin:10px 0 6px;font-weight:650}
+  .step p{font-size:13.5px;color:var(--muted);margin:0}
+
+  /* the three outcomes */
+  .outcomes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:10px}
+  .oc{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:20px 20px 18px;border-top:4px solid var(--c)}
+  .oc.fix{--c:var(--fix)} .oc.verify{--c:var(--verify)} .oc.ready{--c:var(--ready)}
+  .oc .tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--c);padding:3px 10px;border-radius:100px;background:var(--cb)}
+  .oc.fix .tag{background:var(--fix-bg)} .oc.verify .tag{background:var(--verify-bg)} .oc.ready .tag{background:var(--ready-bg)}
+  .oc h3{font-size:16px;margin:12px 0 6px;font-weight:650}
+  .oc p{font-size:14px;color:var(--muted);margin:0}
+
+  /* checks grid */
+  .checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:16px;margin-top:10px}
+  .chk{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:20px}
+  .chk h3{font-size:15px;margin:0 0 4px;font-weight:680;display:flex;align-items:center;gap:9px}
+  .chk h3 .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none}
+  .chk .why{font-size:12.5px;color:var(--accent-ink);font-weight:600;margin:0 0 12px;font-family:var(--mono);letter-spacing:.02em}
+  .chk ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+  .chk li{font-size:14px;color:var(--ink);padding-left:18px;position:relative;line-height:1.45}
+  .chk li::before{content:"›";position:absolute;left:2px;top:-1px;color:var(--accent);font-weight:700}
+  .chk li b{font-weight:640}
+
+  /* FEEDBACK showcase */
+  .fb{background:var(--deep);color:#EAF3F4;border-radius:20px;padding:clamp(28px,4vw,44px);margin-top:14px;position:relative;overflow:hidden}
+  .fb::before{content:"";position:absolute;left:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(183,154,224,.30),transparent 65%)}
+  .fb-inner{position:relative}
+  .fb .eyebrow{color:#C9B6E8}
+  .fb h2{color:#fff}
+  .fb p{color:#CFE4E6;max-width:64ch}
+  .fb .demo{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:18px 20px;margin:22px 0;font-family:var(--mono);font-size:14px;line-height:1.7}
+  .fb .demo .lbl{color:#C9B6E8;font-weight:700}
+  .fb .demo .typed{color:#EAF3F4}
+  .fb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:22px}
+  .fb-grid .g h4{font-size:14px;margin:0 0 5px;color:#fff;font-weight:650}
+  .fb-grid .g p{font-size:13.5px;color:#B6D3D6;margin:0}
+  .pill{display:inline-block;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;background:rgba(201,182,232,.18);color:#D9C9F0;border:1px solid rgba(201,182,232,.3);padding:3px 10px;border-radius:100px;margin-bottom:16px}
+  .fb .req{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.28);border-radius:12px;padding:14px 18px;margin:6px 0 4px;font-size:14.5px;color:#EAF3F4}
+  .fb .req-k{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.04em;color:#8FE0D4}
+  .fb .req-why{display:block;font-size:13px;color:#9DC5C9;margin-top:4px}
+  .fb .fixed-block{margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.16)}
+  .fb .fixed-block p{color:#CFE4E6}
+  .fb .rule-banner{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;background:rgba(143,224,212,.10);border:1px solid rgba(143,224,212,.38);border-radius:12px;padding:16px 18px;margin:20px 0 20px;font-size:15px;color:#EAF3F4}
+  .fb .rule-k{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.04em;color:#8FE0D4}
+  .fb .rule-why{display:block;font-size:13px;color:#9DC5C9;margin-top:5px}
+  .fb .hdr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:0 0 4px}
+  .fb .hdr{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:16px}
+  .fb .hk{font-family:var(--mono);font-weight:700;font-size:15px;color:#fff;letter-spacing:.02em;margin-bottom:7px}
+  .fb .hdr p{margin:0;font-size:13px;color:#B6D3D6;line-height:1.45}
+
+  /* not/notes */
+  .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:10px}
+  .note{background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:18px}
+  .note h3{font-size:14.5px;margin:0 0 5px;font-weight:650}
+  .note p{font-size:13.5px;color:var(--muted);margin:0}
+  .note .tick{color:var(--ready);font-weight:700}
+
+  /* re-export band — the #1 fix, high visual weight */
+  .reexport{background:var(--verify-bg);border:1px solid color-mix(in srgb,var(--verify) 40%,transparent);border-left:6px solid var(--verify);border-radius:16px;padding:clamp(24px,3.5vw,38px)}
+  .rx-badge{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--verify);padding:5px 12px;border-radius:100px;margin-bottom:16px}
+  .reexport h2{margin:0 0 12px}
+  .reexport h2 .u2{color:var(--verify)}
+  .reexport p{font-size:16px;color:var(--ink);max-width:68ch;margin:0 0 12px}
+  .reexport .rx-do{background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:16px 18px;margin:16px 0 0;font-size:15.5px}
+  .callout{background:var(--accent);color:#fff;border-radius:16px;padding:clamp(24px,3.5vw,36px);margin-top:14px}
+  .callout h2{color:#fff}
+  .callout p{color:#E5F5F6;max-width:64ch;margin:8px 0 0;font-size:16px}
+
+  .foot{margin-top:56px;padding-top:20px;border-top:1px solid var(--hair);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 20px;font-family:var(--mono)}
+  strong.hl{color:var(--accent-ink)}
+  @media (prefers-color-scheme:dark){strong.hl{color:var(--accent)}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-inner">
+    <p class="kicker">Now rolling out · Centralized Estimating</p>
+    <h1>Meet the MICA Compliance Audit</h1>
+    <p class="lede">When a mitigation estimate request comes in, an automated review reads the MICA file, checks it against our drying &amp; documentation standards, and drops a plain-language punch list <b>right onto the DASH job</b> — before the estimate is written.</p>
+    <div class="hero-meta">
+      <span>Runs on <b>every mit estimate request</b></span>
+      <span>Read-only — <b>nothing is changed in MICA</b></span>
+      <span>Lands as a <b>DASH note</b>, tagged to you</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <p class="eyebrow">The idea in one line</p>
+    <h2>A system that has your back — so great work doesn't get slowed down.</h2>
+    <p class="big">Mitigation files miss things — a day of readings, a stop time, an unbuilt sketch. Those gaps tend to surface late, bounce the estimate back, and cost everyone days. This audit reads the file the moment the request comes in and surfaces anything worth a second look, in time to square it away <em>before</em> the estimate is written. It's built to <strong class="hl">give the team a head start</strong>, not grade anyone — a reviewer that reads the file first so nothing gets stuck downstream.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">How it reaches you</p>
+    <h2>It shows up where you already work — the DASH job.</h2>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>A request comes in</h3><p>Someone submits the mitigation estimate request form. That's the only trigger.</p></div>
+      <div class="step"><div class="n">02</div><h3>The file gets read</h3><p>The audit logs into MICA read-only and works the loss the way a reviewer would.</p></div>
+      <div class="step"><div class="n">03</div><h3>A note posts to DASH</h3><p>A single note lands on the job from <b>Mica Mitigate</b> with the punch list.</p></div>
+      <div class="step"><div class="n">04</div><h3>The right people are tagged</h3><p>Centralized Estimating, the assigned estimator, and the person who sent the request.</p></div>
+    </div>
+    <p class="sub" style="margin-top:16px">Because Centralized Estimating is tagged on the note, it flows to the Monday job item automatically — no separate comment needed. During rollout, a copy also emails internally for a paper trail.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">How to read it</p>
+    <h2>Every item is one of three things.</h2>
+    <div class="outcomes">
+      <div class="oc fix"><span class="tag">● FIX</span><h3>Fix before the estimate</h3><p>Something's missing or off that will block or distort the estimate. Handle it first.</p></div>
+      <div class="oc verify"><span class="tag">● VERIFY</span><h3>Confirm or explain</h3><p>Looks off, but there may be a good reason. Confirm it's right — or note why.</p></div>
+      <div class="oc ready"><span class="tag">● READY</span><h3>Good to pull from</h3><p>What already checks out, laid out so the estimator can lift it straight into the estimate.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="reexport">
+      <div class="rx-badge">The #1 mismatch — and its fix</div>
+      <h2>Audit flagging something you <em>know</em> you did? <span class="u2">Re-export the MICA file.</span></h2>
+      <p>If the results don't match what you know you documented in MICA — the readings, the sketch, the stop times are <em>there</em> on your tablet — the cause is almost always the same: <b>the export never fully landed.</b> It can look done on the tablet but never make it into the MICA website; the export hiccuped, failed, or didn't run. The audit reads the website, so it sees the older state.</p>
+      <p class="rx-do"><b>When that's the case:</b> re-export from MICA, confirm it goes through, and those "missing" items resolve — they were done, they just hadn't synced. Then use <b>MICA&nbsp;FIXED:</b> (below) to have the audit re-check the file and confirm it's clean.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">What it actually checks — and why</p>
+    <h2>Four areas, all read straight from the MICA file.</h2>
+    <div class="checks">
+      <div class="chk">
+        <h3><span class="dot"></span>Loss &amp; linkage</h3>
+        <p class="why">Is it the right file, and is it connected?</p>
+        <ul>
+          <li>The <b>MICA loss exists</b> and isn't a duplicate or an unmerged split.</li>
+          <li>The <b>DASH↔Mitigate link</b> is in place so the loss is reachable from the job.</li>
+          <li>The file was <b>exported to DASH</b> — the work actually left MICA (and when, and by whom).</li>
+        </ul>
+      </div>
+      <div class="chk">
+        <h3><span class="dot"></span>Did it dry — and can it bill?</h3>
+        <p class="why">The drying story has to hold up.</p>
+        <ul>
+          <li><b>Readings every day</b> of the equipment window, weekends included — a day with no readings can't bill.</li>
+          <li><b>Grain depression above 5</b> mid-job — proof the chamber is actually pulling moisture.</li>
+          <li><b>Materials hit their dry goal</b> on the moisture map.</li>
+          <li><b>Dehu &amp; air movers</b> sized to MICA's numbers (oversized? just document why).</li>
+        </ul>
+      </div>
+      <div class="chk">
+        <h3><span class="dot"></span>Is it documented?</h3>
+        <p class="why">The estimate is only as good as the file.</p>
+        <ul>
+          <li><b>Source &amp; Type of Loss</b> set; <b>Category / Class</b> of water on every room.</li>
+          <li><b>Sketch built and equipment placed</b> — MICA figures every min/max and dehu size from the sketch, so an empty one throws off the whole scope.</li>
+          <li><b>Equipment stopped</b> (no stop time = no billable runtime) and <b>control dates</b> filled.</li>
+          <li><b>Photos &amp; notes</b> where they belong.</li>
+        </ul>
+      </div>
+      <div class="chk">
+        <h3><span class="dot"></span>Context &amp; edge cases</h3>
+        <p class="why">It knows when the normal rules don't apply.</p>
+        <ul>
+          <li>Passes through <b>MICA's own Process Audit</b> flags, de-duplicated against ours.</li>
+          <li><b>Preliminary requests</b> get a "file expected incomplete" banner — not a defect list.</li>
+          <li><b>T&amp;M jobs are skipped</b> — those belong on the T&amp;M form, not here.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="fb">
+      <div class="fb-inner">
+        <span class="pill">The most important part</span>
+        <p class="eyebrow">Talk back to it</p>
+        <h2>You steer it — with a DASH note that tags CE.</h2>
+        <p>The audit gets smarter, re-checks itself, and runs on demand because <b>you</b> tell it to — no ticket, no waiting. You do it the way you already work: a note on the DASH job. There are exactly three headers, and they all work the same simple way:</p>
+
+        <div class="rule-banner">
+          <span class="rule-k">The whole rule →</span>
+          <span>Put a <b>DASH note on the job</b>, <b>tag Centralized Estimating</b>, and start it with one of these three headers. <span class="rule-why">The CE tag is what routes it in — <b>no CE tag, nothing happens.</b></span></span>
+        </div>
+
+        <div class="hdr-grid">
+          <div class="hdr"><div class="hk">MICA&nbsp;FEEDBACK:</div><p>A flag was wrong or confusing — tell us what's actually true.</p></div>
+          <div class="hdr"><div class="hk">MICA&nbsp;FIXED:</div><p>You re-exported / fixed the file — re-check it and post fresh results.</p></div>
+          <div class="hdr"><div class="hk">MICA&nbsp;RUN:</div><p>Run the audit any time — even a job that never had a request form.</p></div>
+        </div>
+
+        <p class="eyebrow" style="color:#8FE0D4;margin-top:28px;padding-top:22px;border-top:1px solid rgba(255,255,255,.16)"><span style="color:#fff">MICA FEEDBACK:</span> — it got something wrong</p>
+        <p>It's a v1 rule set; it <b>will</b> occasionally miss the mark. When it does, correct it directly and it gets logged against the job and reviewed fast — real corrections have gone from feedback to fixed <b>the same day</b>.</p>
+        <div class="demo">
+          <span class="lbl">MICA FEEDBACK:</span> <span class="typed">the grain depression flag was wrong — GD was above 5 on the 17th and 18th. Everything else looked right.</span>
+        </div>
+        <div class="fb-grid">
+          <div class="g"><h4>Wrong flag?</h4><p>Tell us what was actually true. We tighten the rule.</p></div>
+          <div class="g"><h4>Confusing wording?</h4><p>Say so. We rewrite it for the field.</p></div>
+          <div class="g"><h4>Missing something?</h4><p>Tell us what a good reviewer would've caught. We add it.</p></div>
+        </div>
+
+        <div class="fixed-block">
+          <p class="eyebrow" style="color:#8FE0D4;margin-top:4px">Fixed it? Re-run it — <span style="color:#fff">MICA FIXED:</span></p>
+          <p style="margin-top:4px">Re-exported and squared the file away? You won't have to wait for the next request or chase anyone down. Start a note with <b>MICA&nbsp;FIXED:</b> (tagging <b>Centralized Estimating</b>, same as feedback) and the audit re-reads the file and posts fresh results — so you can confirm it's actually clean now.</p>
+          <div class="demo" style="margin:16px 0 0">
+            <span class="lbl" style="color:#8FE0D4">MICA FIXED:</span> <span class="typed">re-exported — readings and sketch are in now, please re-check.</span>
+          </div>
+        </div>
+
+        <div class="fixed-block">
+          <p class="eyebrow" style="color:#8FE0D4;margin-top:4px">Want it run any time — <span style="color:#fff">MICA RUN:</span></p>
+          <p style="margin-top:4px">Need an audit on a job that never went through a request form, or just want a fresh check on demand? Start a note with <b>MICA&nbsp;RUN:</b> (tagging <b>Centralized Estimating</b>) and the audit runs and posts results — no need to have "fixed" anything.</p>
+          <div class="demo" style="margin:16px 0 0">
+            <span class="lbl" style="color:#8FE0D4">MICA RUN:</span> <span class="typed">please run the MICA audit on this job.</span>
+          </div>
+        </div>
+
+        <p style="margin-top:24px;font-size:13.5px;color:#9DC5C9"><b style="color:#C9B6E8">Three headers, one rule:</b> <span style="font-family:var(--mono)">MICA&nbsp;FEEDBACK:</span> (a flag was wrong), <span style="font-family:var(--mono)">MICA&nbsp;FIXED:</span> (fixed it, re-check), <span style="font-family:var(--mono)">MICA&nbsp;RUN:</span> (run it now) — each just needs the header and a <b>Centralized Estimating tag</b> on the note.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Set expectations straight</p>
+    <h2>What this is — and isn't.</h2>
+    <div class="notes">
+      <div class="note"><h3><span class="tick">✓</span> A support tool</h3><p>It's here to help the team turn out complete files fast — a head start on the review, not extra homework.</p></div>
+      <div class="note"><h3><span class="tick">✓</span> Read-only</h3><p>It never changes anything in MICA. It reads, reports, and tags — that's it.</p></div>
+      <div class="note"><h3>✕ Not a billing review</h3><p>It's not second-guessing dollars. It's making sure the file is right and complete.</p></div>
+      <div class="note"><h3>✕ Not a gotcha</h3><p>No scores, no shaming on any single job. Over time we may share <b>trends</b> with GMs — but only to help a team that's consistently getting stuck, never to call out a person.</p></div>
+    </div>
+  </section>
+
+  <div class="callout">
+    <h2>The short version</h2>
+    <p>A mit request comes in → the audit reads the MICA file → a punch list posts to the DASH job, tagged to you → doesn't match your work? <b>re-export first.</b> Then square away the <b>FIX</b> and <b>VERIFY</b> items and the estimate gets written clean. Fixed it? <b>MICA&nbsp;FIXED:</b> re-runs it. Want it run any time? <b>MICA&nbsp;RUN:</b>. Wrong flag? <b>MICA&nbsp;FEEDBACK:</b> makes it better. All three just need the note to <b>tag Centralized Estimating</b>.</p>
+  </div>
+
+  <div class="foot">
+    <span>MICA Compliance Audit</span><span>Centralized Estimating</span><span>Questions → your CE contact</span>
+  </div>
+</div>
+
+</body>
+</html>
