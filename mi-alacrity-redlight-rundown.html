@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI Alacrity/Altimeter — The 11 "Red" Jobs, The Real Story</title>
+<style>
+  :root {
+    --blue: #1e40af; --blue-light: #dbeafe; --blue-mid: #3b82f6;
+    --green: #15803d; --green-light: #dcfce7;
+    --amber: #b45309; --amber-light: #fef3c7;
+    --red: #b91c1c; --red-light: #fee2e2;
+    --purple: #6d28d9; --purple-light: #ede9fe;
+    --gray: #374151; --gray-light: #f3f4f6; --gray-mid: #6b7280;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: var(--gray); background: #fff; line-height: 1.5; }
+  .page { max-width: 1180px; margin: 0 auto; padding: 40px 32px 64px; }
+  .report-header { border-bottom: 3px solid var(--blue); padding-bottom: 20px; margin-bottom: 32px; }
+  .report-header h1 { font-size: 27px; color: var(--blue); font-weight: 700; letter-spacing: -.3px; }
+  .report-header .subtitle { color: var(--gray-mid); margin-top: 6px; font-size: 13px; }
+  .report-header .meta { display: flex; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+  .meta-item { background: var(--gray-light); padding: 10px 16px; border-radius: 8px; min-width: 120px; }
+  .meta-item .label { font-size: 10.5px; color: var(--gray-mid); text-transform: uppercase; letter-spacing: .5px; }
+  .meta-item .value { font-size: 22px; font-weight: 700; color: var(--blue); }
+  .meta-item.hot .value { color: var(--red); }
+  .meta-item.good .value { color: var(--green); }
+  .section { margin-bottom: 40px; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--blue); border-left: 4px solid var(--blue); padding-left: 12px; margin-bottom: 16px; }
+  .lead { font-size: 15px; }
+  .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 8px; }
+  .hero-card { border-radius: 12px; padding: 22px 24px; }
+  .hero-myth { background: var(--red-light); border: 1.5px solid #fca5a5; }
+  .hero-real { background: var(--green-light); border: 1.5px solid #86efac; }
+  .hero-card .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; }
+  .hero-myth .tag { color: var(--red); }
+  .hero-real .tag { color: var(--green); }
+  .hero-card h3 { font-size: 17px; margin-bottom: 8px; color: #111; }
+  .hero-card p { font-size: 13.5px; color: #444; }
+  .callout { border-radius: 8px; padding: 16px 20px; margin: 14px 0; }
+  .callout-blue { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .callout-amber { background: var(--amber-light); border-left: 4px solid var(--amber); }
+  .callout-green { background: var(--green-light); border-left: 4px solid var(--green); }
+  .callout h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .callout p, .callout li { font-size: 13px; }
+  .callout ul { padding-left: 20px; margin-top: 4px; }
+  .callout li { margin-bottom: 4px; }
+  .buckets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 4px; }
+  .bucket { border: 1.5px solid var(--border); border-radius: 10px; padding: 18px; }
+  .bucket.b-green { border-color: #86efac; background: #f6fef9; }
+  .bucket.b-blue { border-color: #93c5fd; background: #f5f9ff; }
+  .bucket.b-gray { border-color: #d1d5db; background: #fafafa; }
+  .bucket .b-count { font-size: 30px; font-weight: 800; line-height: 1; }
+  .b-green .b-count { color: var(--green); } .b-blue .b-count { color: var(--blue); } .b-gray .b-count { color: var(--gray-mid); }
+  .bucket .b-head { font-size: 14px; font-weight: 700; margin: 6px 0 8px; color: #111; }
+  .bucket .b-desc { font-size: 12.5px; color: var(--gray-mid); }
+  .bucket .b-jobs { font-size: 12px; margin-top: 10px; color: #555; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th { background: var(--gray-light); text-align: left; padding: 9px 10px; font-weight: 600; font-size: 11px; color: var(--gray-mid); text-transform: uppercase; letter-spacing: .4px; border-bottom: 2px solid var(--border); }
+  td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .job { border-left: 4px solid var(--border); }
+  .job.j-green { border-left-color: #4ade80; }
+  .job.j-blue { border-left-color: #60a5fa; }
+  .job.j-gray { border-left-color: #9ca3af; }
+  .job .who { font-weight: 700; color: #111; }
+  .job .sub { color: var(--gray-mid); font-size: 11px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 10.5px; font-weight: 700; white-space: nowrap; }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-amber { background: var(--amber-light); color: var(--amber); }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-blue { background: var(--blue-light); color: var(--blue); }
+  .badge-purple { background: var(--purple-light); color: var(--purple); }
+  .badge-gray { background: #e5e7eb; color: #4b5563; }
+  .decoder { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .decoder .term { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .decoder .term b { color: var(--blue); }
+  .decoder .term .court { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--gray-mid); }
+  .fixes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .fix { border: 1.5px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .fix .n { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 700; align-items: center; justify-content: center; font-size: 13px; margin-bottom: 8px; }
+  .fix h4 { font-size: 14px; margin-bottom: 6px; color: #111; }
+  .fix p { font-size: 12.5px; color: #555; }
+  .footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--border); font-size: 11.5px; color: var(--gray-mid); }
+  .footer b { color: var(--gray); }
+  em.hl { font-style: normal; background: #fef08a; padding: 0 3px; border-radius: 3px; }
+  @media (max-width: 760px) {
+    .hero, .buckets, .fixes, .decoder { grid-template-columns: 1fr; }
+    .table-wrap { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="report-header">
+  <h1>The 11 "Red" MI Jobs — What's Really Going On</h1>
+  <div class="subtitle">Reconciling the Alacrity/Altimeter dashboard everyone sees against the actual Dash + AlacNet record · Michigan (Kalamazoo + Michigan Center) · as of July 23, 2026</div>
+  <div class="meta">
+    <div class="meta-item hot"><div class="label">Jobs "in the red"</div><div class="value">11</div></div>
+    <div class="meta-item good"><div class="label">Net-new estimates CE actually owes</div><div class="value">0</div></div>
+    <div class="meta-item"><div class="label">Estimate done / approved</div><div class="value">5</div></div>
+    <div class="meta-item"><div class="label">Can't be inspected yet</div><div class="value">5</div></div>
+    <div class="meta-item"><div class="label">Dead / canceled</div><div class="value">1</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="hero">
+    <div class="hero-card hero-myth">
+      <div class="tag">What the dashboard shows</div>
+      <h3>"11 jobs in the red, all waiting on estimates — deadlines 7/20–21."</h3>
+      <p>Every one sits in the <b>"Contractor Estimating"</b> status with an estimate deadline of 7/20–21. At a glance it reads as an estimating backlog — and it's what's fueling the "we'll be shut off by Alacrity" pressure.</p>
+    </div>
+    <div class="hero-card hero-real">
+      <div class="tag">What's actually true</div>
+      <h3>Not one is an estimator sitting on an estimate they could finish.</h3>
+      <p><b>5</b> are already done/approved (four cleared this week). <b>5</b> physically can't be estimated — they haven't been inspected. <b>1</b> is a canceled job that should be closed. Where CE <em class="hl">was</em> working, they were mostly waiting on the Michigan team for inputs.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Why "Contractor Estimating" ≠ "the estimator is the holdup"</div>
+  <p class="lead">"Contractor Estimating" is a <b>phase, not a diagnosis</b>. A job lands in it the moment it's assigned — before anyone has been onsite — and the 7/20–21 "deadline" is an <b>auto-set program clock</b> that fires whether or not the job has been inspected. So the board buckets very different realities under one red label:</p>
+  <div class="callout callout-amber">
+    <h4>The part everyone misses</h4>
+    <p>Being "in estimating" often means the estimator is <b>waiting on the Michigan production/field team</b> to hand over what they need to write or revise — the subcontractor bid, the Matterport scan, demo photos, or a scope/coverage decision. On these 11, that's exactly what was happening. When the input arrived, the estimate turned around fast.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">The three real reasons these jobs are red</div>
+  <div class="buckets">
+    <div class="bucket b-green">
+      <div class="b-count">5</div>
+      <div class="b-head">Estimate is DONE</div>
+      <div class="b-desc">Approved, or the supplement is resolved and it's in production / the program's hands. Not waiting on CE.</div>
+      <div class="b-jobs"><b>Vega-Narvaez · McMahon · Johnson · Trail · Wisner</b></div>
+    </div>
+    <div class="bucket b-blue">
+      <div class="b-count">5</div>
+      <div class="b-head">Can't be estimated yet</div>
+      <div class="b-desc">No inspection is possible — homeowner unresponsive, tree still on the house, or mitigation still running. Estimating literally cannot start.</div>
+      <div class="b-jobs"><b>Todd · Tackett · French · Feliciano · Fraley</b></div>
+    </div>
+    <div class="bucket b-gray">
+      <div class="b-count">1</div>
+      <div class="b-head">Dead — should be closed</div>
+      <div class="b-desc">Customer canceled the claim with the carrier; local team withdrew. Shouldn't be on a red board at all.</div>
+      <div class="b-jobs"><b>Frarey</b></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">The 11 jobs — reconciled (Dash + AlacNet)</div>
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:15%">Job</th>
+        <th style="width:10%">Estimator</th>
+        <th style="width:15%">True status</th>
+        <th style="width:13%">Whose court now</th>
+        <th style="width:47%">The real story</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="job j-green">
+        <td><span class="who">Vega-Narvaez</span><div class="sub">2295Z624X · MC · GC</div></td>
+        <td>A. Caldwell</td>
+        <td><span class="badge badge-green">Supp APPROVED 7/23</span></td>
+        <td><span class="badge badge-purple">Was: MI production</span></td>
+        <td>Base approved back in April. On the flooring <b>supplement</b>, the estimator posted <b>"NEED INFO — need updated bid"</b> (7/2 &amp; 7/7), waiting on Villarreal/Angela for the contractor's flooring bid. Once in, uploaded 7/17 → <b>QA-approved 7/23</b>. <span class="sub">(See "non-submittal" note below.)</span></td>
+      </tr>
+      <tr class="job j-green">
+        <td><span class="who">McMahon</span><div class="sub">260466214 · Kzoo · GC</div></td>
+        <td>R. Trevino</td>
+        <td><span class="badge badge-green">Supp APPROVED</span></td>
+        <td><span class="badge badge-amber">Production</span></td>
+        <td>Base approved 6/9 ($35,127). Deck line was below standards → <b>supplement</b>; PM Kyle McKnight fed demo photos/quote to the estimator; deck supp resubmitted (~$17.5K) and <b>approved</b>. In production.</td>
+      </tr>
+      <tr class="job j-green">
+        <td><span class="who">Johnson</span><div class="sub">220H6D714 · MC · Fire</div></td>
+        <td>R. Trevino</td>
+        <td><span class="badge badge-green">APPROVED 7/16 ($38,072)</span></td>
+        <td><span class="badge badge-gray">Board cleanup</span></td>
+        <td>Kitchen fire. Estimate <b>approved 7/16 on the SFPSP assignment</b>. The red GC line is a <b>superseded duplicate</b> — State Farm replaced the GC assignment with a PSP one (AlacNet shows 4 assignments; GC withdrawn 7/9). Dead line on the board; real estimate is done.</td>
+      </tr>
+      <tr class="job j-green">
+        <td><span class="who">Trail</span><div class="sub">402448620 · Kzoo · EO</div></td>
+        <td>A. Hantz</td>
+        <td><span class="badge badge-green">APPROVED 7/23</span></td>
+        <td><span class="badge badge-purple">Was: MI production</span></td>
+        <td>Estimate-Only (AAA). Estimator's first note 7/16: <b>"NEED INFO — no Matterport"</b>; waited on MI to upload the scan (done same day). Uploaded 7/17 → program-rejected (revision) 7/21 → revised → <b>approved 7/23</b>.</td>
+      </tr>
+      <tr class="job j-green">
+        <td><span class="who">Wisner</span><div class="sub">2299V967V · Kzoo · Roof</div></td>
+        <td>A. Hantz</td>
+        <td><span class="badge badge-amber">Supp denied → build</span></td>
+        <td><span class="badge badge-amber">Production / close</span></td>
+        <td>Base approved 5/8 ($17,845); ~<b>95% built</b>. Sheathing <b>supplement</b> ($5,517) was <b>denied by the program (wear/tear)</b> and the team <b>withdrew</b> it 7/23. No estimate owed — heading to close-out. (AlacNet flags it 71 days in "kustom_revision," timer expired — a supplement-cycle artifact, not a new estimate.)</td>
+      </tr>
+      <tr class="job j-blue">
+        <td><span class="who">Todd</span><div class="sub">220H8T667 · MC · EO</div></td>
+        <td>— unassigned</td>
+        <td><span class="badge badge-blue">Not inspected</span></td>
+        <td><span class="badge badge-red">Homeowner</span></td>
+        <td>Estimate-Only. <b>Homeowner not responding</b> — 3 documented contact attempts; program suspended it ×3 for "Homeowner not responding." No scope = nothing to estimate.</td>
+      </tr>
+      <tr class="job j-blue">
+        <td><span class="who">Tackett</span><div class="sub">220J2L611 · MC · GC</div></td>
+        <td>A. Caldwell</td>
+        <td><span class="badge badge-blue">Not inspected</span></td>
+        <td><span class="badge badge-red">Homeowner / tree</span></td>
+        <td>Storm — <b>tree is still on the house</b>. State Farm is handling removal; we can't inspect until it's off. Suspended twice for tree removal; inspection attempted 7/22. Monday shows "Need More Info" = there is no scope yet.</td>
+      </tr>
+      <tr class="job j-blue">
+        <td><span class="who">French</span><div class="sub">220H9L702 · Kzoo · Roof</div></td>
+        <td>— unassigned</td>
+        <td><span class="badge badge-blue">Not inspected</span></td>
+        <td><span class="badge badge-red">Field / scheduling</span></td>
+        <td>Wind/roof rebuild. Bad phone number, HO on vacation; tarp + mitigation sequencing ahead of the rebuild scope. Suspended "pending mitigation/demo"; <b>inspection booked 7/24</b>.</td>
+      </tr>
+      <tr class="job j-blue">
+        <td><span class="who">Feliciano</span><div class="sub">220J6Q167 · MC · Water</div></td>
+        <td>— unassigned</td>
+        <td><span class="badge badge-blue">Sequencing (MIT)</span></td>
+        <td><span class="badge badge-amber">Field</span></td>
+        <td>Water loss. <b>Mitigation crew still on site</b> — recon scope correctly waits for MIT to finish. AlacNet shows the MIT assignment hit <b>100% on 7/23</b>, so the recon scope is now unblocked.</td>
+      </tr>
+      <tr class="job j-blue">
+        <td><span class="who">Fraley</span><div class="sub">CO-035839 · Kzoo · ADA remodel</div></td>
+        <td>— unassigned</td>
+        <td><span class="badge badge-blue">Not inspected</span></td>
+        <td><span class="badge badge-red">Homeowner</span></td>
+        <td>AAA <b>ADA remodel</b> — AlacNet note: <b>"no XA shell, it's for remodeling"</b> (an Xactimate estimate doesn't even apply). HO unresponsive; inspection <b>set for 7/29</b>.</td>
+      </tr>
+      <tr class="job j-gray">
+        <td><span class="who">Frarey</span><div class="sub">220H8R202 · MC · Water</div></td>
+        <td>— unassigned</td>
+        <td><span class="badge badge-gray">CANCELED</span></td>
+        <td><span class="badge badge-gray">Close it</span></td>
+        <td>Tree on structure. The <b>customer canceled the claim with State Farm</b> (7/20); local team withdrew 7/22. Dead job — shouldn't be counted red.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">So what's actually driving the "red" and the Alacrity shut-off threat?</div>
+  <div class="callout callout-blue">
+    <p>Not estimating throughput. It's two things, neither of which is "our estimators are behind":</p>
+    <ul>
+      <li><b>Program SLA timers running on jobs we can't inspect.</b> Homeowner-unresponsive, tree-not-removed, and mitigation-still-running jobs sit accruing overdue time. Every estimate-stage claim is flagged in AlacNet as <b>"kustom_revision" with an expired timer</b> (8–71 days) — that's the exact metric Alacrity uses to threaten shut-off.</li>
+      <li><b>Supplement / revision cycles.</b> After a program rejection, the clock is <b>24 hours to resubmit</b>. Supplements (Vega, Wisner, McMahon) and EO revisions (Trail) generate rejection/resubmit churn — and CE is turning them (Vega + Trail both cleared 7/23).</li>
+    </ul>
+  </div>
+  <div class="callout callout-amber">
+    <h4>The one genuine estimating-side item to verify</h4>
+    <p>Vega-Narvaez shows an AlacNet <b>"Non-Submittal — Overdue"</b> flag on 7/19: the revised supplement wasn't resubmitted within the program's 24-hour window. That window ran <b>while the team was waiting on the contractor's flooring bid</b>. Worth a quick confirm with Caldwell/Graham/Villarreal on whether that was purely the bid wait or a handoff we can tighten — it's the only spot on all 11 that touches an internal timing miss.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Terminology — so we're all reading the board the same way</div>
+  <div class="decoder">
+    <div class="term"><div class="court">Ball → CE (Centralized Estimating)</div><b>Rejection / Revision-Requested</b> — the program bounces a <em>submitted</em> estimate back to CE to review &amp; revise. The estimate exists; this is a fix, not "no estimate yet." 24h to resubmit.</div>
+    <div class="term"><div class="court">Ball → MI local office</div><b>Withdrawal</b> — the Michigan team pulls off the job (customer canceled, duplicate/superseded assignment, out of scope). A local decision, not an estimating action.</div>
+    <div class="term"><div class="court">Program SLA clock</div><b>Non-Submittal / Overdue</b> — the program's timer fired because a file wasn't submitted in the required window. Often driven by waiting on an upstream input (a bid, a scan), not an idle estimator.</div>
+    <div class="term"><div class="court">Ball → MI production / field</div><b>"Need More Info" (in estimating)</b> — the estimator is blocked waiting on the field team for the bid, Matterport, photos, or a scope decision. "In estimating" but not on the estimator.</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">The real fixes (what actually clears the red)</div>
+  <div class="fixes">
+    <div class="fix"><div class="n">1</div><h4>Close the dead lines</h4><p>Withdraw/close Frarey (canceled) and Johnson's superseded GC duplicate so they stop counting against us as red.</p></div>
+    <div class="fix"><div class="n">2</div><h4>Suspend the un-inspectable ones properly</h4><p>Todd, Tackett, French, Feliciano, Fraley can't be scoped yet (HO / tree / mitigation). Keep them correctly suspended so the SLA clock pauses instead of breaching.</p></div>
+    <div class="fix"><div class="n">3</div><h4>Keep turning revisions fast</h4><p>The supplement/EO revision cycles are CE's genuine work — and it's moving (Vega + Trail cleared 7/23). Tighten the field→estimator handoff on inputs (bids/scans/photos) so the 24h clock isn't spent waiting.</p></div>
+  </div>
+</div>
+
+<div class="footer">
+  <p><b>Sources:</b> Monday.com CE workflow boards (Michigan Center MI + Kalamazoo MI — estimator + status), Dash job notes (Snowflake, deduplicated), and live AlacNet claim reads (contact-state, estimate status, comment threads) for all 11 claims. <b>As of July 23, 2026.</b></p>
+  <p style="margin-top:6px;">Internal Kustom operations document — for MI leadership review. Figures reflect system state at time of pull; a few jobs were actively clearing the same day.</p>
+</div>
+
+</div>
+</body>
+</html>
