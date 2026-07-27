@@ -58,6 +58,9 @@
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 15px 17px; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 560px) { .two { grid-template-columns: 1fr; } }
+  .three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media (max-width: 860px) { .three { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .three { grid-template-columns: 1fr; } }
   .card .ct { font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 8px; }
   .card .ct .dot { color: var(--red); font-size: 11px; }
   .card .cd { color: var(--muted); font-size: 13.5px; margin-top: 5px; }
@@ -142,6 +145,7 @@
       <div class="kicker">User Guide</div>
       <h1>Kustom <span class="v">Voice</span></h1>
       <div class="tagline">Say what you need, call out who to tag - the note lands on the job in DASH with the right people on it.</div>
+      <div style="margin-top:7px;font-size:13.5px;font-weight:800"><a href="https://kustom-voice.vercel.app" style="color:var(--red);text-decoration:none">▶&nbsp;kustom-voice.vercel.app</a></div>
     </div>
     <div class="pilot">PILOT · YOU GO FIRST</div>
   </header>
@@ -170,14 +174,18 @@
   </div>
 
   <h2>Find your job - three ways</h2>
-  <div class="two">
+  <div class="three">
     <div class="card">
       <div class="ct">Customer name <span style="font-size:10px;font-weight:800;color:var(--red);background:var(--red-soft);border-radius:6px;padding:2px 6px;">default</span></div>
-      <div class="cd">Pick your <b>division</b> (type or say the city or code), then a <b>last name</b> - or tap the mic and say it all at once: <b>"Smith in Atlanta."</b> Each result offers <b>Record Note</b> (straight in), <b>Review to Confirm</b> (see the team + recent notes first), or <b>Open in DASH</b>.</div>
+      <div class="cd">Pick your <b>division</b> (type the city or code), then a <b>last name</b>. Each result offers <b>Record Note</b> (straight in), <b>Review to Confirm</b> (see the team + recent notes first), or <b>Open in DASH</b>.</div>
     </div>
     <div class="card">
       <div class="ct">Job number</div>
-      <div class="cd">Tap <b>Job #</b> and type just the digits - it adds the dashes. Or say it out loud. Works on <b>brand-new jobs</b> the database hasn't synced yet, <b>and with no signal at all</b>.</div>
+      <div class="cd">Tap <b>Job #</b> and type just the digits - it adds the dashes. Works on <b>brand-new jobs</b> the database hasn't synced yet, <b>and with no signal at all</b>.</div>
+    </div>
+    <div class="card">
+      <div class="ct">Say it out loud</div>
+      <div class="cd">There's a <b>mic on both tabs</b>. Say it all at once - <b>"Smith in Atlanta"</b> fills in the division and the name; on the Job # tab just read the number off your phone. Needs a connection.</div>
     </div>
   </div>
 
