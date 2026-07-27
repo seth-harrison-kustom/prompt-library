@@ -1,0 +1,266 @@
+<title>Kustom Voice — User Guide</title>
+<style>
+  :root {
+    --bg: #f7f5f3; --surface: #ffffff; --surface-2: #f1ece9; --line: #e7e1df;
+    --ink: #1b1613; --muted: #6d6460; --faint: #978d88;
+    --red: #c8252b; --red-bright: #e23a40; --red-soft: rgba(200,37,43,.10);
+    --ok: #1f8a4c; --ok-bg: rgba(31,138,76,.10); --ok-line: rgba(31,138,76,.35);
+    --warn: #a86a06; --warn-bg: rgba(168,106,6,.11); --warn-line: rgba(168,106,6,.35);
+    --mockbg: #17171c; --mockline: #2c2c34; --mockfg: #f4f4f5; --mockmuted: #a1a1aa;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141210; --surface: #1f1a18; --surface-2: #2a2422; --line: #332d2a;
+      --ink: #f3eeea; --muted: #a89f99; --faint: #7d736e;
+      --red: #e23a40; --red-bright: #f2585d; --red-soft: rgba(226,58,64,.14);
+      --ok: #4ec27d; --ok-bg: rgba(78,194,125,.13); --ok-line: rgba(78,194,125,.38);
+      --warn: #e0a83c; --warn-bg: rgba(224,168,60,.14); --warn-line: rgba(224,168,60,.38);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f7f5f3; --surface: #ffffff; --surface-2: #f1ece9; --line: #e7e1df;
+    --ink: #1b1613; --muted: #6d6460; --faint: #978d88;
+    --red: #c8252b; --red-bright: #e23a40; --red-soft: rgba(200,37,43,.10);
+    --ok: #1f8a4c; --ok-bg: rgba(31,138,76,.10); --ok-line: rgba(31,138,76,.35);
+    --warn: #a86a06; --warn-bg: rgba(168,106,6,.11); --warn-line: rgba(168,106,6,.35);
+  }
+  :root[data-theme="dark"] {
+    --bg: #141210; --surface: #1f1a18; --surface-2: #2a2422; --line: #332d2a;
+    --ink: #f3eeea; --muted: #a89f99; --faint: #7d736e;
+    --red: #e23a40; --red-bright: #f2585d; --red-soft: rgba(226,58,64,.14);
+    --ok: #4ec27d; --ok-bg: rgba(78,194,125,.13); --ok-line: rgba(78,194,125,.38);
+    --warn: #e0a83c; --warn-bg: rgba(224,168,60,.14); --warn-line: rgba(224,168,60,.38);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .wrap { font-family: var(--sans); background: var(--bg); color: var(--ink); line-height: 1.55; -webkit-font-smoothing: antialiased; padding: 34px 18px 64px; }
+  .page { max-width: 720px; margin: 0 auto; }
+
+  .hero { display: flex; gap: 16px; align-items: center; border-bottom: 2px solid var(--red); padding-bottom: 20px; }
+  .mark { flex: 0 0 auto; width: 60px; height: 60px; border-radius: 16px; background: var(--red-soft); display: flex; align-items: center; justify-content: center; color: var(--red); }
+  .mark svg { width: 30px; height: 30px; }
+  .kicker { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--red); font-weight: 800; }
+  h1 { font-size: clamp(28px, 6vw, 40px); margin: 4px 0 6px; letter-spacing: -.025em; font-weight: 800; text-wrap: balance; line-height: 1.05; }
+  h1 .v { color: var(--red); }
+  .tagline { color: var(--muted); font-size: 15px; max-width: 46ch; }
+  .pilot { margin-left: auto; align-self: flex-start; background: var(--red); color: #fff; font-weight: 800; font-size: 10px; letter-spacing: .08em; padding: 5px 11px; border-radius: 999px; white-space: nowrap; }
+  @media (max-width: 560px) { .pilot { display: none; } .mark { width: 52px; height: 52px; } }
+
+  .lede { margin: 22px 0 6px; font-size: 16.5px; }
+  .lede b { color: var(--red); }
+
+  h2 { font-size: 12px; letter-spacing: .15em; text-transform: uppercase; color: var(--faint); margin: 40px 0 15px; font-weight: 800; display: flex; align-items: center; gap: 12px; }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 15px 17px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .two { grid-template-columns: 1fr; } }
+  .card .ct { font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+  .card .ct .dot { color: var(--red); font-size: 11px; }
+  .card .cd { color: var(--muted); font-size: 13.5px; margin-top: 5px; }
+  .card .cd b { color: var(--ink); }
+  .card .eg { margin-top: 9px; font-size: 12.5px; font-style: italic; background: var(--surface-2); border-radius: 9px; padding: 8px 10px; border: 1px solid var(--line); }
+
+  .steps { display: flex; flex-direction: column; gap: 10px; }
+  .step { display: grid; grid-template-columns: 34px 1fr; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+  .num { width: 30px; height: 30px; border-radius: 50%; background: var(--red); color: #fff; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
+  .step .do { font-weight: 700; font-size: 15px; }
+  .step .ck { display: block; margin-top: 4px; color: var(--muted); font-size: 13.5px; }
+  .step .ck b { color: var(--ink); }
+  kbd { font-family: var(--sans); font-weight: 800; font-size: 12.5px; background: var(--surface-2); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; padding: 1px 7px; white-space: nowrap; color: var(--ink); }
+  kbd.rec { color: var(--red); }
+
+  /* In-app visual mocks: dark like the app, so what's pictured = what they see */
+  .mock { background: var(--mockbg); border: 1px solid var(--mockline); border-radius: 12px; padding: 12px 14px; margin-top: 10px; }
+  .mock .mlabel { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--mockmuted); margin-bottom: 8px; }
+  .mchips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .mchip { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 700; }
+  .mchip.okc { background: rgba(200,37,43,.18); color: #f2585d; }
+  .mchip.warnc { border: 1px solid rgba(224,168,60,.6); background: rgba(224,168,60,.12); color: #e0a83c; }
+  .mchip .kb { background: rgba(200,37,43,.3); border-radius: 4px; padding: 0 4px; font-size: 10px; font-weight: 900; }
+  .mchip .x { opacity: .6; }
+  .mnote { color: var(--mockmuted); font-size: 12px; margin-top: 8px; }
+  .mbtnrow { display: flex; gap: 8px; margin-top: 4px; }
+  .mbtn { flex: 1; text-align: center; border-radius: 12px; padding: 9px 0; font-size: 13px; font-weight: 700; }
+  .mbtn.rec { border: 2px solid #c8252b; color: #f2585d; }
+  .mbtn.go { background: #c8252b; color: #fff; }
+  .mbtn.dim { border: 1px solid var(--mockline); color: #6b6b76; }
+  .mbc { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(224,168,60,.6); background: rgba(224,168,60,.12); color: #e0a83c; border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 800; }
+  .mheader { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--mockline); background: rgba(255,255,255,.05); color: var(--mockfg); border-radius: 999px; padding: 4px 10px; font-size: 11.5px; font-weight: 700; }
+  .mheader .hd { width: 8px; height: 8px; border-radius: 50%; background: #c8252b; }
+  .mtranscript { border: 1px solid var(--mockline); border-radius: 10px; background: rgba(255,255,255,.03); color: var(--mockfg); font-size: 13px; padding: 10px 12px; }
+  .mtranscript .cursor { display: inline-block; width: 7px; height: 14px; background: #f2585d; vertical-align: -2px; margin-left: 2px; border-radius: 1px; }
+
+  .rails { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .rails { grid-template-columns: 1fr; } }
+  .rail { background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; }
+  .rail .rt { font-weight: 750; font-size: 13.5px; display: flex; align-items: center; gap: 8px; }
+  .rail .lock { color: var(--red); }
+  .rail p { margin: 4px 0 0; color: var(--muted); font-size: 12.5px; }
+  .rail p b { color: var(--ink); }
+
+  .note { border-radius: var(--radius); padding: 13px 16px; font-size: 13.5px; display: grid; grid-template-columns: 22px 1fr; gap: 10px; margin-top: 12px; }
+  .note .ic { font-size: 15px; line-height: 1.3; }
+  .note.tip { background: var(--ok-bg); border: 1px solid var(--ok-line); }
+  .note.tip b { color: var(--ok); }
+  .note p { margin: 0; }
+
+  .gk { display: flex; flex-direction: column; gap: 9px; }
+  .gk .row { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: baseline; font-size: 13.5px; }
+  .gk .q { font-weight: 750; white-space: nowrap; }
+  .gk .a { color: var(--muted); }
+  .gk .a b { color: var(--ink); }
+
+  .setup { display: flex; gap: 12px; flex-wrap: wrap; }
+  .sstep { flex: 1; min-width: 170px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 13px 15px; }
+  .sstep .sn { font-size: 11px; font-weight: 800; color: var(--red); letter-spacing: .05em; }
+  .sstep .sd { margin-top: 3px; font-size: 13.5px; }
+  .sstep .sd b { font-weight: 750; }
+  .url { color: var(--red); font-weight: 800; word-break: break-all; }
+
+  .foot { margin-top: 40px; background: var(--ink); color: var(--bg); border-radius: var(--radius); padding: 16px 18px; display: flex; gap: 14px; align-items: center; }
+  .foot .fe { font-size: 22px; flex: 0 0 auto; }
+  .foot .fm { font-size: 13.5px; line-height: 1.5; }
+  .foot .fm b { color: var(--red-bright); }
+  .foot a { color: inherit; }
+</style>
+
+<div class="wrap"><div class="page">
+
+  <header class="hero">
+<meta name="robots" content="noindex, nofollow">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="2" width="6" height="12" rx="3" fill="currentColor" stroke="none"/>
+        <path d="M5 10v2a7 7 0 0 0 14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+      </svg>
+    </div>
+    <div>
+      <div class="kicker">User Guide</div>
+      <h1>Kustom <span class="v">Voice</span></h1>
+      <div class="tagline">Say what you need, call out who to tag - the note lands on the job in DASH faster than typing it ever could.</div>
+    </div>
+    <div class="pilot">PILOT · YOU GO FIRST</div>
+  </header>
+
+  <p class="lede">You're on the move all day and you know exactly what's happening on your jobs. Kustom Voice gets it on the record the fast way: <b>you talk, it listens</b> - your words appear on screen as you speak. It turns what you say into a clean, professional DASH note, tags the right people, and posts it to the job. Even with <b>no signal</b>: your note saves and sends itself when you're back in coverage. The app has a quick swipe-through tour when you first open it (and behind the <kbd>?</kbd> anytime) - this guide goes deeper on what everything means.</p>
+
+  <h2>First time - 1 minute</h2>
+  <div class="setup">
+    <div class="sstep"><div class="sn">STEP 1</div><div class="sd">On your phone, open <span class="url">kustom-voice.vercel.app</span></div></div>
+    <div class="sstep"><div class="sn">STEP 2</div><div class="sd">Sign in with your <b>Kustom Microsoft account</b> (same as email).</div></div>
+    <div class="sstep"><div class="sn">STEP 3</div><div class="sd"><b>Bookmark it.</b> Take the 30-second tour that pops up - it shows every screen.</div></div>
+  </div>
+
+  <h2>Two kinds of notes</h2>
+  <div class="two">
+    <div class="card">
+      <div class="ct"><span class="dot">●</span> Daily Report</div>
+      <div class="cd">Your update on a job. The app shows a short list of <b>what's helpful to cover</b> for that job type - just speak to those points.</div>
+      <div class="eg">"Hung drywall in the kitchen and living room, painting tomorrow, waiting on the vanity."</div>
+    </div>
+    <div class="card">
+      <div class="ct"><span class="dot">●</span> General Note</div>
+      <div class="cd">Any note, any role - a call recap, a decision, an instruction. Say whatever you need and it writes it up clean. <b>No list, no format.</b></div>
+      <div class="eg">"Talked to the adjuster, they approved the supplement, tell the coordinator to reschedule."</div>
+    </div>
+  </div>
+
+  <h2>Find your job - three ways</h2>
+  <div class="two">
+    <div class="card">
+      <div class="ct">Customer name <span style="font-size:10px;font-weight:800;color:var(--red);background:var(--red-soft);border-radius:6px;padding:2px 6px;">default</span></div>
+      <div class="cd">Pick your <b>division</b> (type or say the city or code), then a <b>last name</b> - or tap the mic and say it all at once: <b>"Smith in Atlanta."</b> Each result offers <b>Record Note</b> (straight in), <b>Review to Confirm</b> (see the team + recent notes first), or <b>Open in DASH</b>.</div>
+    </div>
+    <div class="card">
+      <div class="ct">Job number</div>
+      <div class="cd">Tap <b>Job #</b> and type just the digits - it adds the dashes. Or say it out loud. Works on <b>brand-new jobs</b> the database hasn't synced yet, <b>and with no signal at all</b>.</div>
+    </div>
+  </div>
+
+  <h2>Recording - what you'll see</h2>
+  <div class="card">
+    <div class="cd" style="margin-top:0;">Tap <kbd class="rec">● Record</kbd> and talk the way you'd brief a coworker - rambling is fine, it does the cleanup. Your words appear <b>as you speak</b>:</div>
+    <div class="mock">
+      <div class="mlabel">Live transcript</div>
+      <div class="mtranscript">Hung drywall in the kitchen and living room, painting starts tomorrow<span class="cursor"></span></div>
+      <div class="mbtnrow" style="margin-top:10px;">
+        <div class="mbtn rec">Stop · 00:42</div>
+        <div class="mbtn dim">Review →</div>
+      </div>
+      <div class="mnote">The mic bar bounces <b style="color:#4ec27d">green</b> when it hears you. Red = it's hearing silence.</div>
+    </div>
+    <div class="cd"><b>Say who to loop in as you go</b>: "tag Mike Dean," "make sure the coordinator sees this." When you tap <kbd>Stop</kbd>, it takes a beat to double-check your words - <b>Continue lights up the instant it's ready</b>, so you can't cut yourself off. Forgot something? <kbd>Record more</kbd> adds to the same note. Changed your mind? <kbd>Clear &amp; start over</kbd> asks first - and has <b>Undo</b>. Accidentally refreshed the page? <b>Everything's still there.</b></div>
+  </div>
+
+  <h2>Review - reading the tag chips</h2>
+  <div class="card">
+    <div class="cd" style="margin-top:0;">The review screen shows the clean write-up (edit anything), the <b>DASH header</b> it detected, and <b>who it will tag</b>. The chips tell you exactly how each person matched:</div>
+    <div class="mock">
+      <div class="mlabel">Tag on the DASH note</div>
+      <div class="mchips">
+        <span class="mchip okc">✓ Jessica Graham <span style="opacity:.7;font-weight:400">· Est</span> <span class="x">✕</span></span>
+        <span class="mchip okc">✓ Mike Dean <span class="kb">K</span> <span class="x">✕</span></span>
+        <span class="mchip warnc">⚠ Seth <span class="x">✕</span></span>
+      </div>
+      <div class="mnote"><b style="color:#f2585d">✓ + role</b> = on this job's team (that's their role) · <b style="color:#f2585d">✓ + K</b> = a Kustom teammate, found in the company directory · <b style="color:#e0a83c">⚠</b> = tap it - if more than one person matches, you'll <b>pick the right one</b> from a list.</div>
+    </div>
+    <div class="cd">Add more people by typing or with the <b>🎤 Add by voice</b> button - nicknames are fine ("Mike" finds Michael), and full names match best. Headers show as chips too - drop a wrong one, add a missed one:</div>
+    <div class="mock">
+      <div class="mchips">
+        <span class="mheader"><span class="hd"></span> POST INSPECTION <span class="x">✕</span></span>
+        <span class="mheader" style="opacity:.7">+ Add header ▾</span>
+      </div>
+    </div>
+    <div class="cd">Then <kbd>Send to DASH</kbd> - the note posts to the job with your name on top, usually within a couple minutes.</div>
+  </div>
+
+  <h2>No signal? Briefcase mode</h2>
+  <div class="card">
+    <div class="cd" style="margin-top:0;">Dead zone at the site? <b>Everything still works.</b> Enter the job #, record - your note saves to the phone. You'll see this in the header until it sends:</div>
+    <div class="mock">
+      <span class="mbc">🧳 1 waiting</span>
+      <div class="mnote">The moment you're back in coverage it flips to "Sending…" and posts itself - <b>nothing else to do</b>.</div>
+    </div>
+    <div class="cd">While it waits, the saved screen lets you <b>add tags and a DASH header</b> - the same smart name matching works completely offline. It already tags the people you <i>named while talking</i>; this is for confirming or adding specific ones. (Your words get written out when it sends - no signal, no transcript yet.) When a briefcase note posts, you get <b>one email</b> recapping what went in, who got tagged, and anyone it couldn't find.</div>
+  </div>
+
+  <h2>Tagging &amp; privacy - the rules that never bend</h2>
+  <div class="rails">
+    <div class="rail"><div class="rt"><span class="lock">🔒</span> Always Private</div><p>Every note posts Private. There's no way to make one public through this tool.</p></div>
+    <div class="rail"><div class="rt"><span class="lock">🔒</span> Customer is never tagged</div><p>The homeowner, insured, adjuster and any outside party are blocked - always, even if asked.</p></div>
+    <div class="rail"><div class="rt">Name or role - both work</div><p>Say a person ("Mike Dean") or a role ("the coordinator," "the GM," "PC") - it finds whoever holds it on the job, or anyone at Kustom by full name.</p></div>
+    <div class="rail"><div class="rt">CE only when you ask</div><p>Say "tag CE" and Centralized Estimating gets tagged. Official headers add CE automatically - remove the chip if you don't want it, and that's honored.</p></div>
+    <div class="rail"><div class="rt">Nobody dropped silently</div><p>Can't match someone you named? The note says so, <b>still posts</b>, and you're emailed so you can forward it.</p></div>
+    <div class="rail"><div class="rt">Your name rides on top</div><p>DASH posts from a shared account, so every note opens with <b>"Recorded by [you] via Kustom Voice"</b> - the team always knows it's yours.</p></div>
+  </div>
+
+  <div class="note tip">
+    <div class="ic">💬</div>
+    <p><b>Say full names when you can.</b> "Mike Dean," not just "Mike" - it matches better (nicknames are fine: "Mike" finds Michael). One-and-only first names auto-complete: there's only one Arcadia at Kustom, so saying "Arcadia" will auto-select her.</p>
+  </div>
+
+  <h2>¿Hablas español?</h2>
+  <div class="card">
+    <div class="cd" style="margin-top:0;">Tap your initials (top right) → <b>Español</b> - the whole app switches, including the tour. Record and review your note <b>in Spanish</b>; when it posts, the office gets the <b>English translation on top</b> with your original Spanish preserved below. Best of both.</div>
+  </div>
+
+  <h2>Good to know</h2>
+  <div class="gk">
+    <div class="row"><span class="q">Job not found?</span><span class="a">Brand-new jobs sync overnight. Check the digits and tap <kbd>continue anyway</kbd> - it still delivers. And if a teammate already sent a note for that job, you'll see a green confirmation that notes are reaching it.</span></div>
+    <div class="row"><span class="q">Mic bar red?</span><span class="a">It's hearing silence - unmute or uncover the mic and re-record. Green means it's got you.</span></div>
+    <div class="row"><span class="q">First note feels slow to show words?</span><span class="a">The first recording after opening the app warms up for a second or two - <b>everything you said is still captured</b>, the screen just catches up.</span></div>
+    <div class="row"><span class="q">Accidentally refreshed?</span><span class="a">Relax - your recording <b>and</b> your edits are still there, on both the record and review screens.</span></div>
+    <div class="row"><span class="q">Next note on the same job?</span><span class="a">The sent screen has <b>"Another note - same job"</b> plus a search box for the next one - no backtracking.</span></div>
+    <div class="row"><span class="q">Want the tour again?</span><span class="a">Tap the <kbd>?</kbd> up top anytime.</span></div>
+  </div>
+
+  <div class="foot">
+    <div class="fe">🎙️</div>
+    <div class="fm"><b>You're the test crew - break it and tell me.</b> Confusing, slow, or wrong is exactly what I need to hear: tap <b>Feedback</b> in the app (talk or type it), or <b>Seth Harrison</b> · <a href="mailto:seth.harrison@kustom.us">seth.harrison@kustom.us</a> (include the job number).</div>
+  </div>
+
+</div></div>

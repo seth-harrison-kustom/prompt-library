@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kustom Voice - Quick Start</title>
+<style>
+  :root {
+    --red: #c8252b; --red-bright: #e23a40; --ink: #17171c; --muted: #5b5b66;
+    --line: #e4e4ea; --soft: #f6f6f8; --amber-bg: #fff7e0; --amber-line: #e0a800; --amber-ink: #7a5b00;
+    --blue-bg: #eef4fb; --blue-line: #9cc0e8; --blue-ink: #1f4e7a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  @page { size: letter; margin: 0.4in; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--ink); font-size: 10pt; line-height: 1.34; max-width: 7.7in; margin: 0 auto; padding: 16px; }
+  @media print { body { padding: 0; } }
+  .head { display: flex; align-items: center; gap: 12px; border-bottom: 3px solid var(--red); padding-bottom: 8px; }
+  .mark { width: 46px; height: 46px; border-radius: 10px; background: #0f0f12; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
+  .mark svg { width: 29px; height: 29px; }
+  .head h1 { font-size: 20pt; letter-spacing: -0.5px; }
+  .head h1 .accent { color: var(--red); }
+  .head .tag { color: var(--muted); font-size: 10pt; margin-top: 2px; }
+  .pill { margin-left: auto; background: var(--red); color: #fff; font-weight: 700; font-size: 8.5pt; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.06em; white-space: nowrap; }
+
+  .why { margin-top: 11px; background: var(--soft); border-radius: 10px; padding: 10px 13px; }
+  .why b { color: var(--ink); }
+  .why .lead { font-size: 11pt; font-weight: 700; }
+  .why .sub { color: var(--muted); margin-top: 2px; }
+
+  .h { font-size: 11pt; text-transform: uppercase; letter-spacing: 0.05em; color: var(--red); margin: 13px 0 6px; }
+  .types { display: flex; gap: 12px; }
+  .type { flex: 1; border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .type .t { font-weight: 800; font-size: 10.5pt; }
+  .type .t .dot { color: var(--red); }
+  .type .d { color: var(--muted); margin-top: 3px; }
+  .type .eg { margin-top: 4px; font-size: 9pt; color: var(--muted); font-style: italic; }
+
+  .cols { display: flex; gap: 12px; margin-top: 12px; }
+  .col { flex: 1; }
+  .card { border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; height: 100%; }
+  .card h3 { font-size: 9.5pt; text-transform: uppercase; letter-spacing: 0.05em; color: var(--red); margin-bottom: 5px; }
+  .card ol, .card ul { padding-left: 16px; }
+  .card li { margin-bottom: 3px; }
+  .rule { background: var(--amber-bg); border: 2px solid var(--amber-line); border-radius: 10px; padding: 9px 11px; }
+  .rule h3 { color: var(--amber-ink); font-size: 9.5pt; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .rule p { color: var(--amber-ink); font-weight: 600; }
+  .rule .big { font-size: 11pt; font-weight: 800; }
+
+  .step { display: flex; gap: 10px; align-items: flex-start; padding: 4px 0; border-bottom: 1px dashed var(--line); }
+  .step:last-child { border-bottom: none; }
+  .num { width: 21px; height: 21px; border-radius: 50%; background: var(--red); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 9.5pt; flex: 0 0 auto; margin-top: 1px; }
+  .step .do { font-weight: 700; }
+  .step .ck { color: var(--muted); }
+  .step .ck strong { color: var(--ink); }
+  kbd { background: var(--soft); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; font-family: inherit; font-weight: 700; font-size: 9pt; white-space: nowrap; }
+  .url { font-weight: 800; color: var(--red); }
+  .foot { margin-top: 12px; background: #0f0f12; color: #f4f4f5; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; }
+  .foot .emoji { font-size: 16pt; }
+  .foot .msg strong { color: var(--red-bright); }
+  .foot .msg { font-size: 9.5pt; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <div class="mark">
+      <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#c8252b" stroke-width="30" stroke-linecap="round" fill="none">
+          <rect x="206" y="106" width="100" height="170" rx="50" fill="#c8252b" stroke="none"/>
+          <path d="M 156 226 v 20 a 100 100 0 0 0 200 0 v -20"/>
+          <line x1="256" y1="346" x2="256" y2="396"/>
+          <line x1="196" y1="400" x2="316" y2="400"/>
+        </g>
+      </svg>
+    </div>
+    <div>
+      <h1>Kustom <span class="accent">Voice</span></h1>
+      <div class="tag">Say what you need, call out who to tag - the note lands on the job in DASH faster than typing it ever could.</div>
+    </div>
+    <div class="pill">PILOT · YOU GO FIRST</div>
+  </div>
+
+  <div class="why">
+    <div class="lead">Bring your voice to the team.</div>
+    <div class="sub">You're on the move all day and you know exactly what's happening on your jobs. Kustom Voice is a modern, built-for-the-field way to get it all on the record: <b>you talk, it listens</b> - your words appear on screen as you speak. It turns what you say into a clean, professional DASH note, <b>tags the right people</b>, and puts it on the job for you - in seconds, right from your phone. <b>Even with no signal</b> - it saves your note and sends it the moment you're back in coverage.</div>
+  </div>
+
+  <div class="h">Two ways to use it - pick one when you record</div>
+  <div class="types">
+    <div class="type">
+      <div class="t"><span class="dot">●</span> Daily Report</div>
+      <div class="d">Your update on a job. The app shows a short list of <b>what's helpful to cover</b> for that job type - just speak to those points.</div>
+      <div class="eg">"Hung drywall in the kitchen and living room, painting tomorrow, waiting on the vanity."</div>
+    </div>
+    <div class="type">
+      <div class="t"><span class="dot">●</span> General Note</div>
+      <div class="d">Any note, any role - a call recap, a decision, an update, an instruction. Say whatever you need and it writes it up clean. <b>No list, no format.</b></div>
+      <div class="eg">"Talked to the adjuster, they approved the supplement, tell the coordinator to reschedule."</div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h3>One-time setup (1 min)</h3>
+        <ol>
+          <li>On your phone, open <span class="url">kustom-voice.vercel.app</span></li>
+          <li>Sign in with your <strong>Kustom Microsoft account</strong> (same as email)</li>
+          <li><strong>Bookmark it</strong> so it's one tap away next time</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h3>One quick thing</h3>
+        <p>When you tap Stop, it takes a moment to finish writing out your last words - and <strong>Continue</strong> lights up the instant it's ready, so you can't cut yourself off. Forgot something? Tap <kbd>Record more</kbd> and keep going.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="h">Recording a note - 5 steps</div>
+  <div class="step"><div class="num">1</div><div>
+    <span class="do">Find your job</span> - <span class="ck">search the <strong>customer name</strong> (pick the office, type the last name - or just say it), or switch to <strong>Job #</strong> and type the digits (it adds the dashes). Confirm the <strong>customer + recent notes</strong> match.</span>
+  </div></div>
+  <div class="step"><div class="num">2</div><div>
+    <span class="do">Choose Daily Report or General Note</span> <span class="ck">(above) - and English or Español.</span>
+  </div></div>
+  <div class="step"><div class="num">3</div><div>
+    <span class="do">Tap <kbd>● Record</kbd> and talk naturally,</span> <span class="ck">the way you'd brief a coworker - no need to be formal, it does the cleanup. Say who to loop in: <strong>"tag the GM," "make sure Jessica sees this."</strong> Mic bar bounces <strong>green</strong> when it hears you.</span>
+  </div></div>
+  <div class="step"><div class="num">4</div><div>
+    <span class="do">Tap <kbd>Stop</kbd>, then <kbd>Continue →</kbd> once it lights up.</span>
+  </div></div>
+  <div class="step"><div class="num">5</div><div>
+    <span class="do">Review & <kbd>Send to DASH</kbd>.</span> <span class="ck">See the clean write-up (fix anything) and <strong>who it'll tag</strong> (remove any you don't want). Send - it's on the job with your name on it. Next job? Type it right there.</span>
+  </div></div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h3>Tagging & privacy</h3>
+        <ul>
+          <li>Say a <strong>name or a role</strong> ("the coordinator," "the GM") - it finds them on the job, or anyone at Kustom by full name.</li>
+          <li>Can't find someone? The note says so and <strong>still posts</strong> - tag them by hand.</li>
+          <li>Notes are <strong>always private</strong>; the customer is never tagged through this tool.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h3>Good to know</h3>
+        <ul>
+          <li><strong>No signal at the site?</strong> Still works - enter the job #, record; your note saves to the phone and <strong>sends itself</strong> when you're back in coverage.</li>
+          <li><strong>¿Hablas español?</strong> Tap <kbd>Español</kbd> - everything switches; office still gets a clean English write-up plus your original Spanish.</li>
+          <li><strong>Job not found?</strong> Brand-new jobs do that - check the digits, tap <kbd>continue anyway</kbd>.</li>
+          <li><strong>Mic bar red?</strong> It's recording silence - unmute/uncover the mic, re-record.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="emoji">🎙️</div>
+    <div class="msg">
+      <strong>You're the test crew - break it and tell me.</strong> Confusing, slow, or wrong is exactly what I need to hear:
+      tap <strong>Feedback</strong> in the app (talk or type it), or email <strong>Seth Harrison · seth.harrison@kustom.us</strong> (include the job number).
+    </div>
+  </div>
+</body>
+</html>
